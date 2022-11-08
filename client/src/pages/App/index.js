@@ -7,14 +7,11 @@ import { useSelector } from 'react-redux';
 
 import './index.css';
 
-import Footer from '../Footer';
-import Dashboard from '../Dashboard';
-import Settings from '../Settings';
-import Login from '../Login';
-import PrivacyPolicy from '../PrivacyPolicy';
-import Terms from '../Terms';
-import DataDeletion from '../DataDeletion';
-import Header from '../Header';
+import Footer from '../../components/Footer';
+import Dashboard from '../../components/Dashboard';
+import Login from '../LoginPage';
+import Header from '../../components/Header';
+import MainPage from '../MainPage';
 
 // TODO: Style hyperlinks in the Terms, etc. pages
 
@@ -28,14 +25,16 @@ const App = () => {
           <Header />
           <Switch>
             <Route exact path="/"> 
-              <Dashboard />
+              <MainPage />
             </Route>
             <Route path="/login">
               <Login />
               <Footer />
             </Route>
+            <Route path="/dashboard">
+              <Dashboard />
+            </Route>
           </Switch>
-
         </Router>
       </div>
       <div id='Popup'>

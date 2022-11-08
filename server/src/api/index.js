@@ -10,11 +10,9 @@ const config = require('../util/config');
 const { is } = require('../util/org');
 
 // API routes
-const postRoutes = require('./nudge');
-const topicRoutes = require('./topic');
-const proxyRoutes = require('./proxy');
 const orgRoutes = require('./org');
 const authRoutes = require('./auth');
+const nudgeRoutes = require('./nudge');
 
 const debug = useDebug('api');
 const app = express();
@@ -63,9 +61,10 @@ module.exports = () => new Promise((resolve, reject) => {
 
   // Register routes
   const apiRoutes = express.Router();
-  apiRoutes.use('/post', is('org', 'admin'), postRoutes); // routes for social media posts
-  apiRoutes.use('/topic', is('org', 'admin'), topicRoutes); // routes for COVID-19 topics
-  apiRoutes.use('/proxy', is('org', 'admin'), proxyRoutes); // routes for oEmbed API proxies
+  apiRoutes.use('/nudge', is('org', 'admin'), nudgeRoutes);
+  // apiRoutes.use('/post', is('org', 'admin'), postRoutes); // routes for social media posts
+  // apiRoutes.use('/topic', is('org', 'admin'), topicRoutes); // routes for COVID-19 topics
+  // apiRoutes.use('/proxy', is('org', 'admin'), proxyRoutes); // routes for oEmbed API proxies
   apiRoutes.use('/org', orgRoutes); // routes for partner organizations
   apiRoutes.use('/auth', authRoutes); // routes for user authentication
   app.use('/api', apiRoutes); // mounts all the routes above to the /api route

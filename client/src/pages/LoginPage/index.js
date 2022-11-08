@@ -1,7 +1,7 @@
 import './index.css';
 
 import useAuth from '../../hooks/auth';
-import LoginModal from '../LoginModal';
+import LoginModal from '../../components/LoginModal';
 
 const Login = () => {
   useAuth(false, '/');
