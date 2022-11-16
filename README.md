@@ -45,18 +45,11 @@ The platform...
 
 Create an empty `.env` file in the root folder for this repo and add the following environment variables using the [dotenv](https://www.npmjs.com/package/dotenv) format:
 
-- `TWITTER_ACCESS_TOKEN` - A Twitter access token; required for Twitter API access.
-- `TWITTER_ACCESS_TOKEN_SECRET` - A Twitter access token secret; required for Twitter API access.
-- `TWITTER_CONSUMER_KEY` - A Twitter consumer key; required for Twitter API access.
-- `TWITTER_CONSUMER_SECRET` - A Twitter consumer secret; required for Twitter API access.
-- `CROWDTANGLE_INSTAGRAM_TOKEN` - A CrowdTangle Instagram dashboard token.
-- `CROWDTANGLE_FACEBOOK_TOKEN` - A CrowdTangle Facebook dashboard token.
-- `FACEBOOK_ACCESS_TOKEN` - A Facebook access token for their oEmbed API.
-- `INSTAGRAM_ACCESS_TOKEN` - An Instagram access token for their oEmbed API.
 - `SESSION_SECRET` - An alphanumeric secret string used to secure user sessions; should be random.
 - `STORE_SECRET` - An alphanumeric secret string used to encrypt user session information in the database; should be random.
 - `CALLBACK_URL` - The callback URL used for Oauth. This is only needed for local testing. If not specified, our live website's URL is given.
 
+To populate the database with sample data found in `server\src\sampleData.js`, simply start the MongoDB server and run `node populateDB.js` within `server\src`.
 ### Running
 
 Running the dashboard in development requires starting up two separate Node.js applications.

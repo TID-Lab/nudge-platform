@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const nudgeHistorySchema = new mongoose.Schema({
-  nudge_ids: { type: [mongoose.Schema.Types.ObjectId], ref: 'NudgeId' },
+  nudge_ids: { type: [mongoose.Schema.Types.ObjectId], ref: 'Nudge' },
   labels: { type: String, enum: [] },
   order: { type: Number },
   date_sent: { type: Date, required: true },
