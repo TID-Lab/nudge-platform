@@ -62,7 +62,6 @@ module.exports = () => new Promise((resolve, reject) => {
   // Register routes
   const apiRoutes = express.Router();
   apiRoutes.use('/nudge', is('org', 'admin'), nudgeRoutes);
-  // apiRoutes.use('/post', is('org', 'admin'), postRoutes); // routes for social media posts
   // apiRoutes.use('/topic', is('org', 'admin'), topicRoutes); // routes for COVID-19 topics
   // apiRoutes.use('/proxy', is('org', 'admin'), proxyRoutes); // routes for oEmbed API proxies
   apiRoutes.use('/org', orgRoutes); // routes for partner organizations
