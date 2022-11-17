@@ -7,13 +7,7 @@ const useDebug = require('debug');
 
 const debug = useDebug('api');
 const Nudge = require('../../models/nudge');
-
-const assignmentCodes = {
-  SUCCESS: 'SUCCESS',
-  NO_PARTICIPANT: 'NO_PARTICIPANT',
-  PREVIOUSLY_ASSIGNED: 'PREVIOUSLY_ASSIGNED',
-  ASSIGNMENT_ABOVE_FAILED: 'ASSIGNMENT_ABOVE_FAILED',
-};
+const { checkAssignments, assignmentCodes } = require('../../util/assignments')
 
 // Return all nudges
 routes.get('/', async (req, res) => {
@@ -37,32 +31,15 @@ routes.get('/', async (req, res) => {
 // NOTE: PREVIOUSLY_ASSIGNED should be handled on the front-end
 
 routes.post('/check', async (req, res) => {
+  if (typeof req.body !== 'object') {
+    res.status(400).send();
+    return;
+  }
   try {
-    // const nudges = await Nudge.find();
-    res.status(200).send([{
-      nudge_id: 7,
-      num_assigned: 80,
-      num_left: 270,
-      success_code: assignmentCodes.SUCCESS,
-    },
-    {
-      nudge_id: 12,
-      success_code: assignmentCodes.PREVIOUSLY_ASSIGNED,
-      error_object: {
-        potential_num_assigned: 50,
-        // Is this ambiguous?
-        previously_assigned_errors: [{ demographics: ['female', '18-29'], count: 30 }, { demographics: ['all'], count: 50 }],
-      },
-    },
-    {
-      nudge_id: 3,
-      success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED,
-    },
-    {
-      nudge_id: 4,
-      success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED,
-    },
-    ]);
+    console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
+    console.log(req.body);
+    const checked_assignments = await checkAssignments(req.body);
+    res.status(200).send(checked_assignments);
   } catch (err) {
     debug(`${err}`);
     res.status(500).send();
