@@ -53,11 +53,17 @@ routes.post('/check', async (req, res) => {
 routes.post('/assign', async (req, res) => {
   try {
     // const nudges = await Nudge.find();
+    const checked_assignments = await checkAssignments(req.body);
+
+
+    // nudge: {nudge_msg: str, participant_ids: [ids]}
+    // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}   
     res.status(200).send();
   } catch (err) {
     debug(`${err}`);
     res.status(500).send();
   }
 });
+    // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}   
 
 module.exports = routes;

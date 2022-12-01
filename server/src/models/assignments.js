@@ -1,3 +1,4 @@
+// OUTDATED... WILL HANDLE ON CLIENT
 const mongoose = require('mongoose');
 
 const assignmentSchema = new mongoose.Schema({

@@ -61,7 +61,7 @@ module.exports = () => new Promise((resolve, reject) => {
 
   // Register routes
   const apiRoutes = express.Router();
-  apiRoutes.use('/nudge', is('org', 'admin'), nudgeRoutes);
+  apiRoutes.use('/nudge', nudgeRoutes);
   // apiRoutes.use('/topic', is('org', 'admin'), topicRoutes); // routes for COVID-19 topics
   // apiRoutes.use('/proxy', is('org', 'admin'), proxyRoutes); // routes for oEmbed API proxies
   apiRoutes.use('/org', orgRoutes); // routes for partner organizations
@@ -71,19 +71,15 @@ module.exports = () => new Promise((resolve, reject) => {
   // Mount the client-side React app
 
   const build = [__dirname, '..', '..', '..', 'client', 'build'];
-  const buildLanding = [__dirname, '..', '..', '..', 'landing', 'build'];
   
   function sendClientIndex(_, res) {
     res.sendFile(path.join(...build, 'index.html'));
   }
 
-  function sendLandingIndex(_, res) {
-    res.sendFile(path.join(...buildLanding, 'index.html'));
-  }
 
   if (process.env.NODE_ENV === 'production') {
     app.get('/login', sendClientIndex); // do not authenticate the login page
-    app.get('/', sendLandingIndex); // do not authenticate the landing page
+    app.get('/', sendClientIndex); // do not authenticate the landing page
     app.use(express.static(path.join(...build))); // static files for dashboard
     app.get('*', is('org', 'admin'), sendClientIndex); // authenticate everything else
   }
