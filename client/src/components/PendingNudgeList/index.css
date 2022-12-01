@@ -1,0 +1,53 @@
+.PendingNudges {
+  position: absolute;
+  background-color: white;
+  right: 0px;
+  width: 30em;
+  height:90%;
+  padding-top:0;
+  margin-top:0;
+}
+
+.vl {
+  position: absolute;
+  border-left: 3px solid black;
+  height: 80%;
+
+  position: absolute;
+  margin-left: -3px;
+  top: 15%;
+}
+
+.ToSendColumn {
+  padding: 3em;
+  padding-top:0.5em;
+}
+
+.totalAssigned {
+  width: 25em;
+  height: 5em;
+  background: #F1F5F9;
+  border-radius: 10px;
+  margin-left: 3em;
+}
+
+.assignedText {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 2px;
+  align-self:center;
+  justify-content: center;
+  padding-top:0.6em;
+  /* font-family: 'Open Sauce Two'; */
+font-style: normal;
+font-weight: 900;
+font-size: 36px;
+line-height: 45px;
+}
+/* 
+.PendingNudges {
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+} */
