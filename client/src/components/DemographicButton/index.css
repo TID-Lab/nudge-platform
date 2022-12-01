@@ -1,0 +1,48 @@
+.Off {
+  
+  /* box-sizing: border-box; */
+
+  /* Auto layout */
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px 16px;
+  gap: 8px;
+  
+  width: 72px;
+  height: 30px;
+  
+  /* M3/sys/light/outline */
+  
+  border: 1px solid #79747E;
+  border-radius: 8px;
+  
+  /* Inside auto layout */
+  
+  /* flex: none;
+  order: 1;
+  flex-grow: 0; */
+}
+
+.On {
+
+  display: flex;
+  flex-direction: row;
+align-items: center;
+padding: 5px 16px;
+gap: 8px;
+
+width: 72px;
+height: 30px;
+
+background: #E8F2FF;
+border: 1px solid #60A5FA;
+border-radius: 8px;
+
+/* Inside auto layout */
+
+/* flex: none;
+order: 0;
+flex-grow: 0; */
+}

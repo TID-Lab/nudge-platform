@@ -1,0 +1,8 @@
+.assignMenu {
+  flex-flow: column wrap;
+  height: 30em;
+}
+
+.groupDiv {
+  display:flex;
+}
