@@ -1,10 +1,9 @@
-const Participant = require('../models/participant');
 const db = require('./db');
 
 const demographic_enum = {
   Age: ['18-29', '30-41', '42-53', '54-65'],
   Race: ['black', 'latinx', 'white', 'asian'],
-  Gender: ['female', 'male'],
+  Gender: ['female', 'male', 'non-binary'],
 };
 
 const assignmentCodes = {
@@ -46,8 +45,7 @@ const assignmentCodes = {
 //   success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED,
 // },
 // ]
-async function checkAssignments(assignments) {
-  const participants = await Participant.find({});
+async function checkAssignments(assignments, participants) {
   let participants_inc = []
   let returned = []
   try {
@@ -56,23 +54,28 @@ async function checkAssignments(assignments) {
       const curr = assignments[i];
       console.log('starting ');
       console.log(curr)
-      const { demographics } = curr;
+      let { demographics } = curr;
+      // Just to double check they're lowercase
+      demographics = demographics.map(ele => ele.toLowerCase());
       const num_parti_before = participants.length;
       const prevAssigned = checkPreviouslyAssigned(curr);
       if (!prevAssigned) {
         // FOR EACH PARTICIPANT, CHECK IF label in the included
         let includedDemographics = getIncludedDemographics(demographics);
+        console.log(includedDemographics)
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
+
           if (participants[parti_idx]['labels'].every((element) => includedDemographics.includes(element))) {
             participants_inc.push(...participants.splice(parti_idx, 1));
             parti_idx = parti_idx - 1;
           }
         }
+        console.log(participants_inc)
         if (num_parti_before - participants.length == 0) {
-          returned.push({nudge_id: curr['nudge_id'], num_assigned: num_parti_before - participants.length, num_left: participants.length, sucess_code: assignmentCodes.NO_PARTICIPANT});
+          returned.push({nudge_id: curr['nudge_id'], num_assigned: num_parti_before - participants.length, num_left: participants.length, success_code: assignmentCodes.NO_PARTICIPANT});
           break;
         } else {
-          returned.push({nudge_id: curr['nudge_id'], num_assigned: num_parti_before - participants.length, num_left: participants.length, sucess_code: assignmentCodes.SUCCESS});
+          returned.push({nudge_id: curr['nudge_id'], num_assigned: num_parti_before - participants.length, num_left: participants.length, success_code: assignmentCodes.SUCCESS});
         }
         // TODO: excluded demographics
       } else {
@@ -80,7 +83,7 @@ async function checkAssignments(assignments) {
         // TODO: Handle previously assigned
         returned.push(
           {nudge_id: curr['nudge_id'],
-          sucess_code: assignmentCodes.PREVIOUSLY_ASSIGNED,
+          success_code: assignmentCodes.PREVIOUSLY_ASSIGNED,
           error_object: {
           potential_num_assigned: 50,
           // Is this ambiguous?
@@ -96,7 +99,7 @@ async function checkAssignments(assignments) {
       returned.push(
         {
           nudge_id: assignments[returned.length]['nudge_id'],
-          sucess_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED
+          success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED
         })
     }
 

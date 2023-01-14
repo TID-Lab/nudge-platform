@@ -9,7 +9,7 @@ import DemographicButton from '../DemographicButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkNudges } from '../../api/nudge'
 const AssignMenu = (props) => {
-  const { nudge } = props;
+  const { nudge, setShowModal } = props;
   const race = ['Black', 'Latinx', 'White', 'Asian']
   const gender = ['Female', 'Male', 'Non-binary']
   const age = ['18-29', '30-41', '42-53', '54-65']
@@ -24,6 +24,7 @@ const AssignMenu = (props) => {
   
   // Pending nudges = [{text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', categories: ['female'], assigned: 50, id: 'asdfsadfa'}]
   const pendingNudges = useSelector(state => state.pendingNudges);
+  
 
   function assignNudge() {
     const reformattedNudges = pendingNudges.map((nudge) => {return {nudge_id: nudge.id, demographics: nudge.demographics}})
@@ -32,7 +33,15 @@ const AssignMenu = (props) => {
     console.log("SENDING"); 
     console.log(reformattedNudges)
     // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-    checkNudges(reformattedNudges).then((res) => console.log(res)).catch(e => console.log(e));
+    checkNudges(reformattedNudges).then((res) => {
+      console.log(res);
+      const last_res = res[reformattedNudges.length - 1]
+      if (last_res.success_code == 'SUCCESS') {
+        dispatch({type: 'pendingNudges/add', payload: {text: nudge.message, demographics: demographics, assigned: last_res.num_assigned}})
+        setShowModal(false);
+      }
+    }).catch(e => console.log(e));
+
   }
 
 

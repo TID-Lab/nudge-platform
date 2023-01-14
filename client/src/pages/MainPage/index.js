@@ -28,7 +28,7 @@ const MainPage = () => {
   return (
   <div className='MainPage'>
     {showModal && <PopupModal
-          content={<AssignMenu nudge={currNudge}/>}
+          content={<AssignMenu nudge={currNudge} setShowModal={setShowModal}/>}
           handleClose={() => {setShowModal(!showModal);}}
         />}
 

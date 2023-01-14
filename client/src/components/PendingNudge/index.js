@@ -5,6 +5,9 @@ const PendingNudge = (props) => {
   const {text, demographics, assigned, order} = props.data;
   const dispatch = useDispatch();
   const pendingNudges = useSelector(state => state.pendingNudges);
+
+  // TODO: On Delete, can reassess distribution (since when you delete a category, the ones underneath could expand technically)
+  // Perhaps more intuitively, we can just delete the entire sequences
   function onDelete() {
     dispatch({ type: 'pendingNudges/delete', payload: order - 1})
   }
