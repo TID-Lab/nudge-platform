@@ -7,6 +7,7 @@ const useDebug = require('debug');
 
 const debug = useDebug('api');
 const Nudge = require('../../models/nudge');
+const Participant = require('../../models/participant');
 const { checkAssignments, assignmentCodes } = require('../../util/assignments')
 
 // Return all nudges
@@ -43,6 +44,18 @@ routes.post('/check', async (req, res) => {
   } catch (err) {
     debug(`${err}`);
     res.status(500).send();
+  }
+});
+
+routes.get('/participantCount', async (req, res) => {
+  try {
+    const participants = await Participant.find({});
+    res.status(200).send(participants.length);
+    return;
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send();
+    return;
   }
 });
 

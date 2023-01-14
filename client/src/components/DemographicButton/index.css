@@ -10,8 +10,8 @@
   padding: 5px 16px;
   gap: 8px;
   
-  width: 72px;
-  height: 30px;
+  /* width: 72px;
+  height: 30px; */
   
   /* M3/sys/light/outline */
   
@@ -33,8 +33,8 @@ align-items: center;
 padding: 5px 16px;
 gap: 8px;
 
-width: 72px;
-height: 30px;
+/* width: 72px;
+height: 30px; */
 
 background: #E8F2FF;
 border: 1px solid #60A5FA;

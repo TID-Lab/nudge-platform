@@ -2,7 +2,7 @@ import './index.css';
 import { useDispatch, useSelector } from 'react-redux';
 
 const PendingNudge = (props) => {
-  const {text, categories, assigned, order} = props.data;
+  const {text, demographics, assigned, order} = props.data;
   const dispatch = useDispatch();
   const pendingNudges = useSelector(state => state.pendingNudges);
   function onDelete() {
@@ -18,7 +18,7 @@ return (
     </div>
     <h1 className='nudgeText'>{text}</h1>
     <div className='PendingBottomBar'>
-      {categories.map((category) => 
+      {demographics.map((category) => 
         <div className='NudgeCategory'>{category}</div>)}
       <b className='assigned'>{assigned} assigned</b>
     </div>

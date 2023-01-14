@@ -10,16 +10,19 @@ import PlatformFilter from '../PlatformFilter';
 import { getPosts } from '../../api/post';
 import notify from '../../util/notify';
 import PendingNudge from '../PendingNudge';
+import { fetchTotalParticipants } from '../../api/nudge';
 
 const PendingNudgeList = () => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector(state => state.pendingNudges);
   const [numParticipants, setNumParticipants] = useState(0);
+  const [totalParticipants, setTotalParticipants] = useState(0);
   // dispatch({ type: 'pendingNudges/set', payload: [{text: 'lorum ipsum', categories: ['female'], assigned: 50}]})
   useEffect(() => {
-    console.log("hello")
-    dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', categories: ['female'], assigned: 50}})
-    dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', categories: ['female', 'asian'], assigned: 50}})
+    // console.log("hello")
+    fetchTotalParticipants().then((numParticipants) => setTotalParticipants(numParticipants));
+    // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female'], assigned: 50}})
+    // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female', 'asian'], assigned: 50}})
   }, [  ])
 
   useEffect(() => {
@@ -31,7 +34,7 @@ const PendingNudgeList = () => {
   return (
     <div className='PendingNudges'>
       <div className="vl"></div>
-      <div className="totalAssigned"><h1 className="assignedText">{numParticipants}/300 Assigned </h1></div>
+      <div className="totalAssigned"><h1 className="assignedText">{numParticipants}/{totalParticipants} Assigned </h1></div>
         <div className="ToSendColumn">
           <h3> Nudges to Send </h3>
           {pendingNudges.map((pendingNudge, index) => (
