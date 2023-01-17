@@ -47,7 +47,7 @@ const MainPage = () => {
           <div class="card">
             <p>{nudge.com_b} </p>
           </div>
-          <button onClick={() => setShowModal(true)}>assign</button>
+          <button onClick={() => {setShowModal(true); setCurrNudge(nudge);}}>assign</button>
         </div>)}
         </div>
       
