@@ -25,6 +25,10 @@ const MainPage = () => {
   }, []);
 
   console.log(nudges)
+  //<p>{nudge.message}</p>
+  //<p>{nudge.com_b}</p>
+  //<button onClick={() => {setShowModal(true); setCurrNudge(nudge)}}>assign</button>
+
   return (
   <div className='MainPage'>
     {showModal && <PopupModal
@@ -32,15 +36,22 @@ const MainPage = () => {
           handleClose={() => {setShowModal(!showModal);}}
         />}
 
-    {
-      nudges.map((nudge) => 
-        <>
-        <h5>{nudge.message}</h5>
-        <button onClick={() => {setShowModal(true); setCurrNudge(nudge)}}>assign</button>
-        </>
-      )
-    }
-    <button onClick={() => setShowModal(true)}>assign</button>
+    
+      <div className= 'NudgeList'>
+      {nudges.map((nudge) => 
+        
+        <div class="flex-container">
+          <div class="card">
+            <p>{nudge.message}</p>
+          </div>
+          <div class="card">
+            <p>{nudge.com_b} </p>
+          </div>
+          <button onClick={() => setShowModal(true)}>assign</button>
+        </div>)}
+        </div>
+      
+    
     
     <div></div>
     <PendingNudgeList/> 

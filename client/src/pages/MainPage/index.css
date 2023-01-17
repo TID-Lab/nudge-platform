@@ -1,10 +1,29 @@
 .MainPage {
   display: flex;
   flex-flow: row;
-  align-items: center;
   justify-content: space-between;
   overflow: auto;
   flex: 1 1 auto;
   overflow-y: auto;
   background-color:white;
+  margin:auto;
+}
+.NudgeList{
+  display: flex;
+  flex-flow: column;
+  overflow-y: scroll;
+}
+.flex-container{
+  column-count: 2;
+  column-gap: 30px;
+  column-rule: 4px dotted rgb(79,185,227);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.card {
+  break-inside: avoid;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid rgb(255, 255, 255);
+  padding: 10px;
+  margin: 0 0 1em 0;
 }
