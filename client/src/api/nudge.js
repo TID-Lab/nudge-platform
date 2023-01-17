@@ -26,8 +26,8 @@ async function fetchTotalParticipants(){
     method: 'GET',
   };
   const res = await fetch('/api/nudge/participantCount', options);
-  const count = await res.json().then((count) => {
-    return count;
+  const count = await res.json().then((resObj) => {
+    return resObj.participantCount;
   });
   return count;
 }

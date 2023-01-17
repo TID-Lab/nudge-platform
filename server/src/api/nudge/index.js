@@ -39,7 +39,8 @@ routes.post('/check', async (req, res) => {
   try {
     console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
     console.log(req.body);
-    const checked_assignments = await checkAssignments(req.body);
+    const participants = await Participant.find({});
+    const checked_assignments = await checkAssignments(req.body, participants);
     res.status(200).send(checked_assignments);
   } catch (err) {
     debug(`${err}`);
@@ -50,7 +51,7 @@ routes.post('/check', async (req, res) => {
 routes.get('/participantCount', async (req, res) => {
   try {
     const participants = await Participant.find({});
-    res.status(200).send(participants.length);
+    res.status(200).send({"participantCount": participants.length});
     return;
   } catch (err) {
     debug(`${err}`);

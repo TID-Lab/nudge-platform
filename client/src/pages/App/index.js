@@ -31,9 +31,6 @@ const App = () => {
               <Login />
               <Footer />
             </Route>
-            <Route path="/dashboard">
-              <Dashboard />
-            </Route>
           </Switch>
         </Router>
       </div>
