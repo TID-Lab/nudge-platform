@@ -28,7 +28,7 @@ const MainPage = () => {
   //<p>{nudge.message}</p>
   //<p>{nudge.com_b}</p>
   //<button onClick={() => {setShowModal(true); setCurrNudge(nudge)}}>assign</button>
-
+  var count = 1;
   return (
   <div className='MainPage'>
     {showModal && <PopupModal
@@ -42,10 +42,13 @@ const MainPage = () => {
         
         <div class="flex-container">
           <div class="card">
+            <p>#{count++}</p>
+          </div>
+          <div class="card">
             <p>{nudge.message}</p>
           </div>
           <div class="card">
-            <p>{nudge.com_b} </p>
+            <p>{nudge.com_b.join(', ')} </p>
           </div>
           <button onClick={() => {setShowModal(true); setCurrNudge(nudge);}}>assign</button>
         </div>)}

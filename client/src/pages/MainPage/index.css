@@ -14,16 +14,15 @@
   overflow-y: scroll;
 }
 .flex-container{
-  column-count: 2;
-  column-gap: 30px;
+  column-count: 3;
+  column-gap: 3px;
   column-rule: 4px dotted rgb(79,185,227);
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
 .card {
   break-inside: avoid;
-  background-color: rgb(255, 255, 255);
-  border: 2px solid rgb(255, 255, 255);
+  background-color: white;
+  border: 2px solid white;
   padding: 10px;
-  margin: 0 0 1em 0;
 }
