@@ -12,6 +12,7 @@ import notify from '../../util/notify';
 import PendingNudge from '../PendingNudge';
 import { fetchTotalParticipants } from '../../api/nudge';
 import ErrorBanner from '../ErrorBanner';
+import PopupModal from '../PopupModal';
 
 
 const PendingNudgeList = () => {
@@ -40,7 +41,6 @@ const PendingNudgeList = () => {
   function submitCheck() {
     if (numParticipants == totalParticipants) {
       console.log("TODO: Call backend API");
-      dispatch({ type: 'pendingNudges/set', payload: []})
       setShowSuccess(true);
     } else {
       setShowError(true);
@@ -57,7 +57,11 @@ const PendingNudgeList = () => {
               <PendingNudge data={{...pendingNudge, order: index + 1}} key={pendingNudge.text} />
             ))}
             {showError && <ErrorBanner text={"Not all participants assigned nudges!"}></ErrorBanner>}
-            {showSuccess && <h3>Success!</h3>}
+            {/* {showSuccess && <h3>Success!</h3>} */}
+            {showSuccess && <PopupModal
+              content={<div><h3>[Placeholder for delivery time selector] </h3> <button onClick={() => dispatch({ type: 'pendingNudges/set', payload: []})}>Confirm?</button></div>}
+              handleClose={() => {setShowSuccess(!showSuccess);}}
+        />}
             {!showError && <div style={{"height": "5em"}}></div>}
            <button onClick={() => submitCheck()}> Submit </button>
         </div> 
