@@ -36,21 +36,23 @@ const MainPage = () => {
           handleClose={() => {setShowModal(!showModal);}}
         />}
 
-    
+
       <div className= 'NudgeList'>
+      <h2 className="NudgeListTitle">Nudge List</h2>
       {nudges.map((nudge) => 
         
-        <div class="flex-container">
+        <div className="flex-container">
           <div class="card">
             <p>#{count++}</p>
           </div>
           <div class="card">
             <p>{nudge.message}</p>
           </div>
-          <div class="card">
+          <div className="assignCard">
             <p>{nudge.com_b.join(', ')} </p>
+
+            <button className="assignButton" onClick={() => {setShowModal(true); setCurrNudge(nudge);}}>Assign</button>
           </div>
-          <button onClick={() => {setShowModal(true); setCurrNudge(nudge);}}>assign</button>
         </div>)}
         </div>
       

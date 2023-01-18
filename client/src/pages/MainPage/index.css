@@ -9,6 +9,7 @@
   margin:auto;
 }
 .NudgeList{
+  margin-left: 1em;
   display: flex;
   flex-flow: column;
   overflow-y: scroll;
@@ -25,4 +26,21 @@
   background-color: white;
   border: 2px solid white;
   padding: 10px;
+}
+
+.assignCard {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  background-color: white;
+  border: 2px solid white;
+  padding: 10px;
+}
+
+.assignButton {
+  align:right;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: 1.2em;
+  height:fit-content;
 }
