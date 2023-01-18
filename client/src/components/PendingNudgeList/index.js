@@ -11,12 +11,16 @@ import { getPosts } from '../../api/post';
 import notify from '../../util/notify';
 import PendingNudge from '../PendingNudge';
 import { fetchTotalParticipants } from '../../api/nudge';
+import ErrorBanner from '../ErrorBanner';
+
 
 const PendingNudgeList = () => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector(state => state.pendingNudges);
   const [numParticipants, setNumParticipants] = useState(0);
   const [totalParticipants, setTotalParticipants] = useState(0);
+  const [ showError, setShowError ] = useState(false)
+  const [ showSuccess, setShowSuccess ] = useState(false)
   // dispatch({ type: 'pendingNudges/set', payload: [{text: 'lorum ipsum', categories: ['female'], assigned: 50}]})
   useEffect(() => {
     // console.log("hello")
@@ -29,8 +33,19 @@ const PendingNudgeList = () => {
     let participants = 0;
     pendingNudges.forEach((nudge) => participants += nudge.assigned);
     setNumParticipants(participants);
-  
+    setShowSuccess(false);
+    setShowError(false);
   }, [ pendingNudges ])
+
+  function submitCheck() {
+    if (numParticipants == totalParticipants) {
+      console.log("TODO: Call backend API");
+      dispatch({ type: 'pendingNudges/set', payload: []})
+      setShowSuccess(true);
+    } else {
+      setShowError(true);
+    }
+  }
   return (
     <div className='PendingNudges'>
       <div className="vl"></div>
@@ -41,7 +56,11 @@ const PendingNudgeList = () => {
           {pendingNudges.map((pendingNudge, index) => (
               <PendingNudge data={{...pendingNudge, order: index + 1}} key={pendingNudge.text} />
             ))}
-        </div>
+            {showError && <ErrorBanner text={"Not all participants assigned nudges!"}></ErrorBanner>}
+            {showSuccess && <h3>Success!</h3>}
+            {!showError && <div style={{"height": "5em"}}></div>}
+           <button onClick={() => submitCheck()}> Submit </button>
+        </div> 
     </div>
   );
 }

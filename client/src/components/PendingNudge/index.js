@@ -15,9 +15,10 @@ const PendingNudge = (props) => {
 return (
   <div className='PendingNudge'>
     <div className='PendingTopBar'>
-      {order}
-      <button id='Delete' onClick={onDelete}>Delete</button>
-      <button id='Edit'>Edit</button>
+      {"#" + order}
+      {/* Do not add this functionality until clarified */}
+      {/* <button id='Delete' onClick={onDelete}>Delete</button> */}
+      {/* <button id='Edit'>Edit</button> */}
     </div>
     <h1 className='nudgeText'>{text}</h1>
     <div className='PendingBottomBar'>

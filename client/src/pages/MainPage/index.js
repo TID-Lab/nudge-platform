@@ -32,7 +32,7 @@ const MainPage = () => {
   return (
   <div className='MainPage'>
     {showModal && <PopupModal
-          content={<AssignMenu nudge={currNudge} setShowModal={setShowModal}/>}
+          content={<AssignMenu nudge={currNudge} nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)} setShowModal={setShowModal}/>}
           handleClose={() => {setShowModal(!showModal);}}
         />}
 

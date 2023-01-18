@@ -8,8 +8,9 @@ import { useState } from 'react';
 import DemographicButton from '../DemographicButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkNudges } from '../../api/nudge'
+import ErrorBanner from '../ErrorBanner';
 const AssignMenu = (props) => {
-  const { nudge, setShowModal } = props;
+  const { nudge, nudgeNum,  setShowModal } = props;
   const race = ['Black', 'Latinx', 'White', 'Asian']
   const gender = ['Female', 'Male', 'Non-binary']
   const age = ['18-29', '30-41', '42-53', '54-65']
@@ -19,7 +20,8 @@ const AssignMenu = (props) => {
 //     {name: age, entries: ['18-29', '30-41', '42-53', '54-65']},
 // ]
   const [demographics, setDemographics ] = useState([]);
-
+  const [showError, setShowError ] = useState(false);
+  const [errorMessage, setErrorMessage ] = useState("");
   const dispatch = useDispatch();
   
   // Pending nudges = [{text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', categories: ['female'], assigned: 50, id: 'asdfsadfa'}]
@@ -27,6 +29,18 @@ const AssignMenu = (props) => {
   
 
   function assignNudge() {
+    if (demographics.length == 0) {
+      setErrorMessage("No demographics were chosen. Consider \"All Remaining\" to select every participant.");
+      setShowError(true);
+      return;
+    }
+    console.log("bruh")
+    console.log(demographics.findIndex((obj) => obj == "All Unassigned") != -1);
+    if (demographics.length > 1 && demographics.findIndex((obj) => obj == "All Unassigned") != -1) {
+      setErrorMessage("Cannot select \"All Remaining\" with other demographics selected.");
+      setShowError(true);
+      return;
+    }
     const reformattedNudges = pendingNudges.map((nudge) => {return {nudge_id: nudge.id, demographics: nudge.demographics}})
 
     reformattedNudges.push({nudge_id: nudge._id, demographics: demographics});
@@ -39,6 +53,10 @@ const AssignMenu = (props) => {
       if (last_res.success_code == 'SUCCESS') {
         dispatch({type: 'pendingNudges/add', payload: {text: nudge.message, demographics: demographics, assigned: last_res.num_assigned}})
         setShowModal(false);
+      } else if (last_res.success_code == "NO_PARTICIPANT") {
+        setErrorMessage("No participants are left with this demographic grouping. Please try a different combination, or use \"All Remaining.\"");
+        setShowError(true);
+
       }
     }).catch(e => console.log(e));
 
@@ -47,7 +65,7 @@ const AssignMenu = (props) => {
 
   return (
     <div className='assignMenu'>
-      <h5>Nudge Message: {nudge.message}</h5>
+      <h5>Nudge #{nudgeNum}: {nudge.message}</h5>
 {/*       
       {demographicDefinitions.map(demographic => {<div>
         <h1>demographic.name</h1>
@@ -69,7 +87,7 @@ const AssignMenu = (props) => {
       })} */}
 
       
-      <h2>Race</h2> 
+      <h2 className="assignTitle">Race</h2> 
       <div className='groupDiv'>
         {race.map((demo) => <DemographicButton label={demo}
           toggleFunction={
@@ -85,7 +103,7 @@ const AssignMenu = (props) => {
         }
       </div>
       
-      <h2>Gender</h2>
+      <h2 className="assignTitle">Gender</h2>
       <div className='groupDiv'>
         {gender.map((demo) => <DemographicButton label={demo}
           toggleFunction={
@@ -101,7 +119,7 @@ const AssignMenu = (props) => {
         }
       </div>
       
-      <h2>Age</h2>
+      <h2 className="assignTitle">Age</h2>
       <div className='groupDiv'>
         {age.map((demo) => <DemographicButton label={demo}
           toggleFunction={
@@ -116,6 +134,28 @@ const AssignMenu = (props) => {
           />)
         }
       </div>
+      <h2 className="assignTitle"></h2>
+      <div className='groupDiv'>
+          <DemographicButton label={"All Unassigned"}
+          toggleFunction={
+            ()=> { 
+              if (demographics.includes("All Unassigned")) {
+                setDemographics(demographics.filter(item => item !== "All Unassigned"))
+              } else {
+                setDemographics([...demographics, "All Unassigned"])
+              }
+            }
+          }
+          />
+      </div>
+
+      <h2 className="assignTitle"></h2>
+      <div className='groupDiv'>
+          <DemographicButton label={"Participant Placeholder"}
+          />
+      </div>
+      {showError && <ErrorBanner text={errorMessage}></ErrorBanner>}
+      {!showError && <div style={{"height": "5em"}}></div>}
       <button onClick={assignNudge}> Submit </button>
     </div>
   )
