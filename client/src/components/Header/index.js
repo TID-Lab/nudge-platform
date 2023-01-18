@@ -27,7 +27,10 @@ const Header = () => {
   } else if (pathname === '/' ) {
     return (
       <div className='PageHeader'>
-        <Logo />
+        <h3 className='NudgePlatformTitle'> Nudge Dashboard </h3>
+        <div style={{"display": 'flex', "alignItems": "center", justifyContent: "center"}}>
+          <img className='PartnerLogos' src='/images/partner_logos.svg' alt='Project Peach' ></img>
+        </div>
       </div>
     ) 
   } else {

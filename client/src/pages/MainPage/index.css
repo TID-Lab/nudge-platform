@@ -14,6 +14,11 @@
   flex-flow: column;
   overflow-y: scroll;
 }
+.NudgeListTitle {
+  font-weight: 600;
+  font-size: 18px;
+  margin-left:0.7em;
+}
 .flex-container{
   column-count: 3;
   column-gap: 3px;
