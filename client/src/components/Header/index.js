@@ -1,13 +1,16 @@
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import './index.css';
+import { Layout, Space, Button, Menu, Input, Drawer } from 'antd'
 
 import Logo from '../Logo';
 import SortSelect from '../SortSelect';
 import TextSearch from '../TextSearch';
-import PopupModal from '../PopupModal';
 // import { Button } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import './index.css';
+import CreateNudgeDrawer from '../Drawer/CreateNudgeDrawer';
+
+const { Header: AntHeader } = Layout
 
 const Header = () => {
   const { pathname } = useLocation(); // TODO show search only if in dashboard mode
@@ -17,7 +20,7 @@ const Header = () => {
   function onMenuClick() {
     dispatch({ type: 'postingMenu/set', payload: !postingMenu })
   }
-  const [isModelOpen, setIsModelOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   if (pathname === '/dashboard') {
     return (
@@ -30,35 +33,19 @@ const Header = () => {
     )
   } else if (pathname === '/') {
     return (
-      <div className='PageHeader'>
+      <AntHeader >
         <Logo />
-        <button onClick={() => setIsModelOpen(true)}>Create Nudge</button>
-        {isModelOpen && <PopupModal content={<>
-          <h4>Create Nudge</h4>
-          <form>
-            <div>
-              <label for="com-b">Com-B (optional)</label><br />
-              <select name="com-b">
-                <option value="foo">foo</option>
-              </select>
-            </div>
 
-            <div>
-              <label for="content">Nudge Content</label><br />
-              <textarea placeholder='Please input the nudge content' />
-            </div>
+        <Menu mode='horizontal' items={[{ label: 'Nudges' }, { label: 'Analytics' }]} />
 
-            <div>
-              <label for="comment">Comment</label><br />
-              <textarea placeholder='Please input any comment to this nudge' />
-            </div>
+        <Space>
+          <Input placeholder='Search' />
+          <Button onClick={() => setIsDrawerOpen(true)}>Create Nudge</Button>
+        </Space>
 
-            <button>Cancel</button>
-            <button type="submit">Confirm</button>
-          </form>
-        </>}  handleClose={() => setIsModelOpen(false)}/>
-        }
-      </div>
+        <CreateNudgeDrawer onClose={() => setIsDrawerOpen(false)} open={isDrawerOpen} />
+
+      </AntHeader>
     )
   } else {
     return ( // return nothing for now LOL
@@ -66,6 +53,5 @@ const Header = () => {
     )
   }
 }
-
 
 export default Header;

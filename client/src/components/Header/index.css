@@ -7,3 +7,21 @@
   align-items: stretch;
   border-bottom: 1px solid lightgray;
 }
+
+.ant-layout-header {
+  display: flex;
+  align-items: center;
+  background-color: var(--body-background);
+  padding: 1rem;
+}
+
+.ant-menu {
+  min-width: 15rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  background-color: var(--body-background);
+}
+
+.menu-action-group {
+  display: flex;
+}
