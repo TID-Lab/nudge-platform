@@ -62,37 +62,30 @@ const data = {
     {
       message: 'Hello world!',
       date_created: Date(),
-      color: 'red',
       com_b: ['motivation', 'capability'],
       is_active: true,
     },
     {
       message: 'Test for the football game!',
       date_created: Date(),
-      color: 'red',
       com_b: ['capability', 'oportunity', 'motivation'],
       is_active: true,
     },
     {
       message: 'Extra long nudge for the test! lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam posuere nisi nunc, sed sodales nunc vehicula ac. Maecenas et commodo nulla, non placerat urna. Aenean maximus tellus ligula, ut rhoncus libero facilisis at. ',
       date_created: Date(),
-      color: 'red',
       com_b: ['opportunity'],
       is_active: true,
     },
     {
       message: 'Test for the hockey game!',
       date_created: Date(),
-      color: 'red',
       com_b: ['capability'],
       is_active: true,
     },
     {
       message: 'Test for the soccer game!',
       date_created: Date(),
-      color: 'red',
-      com_b: ['capability'],
-      is_active: true,
     },
   ],
 };
