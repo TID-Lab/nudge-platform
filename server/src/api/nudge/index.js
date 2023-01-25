@@ -18,12 +18,33 @@ routes.get('/', async (req, res) => {
     nudges = await Nudge.find({});
   } catch (err) {
     debug(`${err}`);
-    res.status(500).send();
+    res.status(500).send(err);
     return;
   }
   res.status(200).send(nudges);
 });
 
+//  REFERENCE models/nudge.js 
+//   req.body ~= {
+//   message: 'Hello world!',
+//   date_created: Date(),
+//   color: 'red',
+//   com_b: ['motivation', 'capability'],
+//   is_active: true,
+//   }
+routes.post('/', async (req, res) => {
+  if (typeof req.body !== 'object') {
+    res.status(400).send();
+    return;
+  }
+  try {
+    await Nudge.create(req.body);
+    res.status(200).send();
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
 // Checks the participant assignment of an ordered list of a list of nudge assignments
 // Input an ordered list of [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]
 // i.e. [{nudge_id: 12039, demographics: ['female', '18-29']}, {nudge_id: 1209, demographics: ['asian', 'female'], excluded: [['female', '18-29']]}]
@@ -45,7 +66,7 @@ routes.post('/check', async (req, res) => {
     res.status(200).send(checked_assignments);
   } catch (err) {
     debug(`${err}`);
-    res.status(500).send();
+    res.status(500).send(err);
   }
 });
 
@@ -56,7 +77,7 @@ routes.get('/participantCount', async (req, res) => {
     return;
   } catch (err) {
     debug(`${err}`);
-    res.status(500).send();
+    res.status(500).send(err);
     return;
   }
 });
@@ -76,7 +97,7 @@ routes.post('/assign', async (req, res) => {
     res.status(200).send();
   } catch (err) {
     debug(`${err}`);
-    res.status(500).send();
+    res.status(500).send(err);
   }
 });
     // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}   
