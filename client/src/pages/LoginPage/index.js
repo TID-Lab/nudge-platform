@@ -1,15 +1,15 @@
-import './index.css';
+import "./index.css";
 
-import useAuth from '../../hooks/auth';
-import LoginModal from '../../components/LoginModal';
+import useAuth from "../../hooks/auth";
+import LoginModal from "../../components/LoginModal";
 
 const Login = () => {
-  useAuth(false, '/');
+  useAuth(false, "/");
 
   return (
-  <div className='Login'>
-    <LoginModal />
-  </div>
+    <div className="Login">
+      <LoginModal />
+    </div>
   );
 };
 

@@ -1,8 +1,8 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 
-import './index.css';
+import "./index.css";
 
-let timeout
+let timeout;
 
 const TextSearch = () => {
   const dispatch = useDispatch();
@@ -10,13 +10,13 @@ const TextSearch = () => {
   function onChange(e) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-      dispatch({ type: 'search/set', payload: e.target.value });
-    }, 2000)
+      dispatch({ type: "search/set", payload: e.target.value });
+    }, 2000);
   }
 
   return (
-    <div className='TextSearch'>
-      <input type='text' onChange={onChange} placeholder='Search' />
+    <div className="TextSearch">
+      <input type="text" onChange={onChange} placeholder="Search" />
     </div>
   );
 };

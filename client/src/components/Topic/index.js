@@ -1,5 +1,4 @@
-import './index.css';
-
+import "./index.css";
 
 const Topic = (props) => {
   const { name, id, selected, onSelected } = props;
@@ -9,9 +8,15 @@ const Topic = (props) => {
   }
 
   return (
-    <div className='Topic'>
+    <div className="Topic">
       <label>
-        <input type='radio' name='topics' id={id} onChange={onChange} checked={selected} />
+        <input
+          type="radio"
+          name="topics"
+          id={id}
+          onChange={onChange}
+          checked={selected}
+        />
         {name}
       </label>
     </div>

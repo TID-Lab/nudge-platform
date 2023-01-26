@@ -3,10 +3,10 @@
 const initState = false;
 
 export default function postingMenuReducer(state = initState, action) {
-    switch (action.type) {
-        case 'postingMenu/set':
-            return action.payload;
-        default:
-            return state;
-    }
+  switch (action.type) {
+    case "postingMenu/set":
+      return action.payload;
+    default:
+      return state;
+  }
 }

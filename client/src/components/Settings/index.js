@@ -1,35 +1,31 @@
-import {
-    Switch,
-    Route,
-    useRouteMatch,
-  } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 
-import './index.css';
+import "./index.css";
 
-import OrganizationSettings from '../OrganizationSettings';
+import OrganizationSettings from "../OrganizationSettings";
 import TopicSettings from "../TopicSettings";
-import useAuth from '../../hooks/auth';
+import useAuth from "../../hooks/auth";
 
 const Settings = () => {
-    useAuth();
+  useAuth();
 
-    let { path } = useRouteMatch();
+  let { path } = useRouteMatch();
 
-    return (
-    <div className='Root Settings'>
-        <Switch>
-            <Route exact path={path}>
-                TODO
-            </Route>
-            <Route path={`${path}/orgs`}>
-                <OrganizationSettings />
-            </Route>
-            <Route path={`${path}/topics`}>
-                <TopicSettings />
-            </Route>
-        </Switch>
+  return (
+    <div className="Root Settings">
+      <Switch>
+        <Route exact path={path}>
+          TODO
+        </Route>
+        <Route path={`${path}/orgs`}>
+          <OrganizationSettings />
+        </Route>
+        <Route path={`${path}/topics`}>
+          <TopicSettings />
+        </Route>
+      </Switch>
     </div>
-    );
+  );
 };
 
 export default Settings;

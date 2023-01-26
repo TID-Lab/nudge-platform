@@ -7,7 +7,7 @@
   top: 0;
   left: 0;
 }
- 
+
 .box {
   position: relative;
   width: 50%;
@@ -22,9 +22,9 @@
   border: 1px solid #999;
   overflow: auto;
 }
- 
+
 .close-icon {
-  content: 'x';
+  content: "x";
   cursor: pointer;
   position: fixed;
   right: calc(25% - 13px);
