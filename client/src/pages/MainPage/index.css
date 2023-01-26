@@ -5,19 +5,19 @@
   overflow: auto;
   flex: 1 1 auto;
   overflow-y: auto;
-  background-color:white;
-  margin:auto;
+  background-color: white;
+  margin: auto;
 }
-.NudgeList{
+.NudgeList {
   margin-left: 1em;
   display: flex;
   flex-flow: column;
   overflow-y: scroll;
 }
-.flex-container{
+.flex-container {
   column-count: 3;
   column-gap: 3px;
-  column-rule: 4px dotted rgb(79,185,227);
+  column-rule: 4px dotted rgb(79, 185, 227);
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
@@ -38,9 +38,9 @@
 }
 
 .assignButton {
-  align:right;
+  align: right;
   margin-left: 1em;
   margin-right: 1em;
   margin-top: 1.2em;
-  height:fit-content;
+  height: fit-content;
 }

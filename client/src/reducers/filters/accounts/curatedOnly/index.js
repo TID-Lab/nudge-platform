@@ -3,10 +3,10 @@
 const initState = true;
 
 export default function curatedOnlyReducer(state = initState, action) {
-    switch (action.type) {
-        case 'accounts/curatedOnly/set':
-            return action.payload
-        default:
-            return state
-    }
+  switch (action.type) {
+    case "accounts/curatedOnly/set":
+      return action.payload;
+    default:
+      return state;
+  }
 }

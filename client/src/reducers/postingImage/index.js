@@ -3,10 +3,10 @@
 const initState = false;
 
 export default function postingImageReducer(state = initState, action) {
-    switch (action.type) {
-        case 'postingImage/set':
-            return action.payload;
-        default:
-            return state;
-    }
+  switch (action.type) {
+    case "postingImage/set":
+      return action.payload;
+    default:
+      return state;
+  }
 }

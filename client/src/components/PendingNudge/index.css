@@ -1,6 +1,6 @@
 .PendingNudge {
   border-radius: 10px;
-  background-color:  #F1F5F9;
+  background-color: #f1f5f9;
 }
 
 .PendingTopBar {
@@ -13,23 +13,23 @@
 
 .nudgeText {
   /* font-family: 'Open Sans'; */
-font-style: normal;
-font-weight: 400;
-font-size: 15px;
-line-height: 22px;
-/* or 154% */
-padding-left: 0.5em;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 22px;
+  /* or 154% */
+  padding-left: 0.5em;
 
-display: flex;
-align-items: center;
-justify-content: center;
-letter-spacing: 0.1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.1px;
 
-color: #000000;
+  color: #000000;
 }
 
 .PendingBottomBar {
-  margin-bottom:1em;
+  margin-bottom: 1em;
   padding-top: 0.5em;
   padding-left: 0.5em;
   display: flex;
@@ -40,7 +40,7 @@ color: #000000;
 }
 
 .NudgeCategory {
-  border: 1px solid #60A5FA;
+  border: 1px solid #60a5fa;
   border-radius: 8px;
   display: flex;
   flex-direction: row;
@@ -51,11 +51,10 @@ color: #000000;
 
 .assigned {
   display: flex;
-  padding-right:1em;
+  padding-right: 1em;
   justify-content: right;
   align-content: right;
   margin-left: auto;
-
 }
 
 #Delete {
