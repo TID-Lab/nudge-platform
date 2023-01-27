@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { ConfigProvider } from "antd";
 
 import "./index.css";
 
@@ -15,23 +16,31 @@ const App = () => {
   const popupModal = useSelector((state) => state.popup);
 
   return (
-    <div className="Root">
-      <div className="App">
-        <Router>
-          <Header />
-          <Switch>
-            <Route exact path="/">
-              <MainPage />
-            </Route>
-            <Route path="/login">
-              <Login />
-              <Footer />
-            </Route>
-          </Switch>
-        </Router>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Open Sauce Two, sans-serif",
+        },
+      }}
+    >
+      <div className="Root">
+        <div className="App">
+          <Router>
+            <Header />
+            <Switch>
+              <Route exact path="/">
+                <MainPage />
+              </Route>
+              <Route path="/login">
+                <Login />
+                <Footer />
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+        <div id="Popup">{popupModal}</div>
       </div>
-      <div id="Popup">{popupModal}</div>
-    </div>
+    </ConfigProvider>
   );
 };
 
