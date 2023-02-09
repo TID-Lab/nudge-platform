@@ -3,12 +3,6 @@ import { useEffect, useState } from 'react';
 
 import './index.css';
 
-import DateFilter from '../DateFilter';
-import TopicFilter from '../TopicFilter';
-import AccountFilters from '../AccountFilters';
-import PlatformFilter from '../PlatformFilter';
-import { getPosts } from '../../api/post';
-import notify from '../../util/notify';
 import PendingNudge from '../PendingNudge';
 import { fetchTotalParticipants } from '../../api/nudge';
 import ErrorBanner from '../ErrorBanner';

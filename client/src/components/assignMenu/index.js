@@ -1,9 +1,5 @@
 import './index.css';
 
-import Filters from '../Filters';
-import Posts from '../Posts';
-import useAuth from '../../hooks/auth';
-import PostingMenu from '../PostingMenu';
 import { useState } from 'react';
 import DemographicButton from '../DemographicButton';
 import { useDispatch, useSelector } from 'react-redux';
