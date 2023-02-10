@@ -12,7 +12,7 @@ import Dashboard from '../../components/Dashboard';
 import Login from '../LoginPage';
 import Header from '../../components/Header';
 import MainPage from '../MainPage';
-
+import AnalysisPage from '../AnalysisPage';
 // TODO: Style hyperlinks in the Terms, etc. pages
 
 const App = () => {
@@ -30,6 +30,9 @@ const App = () => {
             <Route path="/login">
               <Login />
               <Footer />
+            </Route>
+            <Route path ="/analysis">
+              <AnalysisPage />
             </Route>
           </Switch>
         </Router>
