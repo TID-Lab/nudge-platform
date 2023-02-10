@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { editOrganization } from '../../api/org';
-import notify from '../../util/notify';
+import { useState } from "react";
+import { editOrganization } from "../../api/org";
+import notify from "../../util/notify";
 
-import { useHidePopup } from '../../hooks/popup';
+import { useHidePopup } from "../../hooks/popup";
 
-import './index.css';
+import "./index.css";
 
 const EditOrganization = (props) => {
-  const { _id, name:initName, onEdit } = props;
+  const { _id, name: initName, onEdit } = props;
 
-  const [ name, setName ] = useState(initName);
-  const [ password, setPassword ] = useState('');
-  
+  const [name, setName] = useState(initName);
+  const [password, setPassword] = useState("");
+
   const hidePopup = useHidePopup();
 
   function onNameChange(event) {
@@ -34,11 +34,10 @@ const EditOrganization = (props) => {
 
       hidePopup();
 
-      setName('');
-      setPassword('');
-
+      setName("");
+      setPassword("");
     } catch (err) {
-      notify('An error occurred.');
+      notify("An error occurred.");
     }
   }
 
@@ -47,17 +46,28 @@ const EditOrganization = (props) => {
   }
 
   return (
-    <div className='Modal EditOrganization'>
+    <div className="Modal EditOrganization">
       <h1>Edit Organization</h1>
-      <input className='Name' type='text' value={name} onChange={onNameChange} placeholder='Name'></input>
-      <input type='password' value={password} onChange={onPasswordChange} placeholder='New Password'></input>
+      <input
+        className="Name"
+        type="text"
+        value={name}
+        onChange={onNameChange}
+        placeholder="Name"
+      ></input>
+      <input
+        type="password"
+        value={password}
+        onChange={onPasswordChange}
+        placeholder="New Password"
+      ></input>
       <p>Leave blank to keep the current password.</p>
       <div>
         <button onClick={onSubmit}>Submit</button>
         <button onClick={onClose}>Close</button>
       </div>
     </div>
-  )
+  );
 };
 
 export default EditOrganization;

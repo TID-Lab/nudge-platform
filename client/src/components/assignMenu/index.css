@@ -1,20 +1,19 @@
 .assignMenu {
   flex-flow: column wrap;
-  margin:auto;
+  margin: auto;
 }
 
 .groupDiv {
-  display:flex;
+  display: flex;
 }
 
 .assignTitle {
   /* RACE */
 
-
   width: 42px;
   height: 18px;
 
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
@@ -25,8 +24,7 @@
 
   /* 500 */
 
-  color: #64748B;
-
+  color: #64748b;
 
   /* Inside auto layout */
 

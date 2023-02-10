@@ -1,9 +1,7 @@
 /* notification banner */
 
-
 /* Auto layout */
 .ErrorBanner {
-  
   display: flex;
 
   flex-direction: row;
@@ -13,44 +11,43 @@
   width: fit-content;
   padding: 0.5em 1em;
   /* gap: 22px; */
-/* 
+  /* 
   width: 481px;
   height: 62px;
   left: 29px;
   top: 796px; */
   /* width: auto; */
 
-  background: #FEF2F2;
-  border: 2px solid #DC2626;
+  background: #fef2f2;
+  border: 2px solid #dc2626;
   /* shadow */
 
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   margin: 2em;
   margin-left: 0;
 }
 
-
 .ErrorText {
   /* ✏️ Body 2 */
 
-margin-left:1em;
-font-style: normal;
-font-weight: 600;
-font-size: 14px;
-line-height: 20px;
-/* or 143% */
+  margin-left: 1em;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  /* or 143% */
 
-display: flex;
-align-items: center;
-letter-spacing: 0.25px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
 
-color: #0F172A;
+  color: #0f172a;
 
+  /* Inside auto layout */
 
-/* Inside auto layout */
-
-order: 0;
-align-self: stretch;
-flex-grow: 0;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
 }

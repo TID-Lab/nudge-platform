@@ -1,16 +1,16 @@
-import { useLocation } from 'react-router-dom';
-import './index.css';
+import { useLocation } from "react-router-dom";
+import "./index.css";
 
 // import { Button } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const { pathname } = useLocation(); // TODO show search only if in dashboard mode
   // const [postingVisible, setPostingVisible] = useState(false);
   const dispatch = useDispatch();
-  const postingMenu = useSelector(state => state.postingMenu);
+  const postingMenu = useSelector((state) => state.postingMenu);
   function onMenuClick() {
-    dispatch({type: 'postingMenu/set', payload: !postingMenu})
+    dispatch({ type: "postingMenu/set", payload: !postingMenu });
   }
   if (pathname === '/' ) {
     return (
@@ -20,13 +20,13 @@ const Header = () => {
           <img className='PartnerLogos' src='/images/partner_logos.svg' alt='Project Peach' ></img>
         </div>
       </div>
-    ) 
+    );
   } else {
-      return ( // return nothing for now LOL
-        <div></div>
-      )
-    }
-}
-
+    return (
+      // return nothing for now LOL
+      <div></div>
+    );
+  }
+};
 
 export default Header;

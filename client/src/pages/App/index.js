@@ -1,11 +1,7 @@
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import './index.css';
+import "./index.css";
 
 import Footer from '../../components/Footer';
 import Login from '../LoginPage';
@@ -15,15 +11,15 @@ import MainPage from '../MainPage';
 // TODO: Style hyperlinks in the Terms, etc. pages
 
 const App = () => {
-  const popupModal = useSelector(state => state.popup);
+  const popupModal = useSelector((state) => state.popup);
 
   return (
-    <div className='Root'>
-      <div className='App'>
+    <div className="Root">
+      <div className="App">
         <Router>
           <Header />
           <Switch>
-            <Route exact path="/"> 
+            <Route exact path="/">
               <MainPage />
             </Route>
             <Route path="/login">
@@ -33,11 +29,9 @@ const App = () => {
           </Switch>
         </Router>
       </div>
-      <div id='Popup'>
-        {popupModal}
-      </div>
+      <div id="Popup">{popupModal}</div>
     </div>
   );
-}
+};
 
 export default App;
