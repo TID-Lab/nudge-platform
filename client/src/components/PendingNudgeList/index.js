@@ -28,7 +28,7 @@ const PendingNudgeList = () => {
     fetchTotalParticipants().then((numParticipants) => setTotalParticipants(numParticipants)).catch((err) => console.log("err:" + err));
     // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female'], assigned: 50}})
     // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female', 'asian'], assigned: 50}})
-  }, [  ])
+  }, [])
 
   useEffect(() => {
     let participants = 0;

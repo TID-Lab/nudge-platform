@@ -9,6 +9,7 @@ import postingMenuReducer from './postingMenu';
 import postingTextReducer from './postingText';
 import postingImageReducer from './postingImage';
 import pendingNudgesReducer from './pendingNudges';
+import nudgeReducer from './nudges'
 
 const rootReducer = combineReducers({
     filters: filtersReducer,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     postingMenu: postingMenuReducer,
     postingText: postingTextReducer,
     postingImage: postingImageReducer,
-    pendingNudges: pendingNudgesReducer
+    pendingNudges: pendingNudgesReducer,
+    nudges: nudgeReducer
 });
   
 export default rootReducer;
