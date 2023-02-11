@@ -230,7 +230,7 @@ const PostingMenu = () => {
             Close
           </button>
         </div>
-        <div class="gcse-search"></div>
+        <div className="gcse-search"></div>
         <hr
           style={{
             color: "grey",
