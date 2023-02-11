@@ -49,14 +49,11 @@ const Header = () => {
       await createNudge(newNudge)
       dispatch({ type: 'nudges/add', payload: newNudge })
       setIsModelOpen(false)
-    } catch (error) {
-      console.error(error);
-
-
-
+    } catch (err) {
+      // TODO: Make alert messages more user-readable
       setResp({
         state: 'error',
-        message: error
+        message: err.message
       })
     }
   }
@@ -102,6 +99,8 @@ const Header = () => {
                 <textarea name="comment" placeholder='Please input any comment to this nudge' />
               </label>
             </div>
+
+            {resp.state === 'error' && <p>{resp.message}</p>}
 
             <button>Cancel</button>
             <button type="submit">Confirm</button>

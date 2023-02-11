@@ -59,8 +59,8 @@ const MainPage = () => {
 
       </div>
 
-      {/* <PendingNudgeList />
-      <PostingMenu /> */}
+      <PendingNudgeList />
+      <PostingMenu />
     </div>
   );
 };
