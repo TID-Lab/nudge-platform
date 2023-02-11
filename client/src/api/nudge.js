@@ -47,8 +47,8 @@ async function checkNudges(nudges) {
 async function createNudge(nudge) {
   const options = {
     ...defaultOptions,
-    method: "POST",
-    body: JSON.stringify(nudge),
+    method: 'POST',
+    body: JSON.stringify(nudge)
   };
 
   let res;
