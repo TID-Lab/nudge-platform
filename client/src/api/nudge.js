@@ -5,7 +5,7 @@ const defaultOptions = {
   },
 };
 
-async function fetchNudges(){
+async function fetchNudges() {
   const options = {
     ...defaultOptions,
     method: 'GET',
@@ -20,7 +20,7 @@ async function fetchNudges(){
 }
 
 
-async function fetchTotalParticipants(){
+async function fetchTotalParticipants() {
   const options = {
     ...defaultOptions,
     method: 'GET',
@@ -34,7 +34,7 @@ async function fetchTotalParticipants(){
 
 
 // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-async function checkNudges(nudges){
+async function checkNudges(nudges) {
   const options = {
     ...defaultOptions,
     method: 'POST',
@@ -49,22 +49,28 @@ async function checkNudges(nudges){
   return checkedNudges;
 }
 
-async function createNudge(nudge){
+async function createNudge(nudge) {
   const options = {
     ...defaultOptions,
     method: 'POST',
     body: JSON.stringify(nudge)
   };
 
-  const res = await fetch('/api/nudge', options);
+  let res;
+
   try {
-    if(!res.ok) {
-      res.text().then(text => { throw new Error(text) })
-    }
-    return res.status === 200;
+    res = await fetch('/api/nudge', options);
   } catch (err) {
-    console.log("Something went wrong with the create nudge error handling. Error code: " + res.status);
+    console.error(`${res.status}: ${err}`);
+
+    return false;
   }
+
+  if (!res.ok) {
+    throw new Error(await res.text())
+  }
+
+  return res.status === 200;
 }
 
 // Output (success): [{nudge_id, num_assigned, num_left, success_code}]
@@ -72,7 +78,7 @@ async function createNudge(nudge){
 // NOTE: PREVIOUSLY_ASSIGNED should be handled on the front-end
 
 function handleCheckNudges(nudges) {
-  
+
 }
 
-export{fetchNudges, checkNudges, fetchTotalParticipants, createNudge};
+export { fetchNudges, checkNudges, fetchTotalParticipants, createNudge };
