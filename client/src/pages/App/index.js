@@ -5,7 +5,6 @@ import { ConfigProvider } from "antd";
 import "./index.css";
 
 import Footer from "../../components/Footer";
-import Dashboard from "../../components/Dashboard";
 import Login from "../LoginPage";
 import Header from "../../components/Header";
 import MainPage from "../MainPage";

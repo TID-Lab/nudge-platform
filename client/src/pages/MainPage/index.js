@@ -55,144 +55,121 @@ const MainPage = () => {
   console.log(nudges);
   return (
     <>
-      <StyledContent>
-        <Row gutter={32}>
-          <Col span={16}>
-            <Progress percent={30} />
-          </Col>
-          <Col span={8}>
-            <Card bordered={false}>
-              <Statistic title="Assigned" value={69} suffix="/ 100" />
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={16}>
-            <h3>Nudge List</h3>
-    <div className="MainPage">
-      {showModal && (
-        <PopupModal
-          content={
-            <AssignMenu
-              nudge={currNudge}
-              nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)}
-              setShowModal={setShowModal}
-            />
-          }
-          handleClose={() => {
-            setShowModal(!showModal);
-          }}
-        />
-      )}
-
-            <Space>
-              <Search
-                placeholder="Search for nudges"
-                allowClear
-                onSearch={() => {}}
+      <div className="MainPage">
+        {showModal && (
+          <PopupModal
+            content={
+              <AssignMenu
+                nudge={currNudge}
+                nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)}
+                setShowModal={setShowModal}
               />
-      <div className="NudgeList">
-        <h2 className="NudgeListTitle">Nudge List</h2>
+            }
+            handleClose={() => {
+              setShowModal(!showModal);
+            }}
+          />
+        )}
+        <StyledContent>
+          <Row gutter={32}>
+            <Col span={16}>
+              <Progress percent={30} />
+            </Col>
+            <Col span={8}>
+              <Card bordered={false}>
+                <Statistic title="Assigned" value={69} suffix="/ 100" />
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={16}>
+              <h3>Nudge List</h3>
 
-              <Button type="primary">Search</Button>
-              <Button>Reset</Button>
-        {nudges.map((nudge, i) => (
-          <div className="flex-container" key={i}>
-            <div className="card">
-              <p>#{count++}</p>
-            </div>
-            <div className="card">
-              <p>{nudge.message}</p>
-            </div>
-            <div className="assignCard">
-              <p>{nudge.com_b.join(", ")} </p>
+              <Space>
+                <Search
+                  placeholder="Search for nudges"
+                  allowClear
+                  onSearch={() => {}}
+                />
+                <div className="NudgeList">
+                  <h2 className="NudgeListTitle">Nudge List</h2>
 
-              <button
-                className="assignButton"
-                onClick={() => {
-                  setShowModal(true);
-                  setCurrNudge(nudge);
-                }}
-              >
-                Assign
-              </button>
-            </div>
-          </div>
-        ))}
+                  <Button type="primary">Search</Button>
+                  <Button>Reset</Button>
+                </div>
+
+                <Button onClick={submitNudgeCreation} type="dashed">
+                  Test Create Nudge using Preset Value
+                </Button>
+              </Space>
+
+              <Table
+                columns={[
+                  {
+                    title: "#",
+                    dataIndex: "index",
+                    render: (_, __, i) => <>{i + 1}</>,
+                  },
+                  {
+                    title: "Nudge Content",
+                    dataIndex: "message",
+                  },
+                  {
+                    title: "COM-B",
+                    dataIndex: "com_b",
+                    render: (_, { com_b }) => (
+                      <>
+                        {com_b.map((tag) => {
+                          return <Tag key={tag}>{tag.toUpperCase()}</Tag>;
+                        })}
+                      </>
+                    ),
+                  },
+                  {
+                    title: "Comment",
+                  },
+                  {
+                    title: "Actions",
+                    render: (_, nudge) => (
+                      <Button
+                        onClick={() => {
+                          setShowModal(true);
+                          setCurrNudge(nudge);
+                        }}
+                      >
+                        Assign
+                      </Button>
+                    ),
+                  },
+                ]}
+                dataSource={nudges}
+              />
+            </Col>
+            <Col span={8}>
+              {/* <PendingNudgeList /> */}
+              <PostingMenu />
+            </Col>
+          </Row>
+        </StyledContent>
+
+        {showModal && (
+          <PopupModal
+            content={
+              <AssignMenu
+                nudge={currNudge}
+                nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)}
+                setShowModal={setShowModal}
+              />
+            }
+            handleClose={() => {
+              setShowModal(!showModal);
+            }}
+          />
+        )}
+        <PendingNudgeList />
+        <PostingMenu />
       </div>
-
-              <Button onClick={submitNudgeCreation} type="dashed">
-                Test Create Nudge using Preset Value
-              </Button>
-            </Space>
-
-            <Table
-              columns={[
-                {
-                  title: "#",
-                  dataIndex: "index",
-                  render: (_, __, i) => <>{i + 1}</>,
-                },
-                {
-                  title: "Nudge Content",
-                  dataIndex: "message",
-                },
-                {
-                  title: "COM-B",
-                  dataIndex: "com_b",
-                  render: (_, { com_b }) => (
-                    <>
-                      {com_b.map((tag) => {
-                        return <Tag key={tag}>{tag.toUpperCase()}</Tag>;
-                      })}
-                    </>
-                  ),
-                },
-                {
-                  title: "Comment",
-                },
-                {
-                  title: "Actions",
-                  render: (_, nudge) => (
-                    <Button
-                      onClick={() => {
-                        setShowModal(true);
-                        setCurrNudge(nudge);
-                      }}
-                    >
-                      Assign
-                    </Button>
-                  ),
-                },
-              ]}
-              dataSource={nudges}
-            />
-          </Col>
-          <Col span={8}>
-            {/* <PendingNudgeList /> */}
-            <PostingMenu />
-          </Col>
-        </Row>
-      </StyledContent>
-
-      {showModal && (
-        <PopupModal
-          content={
-            <AssignMenu
-              nudge={currNudge}
-              nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)}
-              setShowModal={setShowModal}
-            />
-          }
-          handleClose={() => {
-            setShowModal(!showModal);
-          }}
-        />
-      )}
     </>
-      <PendingNudgeList />
-      <PostingMenu />
-    </div>
   );
 };
 
@@ -201,4 +178,3 @@ export default MainPage;
 const StyledContent = styled(Content)`
   padding: 1rem;
 `;
-

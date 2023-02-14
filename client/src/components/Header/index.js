@@ -6,6 +6,7 @@ import "./index.css";
 
 import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawer/CreateNudgeDrawer";
+import PopupModal from "../PopupModal";
 import { createNudge } from "../../api/nudge";
 
 const { Header: AntHeader } = Layout;
@@ -58,74 +59,74 @@ const Header = () => {
       });
     }
   };
-return (
-      <AntHeader>
-        <Logo />
-        
-                <Menu
-          mode="horizontal"
-          items={[{ label: "Nudges" }, { label: "Analytics" }]}
-        />
-        
-                <Space>
-          <Input placeholder="Search" />
-          <Button onClick={() => setIsDrawerOpen(true)}>Create Nudge</Button>
-        </Space>
-        
-                <CreateNudgeDrawer
-          onClose={() => setIsDrawerOpen(false)}
-          open={isDrawerOpen}
-        />
-      </AntHeader>
-        <button onClick={() => setIsModelOpen(true)}>Create Nudge</button>
-        {isModelOpen && (
-          <PopupModal
-            content={
-              <>
-                <h4>Create Nudge</h4>
-                <form method="post" onSubmit={handleSubmit}>
-                  <div>
-                    <label>
-                      Com-B (optional)
-                      <select name="com_b" multiple>
-                        <option value="capability">Capability</option>
-                        <option value="opportunity">Opportunity</option>
-                        <option value="motivation">Motivation</option>
-                      </select>
-                    </label>
-                  </div>
-                  
-                  <div>
-                    <label>
-                      Nudge Content
-                      <textarea
-                        name="message"
-                        placeholder="Please input the nudge content"
-                      />
-                    </label>
-                  </div>
-                  
-                  <div>
-                    <label>
-                      Comment
-                      <textarea
-                        name="comment"
-                        placeholder="Please input any comment to this nudge"
-                      />
-                    </label>
-                  </div>
-                  {resp.state === "error" && <p>{resp.message}</p>}
+  return (
+    <AntHeader>
+      <button onClick={() => setIsModelOpen(true)}>Create Nudge</button>
+      {isModelOpen && (
+        <PopupModal
+          content={
+            <>
+              <h4>Create Nudge</h4>
+              <form method="post" onSubmit={handleSubmit}>
+                <div>
+                  <label>
+                    Com-B (optional)
+                    <select name="com_b" multiple>
+                      <option value="capability">Capability</option>
+                      <option value="opportunity">Opportunity</option>
+                      <option value="motivation">Motivation</option>
+                    </select>
+                  </label>
+                </div>
 
-                  <button>Cancel</button>
-                  <button type="submit">Confirm</button>
-                </form>
-              </>
-            }
-            handleClose={() => setIsModelOpen(false)}
-          />
-        )}
-      </div>
-    );
+                <div>
+                  <label>
+                    Nudge Content
+                    <textarea
+                      name="message"
+                      placeholder="Please input the nudge content"
+                    />
+                  </label>
+                </div>
+
+                <div>
+                  <label>
+                    Comment
+                    <textarea
+                      name="comment"
+                      placeholder="Please input any comment to this nudge"
+                    />
+                  </label>
+                </div>
+                {resp.state === "error" && <p>{resp.message}</p>}
+
+                <button>Cancel</button>
+                <button type="submit">Confirm</button>
+              </form>
+            </>
+          }
+          handleClose={() => setIsModelOpen(false)}
+        />
+      )}
+
+      <Logo />
+
+      <Menu
+        mode="horizontal"
+        items={[{ label: "Nudges" }, { label: "Analytics" }]}
+      />
+
+      <Space>
+        <Input placeholder="Search" />
+        <Button onClick={() => setIsDrawerOpen(true)}>Create Nudge</Button>
+      </Space>
+
+      <CreateNudgeDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+      />
+    </AntHeader>
+  );
 };
 
 export default Header;
