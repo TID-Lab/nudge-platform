@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   Col,
   Layout,
@@ -14,6 +13,7 @@ import {
   Tag,
 } from "antd";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 
 import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
@@ -30,9 +30,9 @@ const { Search } = Input;
 const MainPage = () => {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
-  const [nudges, setNudges] = useState([]);
+  const [_, setNudges] = useState([]);
+  const nudges = useSelector((state) => state.nudges);
   const [currNudge, setCurrNudge] = useState(null);
-
   function assign() {
     dispatch({ type: "postingMenu/set", payload: true });
   }
@@ -48,12 +48,11 @@ const MainPage = () => {
 
   useEffect(() => {
     fetchNudges()
-      .then((nudges) => setNudges(nudges))
+      .then((nudges) => dispatch({ type: "nudges/set", payload: nudges }))
       .catch((e) => console.log(e));
   }, []);
 
   console.log(nudges);
-
   return (
     <>
       <StyledContent>
@@ -70,6 +69,21 @@ const MainPage = () => {
         <Row>
           <Col span={16}>
             <h3>Nudge List</h3>
+    <div className="MainPage">
+      {showModal && (
+        <PopupModal
+          content={
+            <AssignMenu
+              nudge={currNudge}
+              nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)}
+              setShowModal={setShowModal}
+            />
+          }
+          handleClose={() => {
+            setShowModal(!showModal);
+          }}
+        />
+      )}
 
             <Space>
               <Search
@@ -77,9 +91,35 @@ const MainPage = () => {
                 allowClear
                 onSearch={() => {}}
               />
+      <div className="NudgeList">
+        <h2 className="NudgeListTitle">Nudge List</h2>
 
               <Button type="primary">Search</Button>
               <Button>Reset</Button>
+        {nudges.map((nudge, i) => (
+          <div className="flex-container" key={i}>
+            <div className="card">
+              <p>#{count++}</p>
+            </div>
+            <div className="card">
+              <p>{nudge.message}</p>
+            </div>
+            <div className="assignCard">
+              <p>{nudge.com_b.join(", ")} </p>
+
+              <button
+                className="assignButton"
+                onClick={() => {
+                  setShowModal(true);
+                  setCurrNudge(nudge);
+                }}
+              >
+                Assign
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
               <Button onClick={submitNudgeCreation} type="dashed">
                 Test Create Nudge using Preset Value
@@ -150,6 +190,9 @@ const MainPage = () => {
         />
       )}
     </>
+      <PendingNudgeList />
+      <PostingMenu />
+    </div>
   );
 };
 
@@ -158,3 +201,4 @@ export default MainPage;
 const StyledContent = styled(Content)`
   padding: 1rem;
 `;
+

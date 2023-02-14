@@ -3,12 +3,6 @@ import { useEffect, useState } from "react";
 
 import "./index.css";
 
-import DateFilter from "../DateFilter";
-import TopicFilter from "../TopicFilter";
-import AccountFilters from "../AccountFilters";
-import PlatformFilter from "../PlatformFilter";
-import { getPosts } from "../../api/post";
-import notify from "../../util/notify";
 import PendingNudge from "../PendingNudge";
 import { fetchTotalParticipants } from "../../api/nudge";
 import ErrorBanner from "../ErrorBanner";
@@ -29,7 +23,7 @@ const PendingNudgeList = () => {
       .catch((err) => console.log("err:" + err));
     // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female'], assigned: 50}})
     // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female', 'asian'], assigned: 50}})
-  }, []);
+  }, [])
 
   useEffect(() => {
     let participants = 0;
