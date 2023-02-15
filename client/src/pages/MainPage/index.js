@@ -19,57 +19,42 @@ import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
 import PopupModal from "../../components/PopupModal";
 import AssignMenu from "../../components/assignMenu";
-import { fetchNudges, createNudge } from "../../api/nudge";
+import { fetchNudges } from "../../api/nudge";
 import "./index.css";
-
-console.log(fetchNudges());
+import AssignDrawer from "../../components/Drawer/AssignDrawer";
 
 const { Content } = Layout;
 const { Search } = Input;
 
 const MainPage = () => {
+  const [isAssignDrawerOpen, setIsAssignDrawerOpen] = useState(false);
+  const [assignedNudge, setAssignedNudge] = useState({ key: 0, message: "" });
+
   const dispatch = useDispatch();
-  const [showModal, setShowModal] = useState(false);
-  const [_, setNudges] = useState([]);
   const nudges = useSelector((state) => state.nudges);
-  const [currNudge, setCurrNudge] = useState(null);
+
+  useEffect(() => {
+    fetchNudges()
+      .then((nudges) => {
+        dispatch({
+          type: "nudges/set",
+          payload: nudges.map((nudge, i) => {
+            return { ...nudge, key: i };
+          }),
+        });
+      })
+      .catch((e) => console.log(e));
+  }, [dispatch]);
+
   function assign() {
     dispatch({ type: "postingMenu/set", payload: true });
   }
 
-  function submitNudgeCreation() {
-    createNudge({
-      message: "testing testing",
-      date_created: Date(),
-      com_b: ["motivation", "capability"],
-    });
-    // SOME LOGIC TO REFETCH THE NUDGE LIST -> Likely refetch nudges using api/nudge.js and update the redux state
-  }
-
-  useEffect(() => {
-    fetchNudges()
-      .then((nudges) => dispatch({ type: "nudges/set", payload: nudges }))
-      .catch((e) => console.log(e));
-  }, []);
-
-  console.log(nudges);
-  return (
-    <>
-      <div className="MainPage">
-        {showModal && (
-          <PopupModal
-            content={
-              <AssignMenu
-                nudge={currNudge}
-                nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)}
-                setShowModal={setShowModal}
-              />
-            }
-            handleClose={() => {
-              setShowModal(!showModal);
-            }}
-          />
-        )}
+  if (nudges.length === 0) {
+    return <>Loading</>;
+  } else {
+    return (
+      <>
         <StyledContent>
           <Row gutter={32}>
             <Col span={16}>
@@ -91,24 +76,16 @@ const MainPage = () => {
                   allowClear
                   onSearch={() => {}}
                 />
-                <div className="NudgeList">
-                  <h2 className="NudgeListTitle">Nudge List</h2>
-
-                  <Button type="primary">Search</Button>
-                  <Button>Reset</Button>
-                </div>
-
-                <Button onClick={submitNudgeCreation} type="dashed">
-                  Test Create Nudge using Preset Value
-                </Button>
+                <Button type="primary">Search</Button>
+                <Button>Reset</Button>
               </Space>
 
               <Table
                 columns={[
                   {
                     title: "#",
-                    dataIndex: "index",
-                    render: (_, __, i) => <>{i + 1}</>,
+                    dataIndex: "key",
+                    render: (key) => <>{key + 1}</>,
                   },
                   {
                     title: "Nudge Content",
@@ -133,8 +110,8 @@ const MainPage = () => {
                     render: (_, nudge) => (
                       <Button
                         onClick={() => {
-                          setShowModal(true);
-                          setCurrNudge(nudge);
+                          setIsAssignDrawerOpen(true);
+                          setAssignedNudge(nudge);
                         }}
                       >
                         Assign
@@ -146,31 +123,20 @@ const MainPage = () => {
               />
             </Col>
             <Col span={8}>
-              {/* <PendingNudgeList /> */}
+              <PendingNudgeList />
               <PostingMenu />
             </Col>
           </Row>
         </StyledContent>
 
-        {showModal && (
-          <PopupModal
-            content={
-              <AssignMenu
-                nudge={currNudge}
-                nudgeNum={1 + nudges.findIndex((obj) => obj === currNudge)}
-                setShowModal={setShowModal}
-              />
-            }
-            handleClose={() => {
-              setShowModal(!showModal);
-            }}
-          />
-        )}
-        <PendingNudgeList />
-        <PostingMenu />
-      </div>
-    </>
-  );
+        <AssignDrawer
+          open={isAssignDrawerOpen}
+          onClose={() => setIsAssignDrawerOpen(false)}
+          nudge={assignedNudge}
+        />
+      </>
+    );
+  }
 };
 
 export default MainPage;

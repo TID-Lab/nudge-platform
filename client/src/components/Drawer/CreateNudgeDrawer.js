@@ -1,50 +1,64 @@
-import React, { useState } from "react";
+import React from "react";
 import { Space, Form, Drawer, Button, Input, Select } from "antd";
 
 const { TextArea } = Input;
-const onFinish = (values) => {};
-const onFinishFailed = (err) => {};
-const handleChange = (value) => {};
 
 const CreateNudgeDrawer = ({ open, onClose }) => {
+  const [form] = Form.useForm();
+
   return (
     <Drawer
       title="Create Nudge"
-      width={720}
+      size="large"
       onClose={onClose}
       open={open}
       footer={
         <Space>
           <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={onClose} type="primary" htmlType="submit">
+          <Button
+            onClick={() => form.submit()}
+            type="primary"
+            htmlType="submit"
+          >
             Submit
           </Button>
         </Space>
       }
     >
-      <Form
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        layout="vertical"
-      >
-        <Form.Item label="Com-B (optional)" name="com-b">
+      <Form layout="vertical" form={form} name="createNudgeForm">
+        <Form.Item label="Com-B (optional)" name="com_b">
           <Select
-            onChange={handleChange}
+            mode="multiple"
+            allowClear
             placeholder="Please select a Com-B component."
             options={[
               {
-                value: "foo",
-                label: "Foo",
+                value: "capability",
+                label: "Capability",
               },
               {
-                value: "bar",
-                label: "Bar",
+                value: "opportunity",
+                label: "Opportunity",
+              },
+              {
+                value: "motivation",
+                label: "Motivation",
               },
             ]}
           />
         </Form.Item>
 
-        <Form.Item label="Nudge content" name="content">
+        <Form.Item
+          label="Nudge content"
+          name="message"
+          rules={[
+            {
+              required: true,
+              message:
+                "Nudge content is empty! If you would like to delete this nudge hit CANCEL.",
+            },
+          ]}
+        >
           <TextArea
             rows={6}
             placeholder="Please input your nudge content here. Type <NAME> to include your recipient’s first name in the Nudge mesage."
