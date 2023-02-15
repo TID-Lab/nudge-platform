@@ -17,7 +17,6 @@ async function fetchNudges() {
   return nudges;
 }
 
-
 async function fetchTotalParticipants() {
   const options = {
     ...defaultOptions,
@@ -47,14 +46,14 @@ async function checkNudges(nudges) {
 async function createNudge(nudge) {
   const options = {
     ...defaultOptions,
-    method: 'POST',
-    body: JSON.stringify(nudge)
+    method: "POST",
+    body: JSON.stringify(nudge),
   };
 
   let res;
 
   try {
-    res = await fetch('/api/nudge', options);
+    res = await fetch("/api/nudge", options);
   } catch (err) {
     console.error(`${res.status}: ${err}`);
 
@@ -62,7 +61,7 @@ async function createNudge(nudge) {
   }
 
   if (!res.ok) {
-    throw new Error(await res.text())
+    throw new Error(await res.text());
   }
 
   return res.status === 200;
@@ -72,8 +71,6 @@ async function createNudge(nudge) {
 // Output (failure object): [{nudge_id, success_code, error_object}]
 // NOTE: PREVIOUSLY_ASSIGNED should be handled on the front-end
 
-function handleCheckNudges(nudges) {
-
-}
+function handleCheckNudges(nudges) {}
 
 export { fetchNudges, checkNudges, fetchTotalParticipants, createNudge };
