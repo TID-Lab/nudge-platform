@@ -4,8 +4,6 @@ import {
   Layout,
   Row,
   Progress,
-  Card,
-  Statistic,
   Space,
   Input,
   Button,
@@ -17,8 +15,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
-import PopupModal from "../../components/PopupModal";
-import AssignMenu from "../../components/assignMenu";
 import { fetchNudges } from "../../api/nudge";
 import "./index.css";
 import AssignDrawer from "../../components/Drawer/AssignDrawer";
@@ -46,10 +42,6 @@ const MainPage = () => {
       .catch((e) => console.log(e));
   }, [dispatch]);
 
-  function assign() {
-    dispatch({ type: "postingMenu/set", payload: true });
-  }
-
   if (nudges.length === 0) {
     return <>Loading</>;
   } else {
@@ -59,15 +51,7 @@ const MainPage = () => {
           <Row gutter={32}>
             <Col span={16}>
               <Progress percent={30} />
-            </Col>
-            <Col span={8}>
-              <Card bordered={false}>
-                <Statistic title="Assigned" value={69} suffix="/ 100" />
-              </Card>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={16}>
+
               <h3>Nudge List</h3>
 
               <Space>
@@ -124,7 +108,7 @@ const MainPage = () => {
             </Col>
             <Col span={8}>
               <PendingNudgeList />
-              <PostingMenu />
+              {/* <PostingMenu /> */}
             </Col>
           </Row>
         </StyledContent>

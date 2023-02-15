@@ -1,12 +1,13 @@
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-
-import "./index.css";
+import { useSelector, useDispatch } from "react-redux";
+import { Button, Card, Space, Statistic, Empty } from "antd";
+import styled from "styled-components";
 
 import PendingNudge from "../PendingNudge";
-import { fetchTotalParticipants } from "../../api/nudge";
 import ErrorBanner from "../ErrorBanner";
 import PopupModal from "../PopupModal";
+import { fetchTotalParticipants } from "../../api/nudge";
+import "./index.css";
 
 const PendingNudgeList = () => {
   const dispatch = useDispatch();
@@ -15,15 +16,13 @@ const PendingNudgeList = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
   // dispatch({ type: 'pendingNudges/set', payload: [{text: 'lorum ipsum', categories: ['female'], assigned: 50}]})
   useEffect(() => {
-    // console.log("hello")
     fetchTotalParticipants()
       .then((numParticipants) => setTotalParticipants(numParticipants))
       .catch((err) => console.log("err:" + err));
-    // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female'], assigned: 50}})
-    // dispatch({ type: 'pendingNudges/add', payload: {text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore....', demographics: ['female', 'asian'], assigned: 50}})
-  }, [])
+  }, []);
 
   useEffect(() => {
     let participants = 0;
@@ -34,7 +33,7 @@ const PendingNudgeList = () => {
   }, [pendingNudges]);
 
   function submitCheck() {
-    if (numParticipants == totalParticipants) {
+    if (numParticipants === totalParticipants) {
       console.log("TODO: Call backend API");
       setShowSuccess(true);
     } else {
@@ -42,57 +41,95 @@ const PendingNudgeList = () => {
     }
   }
   return (
-    <div className="PendingNudges">
-      <div className="vl"></div>
-      <div className="totalAssigned">
-        <h1 className="assignedText">
-          {numParticipants}/{totalParticipants} Assigned{" "}
-        </h1>
+    <ListContainer direction="vertical">
+      <Card bordered={false}>
+        <Statistic
+          title="Assigned"
+          value={numParticipants}
+          suffix={`/ ${totalParticipants}`}
+        />
+      </Card>
+
+      <h3>Nudges to Send</h3>
+
+      <div className="list">
+        {pendingNudges.length === 0 ? (
+          <Empty description="No pending nudges" />
+        ) : (
+          pendingNudges.map((pendingNudge, index) => (
+            <PendingNudge
+              data={{ ...pendingNudge, order: index + 1 }}
+              key={pendingNudge.text}
+            />
+          ))
+        )}
       </div>
-      <div className="ToSendColumn">
-        <button
+
+      <ButtonGroup>
+        <Button
+          block
           onClick={() => dispatch({ type: "pendingNudges/set", payload: [] })}
         >
-          {" "}
-          Clear{" "}
-        </button>
-        <h3> Nudges to Send </h3>
-        {pendingNudges.map((pendingNudge, index) => (
-          <PendingNudge
-            data={{ ...pendingNudge, order: index + 1 }}
-            key={pendingNudge.text}
-          />
-        ))}
-        {showError && (
-          <ErrorBanner
-            text={"Not all participants assigned nudges!"}
-          ></ErrorBanner>
-        )}
-        {/* {showSuccess && <h3>Success!</h3>} */}
-        {showSuccess && (
-          <PopupModal
-            content={
-              <div>
-                <h3>[Placeholder for delivery time selector] </h3>{" "}
-                <button
-                  onClick={() =>
-                    dispatch({ type: "pendingNudges/set", payload: [] })
-                  }
-                >
-                  Confirm?
-                </button>
-              </div>
-            }
-            handleClose={() => {
-              setShowSuccess(!showSuccess);
-            }}
-          />
-        )}
-        {!showError && <div style={{ height: "5em" }}></div>}
-        <button onClick={() => submitCheck()}> Submit </button>
-      </div>
-    </div>
+          Reset
+        </Button>
+        <Button block onClick={() => submitCheck()} type="primary">
+          Submit
+        </Button>
+      </ButtonGroup>
+
+      {showError && (
+        <ErrorBanner
+          text={"Not all participants assigned nudges!"}
+        ></ErrorBanner>
+      )}
+      {/* {showSuccess && <h3>Success!</h3>} */}
+      {showSuccess && (
+        <PopupModal
+          content={
+            <div>
+              <h3>[Placeholder for delivery time selector] </h3>{" "}
+              <button
+                onClick={() =>
+                  dispatch({ type: "pendingNudges/set", payload: [] })
+                }
+              >
+                Confirm?
+              </button>
+            </div>
+          }
+          handleClose={() => {
+            setShowSuccess(!showSuccess);
+          }}
+        />
+      )}
+    </ListContainer>
   );
 };
 
 export default PendingNudgeList;
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+
+  .list {
+    flex: 1;
+    display: flex;
+    align-items: center;
+
+    .ant-empty {
+      width: 100%;
+    }
+  }
+`;
+
+const ButtonGroup = styled(Space)`
+  width: 100%;
+
+  .ant-space-item {
+    flex: 1;
+  }
+`;
