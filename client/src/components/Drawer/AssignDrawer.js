@@ -26,8 +26,9 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
   const pendingNudges = useSelector((state) => state.pendingNudges);
 
   const onFinish = (values) => {
-    const demographics = Object.values(values);
+    const demographics = Object.values(values).filter((d) => d !== undefined);
     demographics.pop();
+    console.log(demographics);
     const reformattedNudges = pendingNudges.map(({ id, demographics }) => {
       return { nudge_id: id, demographics: demographics };
     });
@@ -46,6 +47,9 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               assigned: lastRes.num_assigned,
             },
           });
+
+          form.resetFields();
+          onClose();
         } else if (lastRes.success_code === "NO_PARTICIPANT") {
           setError(
             'No participants are left with this demographic grouping. Please try a different combination, or toggle "All Unassigned"'

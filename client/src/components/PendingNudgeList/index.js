@@ -3,9 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Card, Space, Statistic, Empty } from "antd";
 import styled from "styled-components";
 
-import PendingNudge from "../PendingNudge";
-import ErrorBanner from "../ErrorBanner";
-import PopupModal from "../PopupModal";
+import PendingNudge from "../Card/PendingNudgeCard";
 import { fetchTotalParticipants } from "../../api/nudge";
 import "./index.css";
 
@@ -40,6 +38,7 @@ const PendingNudgeList = () => {
       setShowError(true);
     }
   }
+
   return (
     <ListContainer direction="vertical">
       <Card bordered={false}>
@@ -73,7 +72,7 @@ const PendingNudgeList = () => {
           Reset
         </Button>
         <Button block onClick={() => submitCheck()} type="primary">
-          Submit
+          Send
         </Button>
       </ButtonGroup>
 
@@ -116,12 +115,17 @@ const ListContainer = styled.div`
   height: 100%;
 
   .list {
-    flex: 1;
+    flex-grow: 1;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    height: 35rem; // need to polish style here
+    overflow-y: auto;
 
     .ant-empty {
       width: 100%;
+      margin: auto;
     }
   }
 `;

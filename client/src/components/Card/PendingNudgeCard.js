@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { Card, Tag, Space, Button } from "antd";
 
 const PendingNudge = ({ data }) => {
   const { text, demographics, assigned, order } = data;
@@ -12,23 +13,27 @@ const PendingNudge = ({ data }) => {
   }
 
   return (
-    <div className="PendingNudge">
-      <div className="PendingTopBar">
-        {"#" + order}
-        {/* Do not add this functionality until clarified */}
-        {/* <button id='Delete' onClick={onDelete}>Delete</button> */}
-        {/* <button id='Edit'>Edit</button> */}
-      </div>
-      <h1 className="nudgeText">{text}</h1>
-      <div className="PendingBottomBar">
+    <Card
+      title={`#${order}`}
+      extra={
+        <Space>
+          <Button type="link">Edit</Button>
+          <Button type="link" danger>
+            Delete
+          </Button>
+        </Space>
+      }
+      bordered={false}
+    >
+      <p>{text}</p>
+      <div>
         {demographics.map((category, i) => (
-          <div className="NudgeCategory" key={i}>
-            {category}
-          </div>
+          // Category values aren't very well formatted
+          <Tag key={i}>{category}</Tag>
         ))}
-        <b className="assigned">{assigned} assigned</b>
       </div>
-    </div>
+      <p>{assigned} assigned</p>
+    </Card>
   );
 };
 
