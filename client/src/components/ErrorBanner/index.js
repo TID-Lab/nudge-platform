@@ -1,12 +1,12 @@
 import "./index.css";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { MdErrorOutline } from "react-icons/md";
 
 const ErrorBanner = (props) => {
   const { text } = props;
 
   return (
     <div className="ErrorBanner">
-      <ErrorOutlineIcon />
+      <MdErrorOutline />
       {<h1 className="ErrorText"> {text} </h1>}
     </div>
   );

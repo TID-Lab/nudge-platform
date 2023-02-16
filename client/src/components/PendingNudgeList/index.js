@@ -77,13 +77,13 @@ const PendingNudgeList = () => {
         </Button>
       </ButtonGroup>
 
-      {showError && (
+      {/* {showError && (
         <ErrorBanner
           text={"Not all participants assigned nudges!"}
         ></ErrorBanner>
-      )}
-      {/* {showSuccess && <h3>Success!</h3>} */}
-      {showSuccess && (
+      )} */}
+
+      {/* {showSuccess && (
         <PopupModal
           content={
             <div>
@@ -101,7 +101,7 @@ const PendingNudgeList = () => {
             setShowSuccess(!showSuccess);
           }}
         />
-      )}
+      )} */}
     </ListContainer>
   );
 };

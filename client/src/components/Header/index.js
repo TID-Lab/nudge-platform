@@ -6,43 +6,18 @@ import "./index.css";
 
 import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawer/CreateNudgeDrawer";
-import PopupModal from "../PopupModal";
 import { createNudge, fetchNudges } from "../../api/nudge";
 
 const { Header: AntHeader } = Layout;
 
 const Header = () => {
   const { pathname } = useLocation(); // TODO show search only if in dashboard mode
-  // const [postingVisible, setPostingVisible] = useState(false);
   const dispatch = useDispatch();
   const postingMenu = useSelector((state) => state.postingMenu);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isModelOpen, setIsModelOpen] = useState(false);
   const [resp, setResp] = useState({
     state: "",
   });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const newNudge = {
-      message: "",
-      date_created: Date(),
-      com_b: [],
-    };
-
-    [...formData.entries()].forEach((field) => {
-      const label = field[0];
-      const value = field[1];
-
-      if (label === "com_b") {
-        newNudge["com_b"].push(value);
-      } else {
-        newNudge[label] = value;
-      }
-    });
-  };
 
   function onMenuClick() {
     dispatch({ type: "postingMenu/set", payload: !postingMenu });
