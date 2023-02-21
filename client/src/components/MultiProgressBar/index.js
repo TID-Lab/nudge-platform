@@ -10,7 +10,10 @@ import "./index.css";
  * using the total prop or if no total is specified, the values are added up and that is the total.
  *
  * Example:
- *    <MultiProgressBar values={[24, 15, 55]} total={200} />
+ *    <MultiProgressBar
+ *        values={[24, 15, 55]}
+ *        tooltips={['Tooltip for value #1', 'Tooltip for value #2', 'Tooltip for value #1']}
+ *        total={200} />
  */
 
 const MultiProgressBar = (props) => {
