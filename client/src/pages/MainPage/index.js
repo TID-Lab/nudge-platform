@@ -15,9 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
-import { fetchNudges } from "../../api/nudge";
+import { fetchNudges, fetchTotalParticipants } from "../../api/nudge";
 import "./index.css";
 import AssignDrawer from "../../components/Drawer/AssignDrawer";
+import MultiProgressBar from "../../components/MultiProgressBar";
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -25,6 +26,14 @@ const { Search } = Input;
 const MainPage = () => {
   const [isAssignDrawerOpen, setIsAssignDrawerOpen] = useState(false);
   const [assignedNudge, setAssignedNudge] = useState({ key: 0, message: "" });
+  const [totalParticipants, setTotalParticipants] = useState(0);
+  const pendingNudges = useSelector((state) => state.pendingNudges);
+
+  useEffect(() => {
+    fetchTotalParticipants()
+      .then((numParticipants) => setTotalParticipants(numParticipants))
+      .catch((err) => console.log("err:" + err));
+  }, []);
 
   const dispatch = useDispatch();
   const nudges = useSelector((state) => state.nudges);
@@ -50,7 +59,11 @@ const MainPage = () => {
         <StyledContent>
           <Row gutter={32}>
             <Col span={16}>
-              <Progress percent={30} />
+              <MultiProgressBar
+                values={pendingNudges.map((nudge) => nudge.assigned)}
+                tooltips={pendingNudges.map((nudge) => nudge.text)}
+                total={totalParticipants}
+              />
 
               <h3>Nudge List</h3>
 
