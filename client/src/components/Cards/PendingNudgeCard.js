@@ -61,6 +61,8 @@ const Space = styled.div`
 
   .tags-list {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
   }
 
   .text-assigned {

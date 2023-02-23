@@ -1,22 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-  Col,
-  Layout,
-  Row,
-  Progress,
-  Space,
-  Input,
-  Button,
-  Table,
-  Tag,
-} from "antd";
+import { Col, Layout, Row, Space, Input, Button, Table, Tag } from "antd";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
 import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
 import AssignDrawer from "../../components/Drawers/AssignDrawer";
-import MultiProgressBar from "../../components/MultiProgressBar";
+import NudgeBar from "../../components/NudgeBar";
 import { fetchNudges, fetchTotalParticipants } from "../../api/nudge";
 import "./index.css";
 
@@ -59,11 +49,7 @@ const MainPage = () => {
         <StyledContent>
           <Row gutter={32}>
             <Col span={16}>
-              <MultiProgressBar
-                values={pendingNudges.map((nudge) => nudge.assigned)}
-                tooltips={pendingNudges.map((nudge) => nudge.text)}
-                total={totalParticipants}
-              />
+              <NudgeBar nudges={pendingNudges} total={totalParticipants} />
 
               <h3>Nudge List</h3>
 
@@ -120,7 +106,7 @@ const MainPage = () => {
               />
             </Col>
             <Col span={8}>
-              <PendingNudgeList />
+              <PendingNudgeList total={totalParticipants} />
               {/* <PostingMenu /> */}
             </Col>
           </Row>

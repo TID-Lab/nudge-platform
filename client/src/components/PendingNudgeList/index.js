@@ -4,24 +4,15 @@ import { Button, Card, Space, Statistic, Empty, Alert } from "antd";
 import styled from "styled-components";
 
 import PendingNudge from "../Cards/PendingNudgeCard";
-import { fetchTotalParticipants } from "../../api/nudge";
 import "./index.css";
 import { ConfirmSendModal } from "../Modals/ConfirmSend";
 
-const PendingNudgeList = () => {
+const PendingNudgeList = ({ total }) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
   const [numParticipants, setNumParticipants] = useState(0);
-  const [totalParticipants, setTotalParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // dispatch({ type: 'pendingNudges/set', payload: [{text: 'lorum ipsum', categories: ['female'], assigned: 50}]})
-  useEffect(() => {
-    fetchTotalParticipants()
-      .then((numParticipants) => setTotalParticipants(numParticipants))
-      .catch((err) => console.log("err:" + err));
-  }, []);
 
   useEffect(() => {
     let participants = 0;
@@ -30,7 +21,7 @@ const PendingNudgeList = () => {
   }, [pendingNudges]);
 
   function onSend() {
-    if (numParticipants === totalParticipants) {
+    if (numParticipants === total) {
       console.log("TODO: Call backend API");
       setIsModalOpen(true);
     } else {
@@ -44,7 +35,7 @@ const PendingNudgeList = () => {
         <Statistic
           title="Assigned"
           value={numParticipants}
-          suffix={`/ ${totalParticipants}`}
+          suffix={`/ ${total}`}
         />
       </Card>
 
