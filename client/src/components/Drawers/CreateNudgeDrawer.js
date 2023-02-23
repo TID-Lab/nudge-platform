@@ -33,20 +33,29 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
             placeholder="Please select a Com-B component."
             options={[
               {
-                value: "capability",
-                label: "Capability",
+                value: "c-psy",
+                label: "Psychological Capability",
               },
               {
-                value: "opportunity",
-                label: "Opportunity",
+                value: "c-phy",
+                label: "Physical Capability",
+              },
+
+              {
+                value: "o-soc",
+                label: "Social Opportunity",
               },
               {
-                value: "motivation",
-                label: "Motivation",
+                value: "o-phy",
+                label: "Physical Opportunity",
               },
               {
-                value: "",
-                label: "",
+                value: "m-ref",
+                label: "Reflective Motivation",
+              },
+              {
+                value: "m-auto",
+                label: "Automatic Motivation",
               },
             ]}
           />
