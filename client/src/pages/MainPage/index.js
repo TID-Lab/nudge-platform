@@ -15,10 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
+import AssignDrawer from "../../components/Drawers/AssignDrawer";
+import MultiProgressBar from "../../components/MultiProgressBar";
 import { fetchNudges, fetchTotalParticipants } from "../../api/nudge";
 import "./index.css";
-import AssignDrawer from "../../components/Drawer/AssignDrawer";
-import MultiProgressBar from "../../components/MultiProgressBar";
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -72,6 +72,7 @@ const MainPage = () => {
                   placeholder="Search for nudges"
                   allowClear
                   onSearch={() => {}}
+                  disabled
                 />
                 <Button type="primary">Search</Button>
                 <Button>Reset</Button>
@@ -81,8 +82,7 @@ const MainPage = () => {
                 columns={[
                   {
                     title: "#",
-                    dataIndex: "key",
-                    render: (key) => <>{key + 1}</>,
+                    render: (_, __, i) => <>{i + 1}</>,
                   },
                   {
                     title: "Nudge Content",

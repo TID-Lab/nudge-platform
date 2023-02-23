@@ -44,6 +44,10 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
                 value: "motivation",
                 label: "Motivation",
               },
+              {
+                value: "",
+                label: "",
+              },
             ]}
           />
         </Form.Item>

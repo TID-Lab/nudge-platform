@@ -11,24 +11,26 @@ import {
   Alert,
   Switch,
 } from "antd";
+import { presetPrimaryColors } from "@ant-design/colors";
 import styled from "styled-components";
 
 import { checkNudges } from "../../api/nudge";
 
+const colors = Object.values(presetPrimaryColors);
 const { Title } = Typography;
 
 const AssignDrawer = ({ open, onClose, nudge }) => {
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
   const [error, setError] = useState("");
+  const [colorIndex, setColorIndex] = useState(0);
 
   const pendingNudges = useSelector((state) => state.pendingNudges);
 
   const onFinish = (values) => {
     const demographics = Object.values(values).filter((d) => d !== undefined);
     demographics.pop();
-    console.log(demographics);
     const reformattedNudges = pendingNudges.map(({ id, demographics }) => {
       return { nudge_id: id, demographics: demographics };
     });
@@ -45,11 +47,12 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               text: nudge.message,
               demographics: demographics,
               assigned: lastRes.num_assigned,
+              color: colors[colorIndex],
             },
           });
 
-          form.resetFields();
-          onClose();
+          setColorIndex((colorIndex + 1) % colors.length);
+          handleClose();
         } else if (lastRes.success_code === "NO_PARTICIPANT") {
           setError(
             'No participants are left with this demographic grouping. Please try a different combination, or toggle "All Unassigned"'
@@ -57,6 +60,12 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         }
       })
       .catch((e) => console.log(e));
+  };
+
+  const handleClose = () => {
+    onClose();
+    form.resetFields();
+    setError("");
   };
 
   const onValuesChange = (changedValues) => {
@@ -74,11 +83,11 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
     <Drawer
       title="Assign"
       size="large"
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       footer={
         <Space>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => form.submit()}
             type="primary"
