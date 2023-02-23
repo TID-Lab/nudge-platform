@@ -17,7 +17,7 @@ import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
 import { fetchNudges } from "../../api/nudge";
 import "./index.css";
-import AssignDrawer from "../../components/Drawer/AssignDrawer";
+import AssignDrawer from "../../components/Drawers/AssignDrawer";
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -59,6 +59,7 @@ const MainPage = () => {
                   placeholder="Search for nudges"
                   allowClear
                   onSearch={() => {}}
+                  disabled
                 />
                 <Button type="primary">Search</Button>
                 <Button>Reset</Button>
@@ -68,8 +69,7 @@ const MainPage = () => {
                 columns={[
                   {
                     title: "#",
-                    dataIndex: "key",
-                    render: (key) => <>{key + 1}</>,
+                    render: (_, __, i) => <>{i + 1}</>,
                   },
                   {
                     title: "Nudge Content",

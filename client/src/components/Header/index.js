@@ -5,7 +5,7 @@ import { Layout, Space, Button, Menu, Input, Form } from "antd";
 import "./index.css";
 
 import Logo from "../Logo";
-import CreateNudgeDrawer from "../Drawer/CreateNudgeDrawer";
+import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
 import { createNudge, fetchNudges } from "../../api/nudge";
 
 const { Header: AntHeader } = Layout;

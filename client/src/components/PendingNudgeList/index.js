@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Card, Space, Statistic, Empty } from "antd";
+import { Button, Card, Space, Statistic, Empty, Alert } from "antd";
 import styled from "styled-components";
 
-import PendingNudge from "../Card/PendingNudgeCard";
+import PendingNudge from "../Cards/PendingNudgeCard";
 import { fetchTotalParticipants } from "../../api/nudge";
 import "./index.css";
+import { ConfirmSendModal } from "../Modals/ConfirmSend";
 
 const PendingNudgeList = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const PendingNudgeList = () => {
   const [numParticipants, setNumParticipants] = useState(0);
   const [totalParticipants, setTotalParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // dispatch({ type: 'pendingNudges/set', payload: [{text: 'lorum ipsum', categories: ['female'], assigned: 50}]})
   useEffect(() => {
@@ -26,14 +27,12 @@ const PendingNudgeList = () => {
     let participants = 0;
     pendingNudges.forEach((nudge) => (participants += nudge.assigned));
     setNumParticipants(participants);
-    setShowSuccess(false);
-    setShowError(false);
   }, [pendingNudges]);
 
-  function submitCheck() {
+  function onSend() {
     if (numParticipants === totalParticipants) {
       console.log("TODO: Call backend API");
-      setShowSuccess(true);
+      setIsModalOpen(true);
     } else {
       setShowError(true);
     }
@@ -64,6 +63,15 @@ const PendingNudgeList = () => {
         )}
       </div>
 
+      {showError && (
+        <Alert
+          message="Not all participants are assigned nudges!"
+          type="error"
+          showIcon
+          closable
+        />
+      )}
+
       <ButtonGroup>
         <Button
           block
@@ -71,10 +79,16 @@ const PendingNudgeList = () => {
         >
           Reset
         </Button>
-        <Button block onClick={() => submitCheck()} type="primary">
+        <Button block onClick={onSend} type="primary">
           Send
         </Button>
       </ButtonGroup>
+
+      <ConfirmSendModal
+        title="Confirm Send"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+      />
 
       {/* {showError && (
         <ErrorBanner
