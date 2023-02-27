@@ -18,10 +18,11 @@ const PendingNudge = ({ data }) => {
       title={`#${order}`}
       extra={
         <Space>
-          <Button type="link">Edit</Button>
+          {/* Temporarily removed delete and edit buttons */}
+          {/* <Button type="link">Edit</Button>
           <Button type="link" danger onClick={onDelete}>
             Delete
-          </Button>
+          </Button> */}
         </Space>
       }
       bordered={false}
