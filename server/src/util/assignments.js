@@ -1,9 +1,11 @@
 const db = require('./db');
 
 const demographic_enum = {
-  Age: ['18-29', '30-41', '42-53', '54-65'],
-  Race: ['black', 'latinx', 'white', 'asian'],
+  Age: ['18-29', '30-40', '41-50', '51-64', '65+'],
+  Race: ['black', 'latinx', 'white', 'asian', 'native-american'],
   Gender: ['female', 'male', 'non-binary'],
+  Diabetes: ['has-diabetes', 'at-risk', 'caretaker'],
+  TestingStatus: ['tested', 'untested']
 };
 
 const assignmentCodes = {

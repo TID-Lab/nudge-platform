@@ -112,8 +112,9 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
             options={[
               { value: "black", label: "Black" },
               { value: "latinx", label: "Latinx" },
+              { value: "asian", label: "Asian" },
               { value: "white", label: "White" },
-              { value: "native_american", label: "Native American" },
+              { value: "native-american", label: "Native American" },
             ]}
             optionType="button"
             buttonStyle="solid"
@@ -124,7 +125,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
             options={[
               { value: "female", label: "Female" },
               { value: "male", label: "Male" },
-              { value: "non_binary", label: "Non-binary" },
+              { value: "non-binary", label: "Non-binary" },
             ]}
             optionType="button"
             buttonStyle="solid"
@@ -133,10 +134,10 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         <Form.Item label="Age" name="age">
           <Radio.Group
             options={[
-              { value: "18_29", label: "18-29" },
-              { value: "30_40", label: "30-40" },
-              { value: "41_50", label: "41-50" },
-              { value: "51_64", label: "51-64" },
+              { value: "18-29", label: "18-29" },
+              { value: "30-40", label: "30-40" },
+              { value: "41-50", label: "41-50" },
+              { value: "51-64", label: "51-64" },
               { value: "65+", label: "65 and older" },
             ]}
             optionType="button"
@@ -146,8 +147,8 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         <Form.Item label="Diabetes" name="diabetes">
           <Radio.Group
             options={[
-              { value: "has_diabetes", label: "Has Diabetes" },
-              { value: "at_risk", label: "At Risk" },
+              { value: "has-diabetes", label: "Has Diabetes" },
+              { value: "at-risk", label: "At Risk" },
               { value: "caretaker", label: "Caretaker" },
             ]}
             optionType="button"
