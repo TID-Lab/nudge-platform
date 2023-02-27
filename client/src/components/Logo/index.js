@@ -12,7 +12,7 @@ const Logo = () => {
           <h3 style={{ margin: "0px" }}>
             Project <b className="bold">PEACH</b>
           </h3>
-          <div style={{ fontSize: "80%" }}>Social Media Dashboard</div>
+          <div style={{ fontSize: "80%" }}>Nudge Dashboard</div>
         </div>
       </span>
     </Link>

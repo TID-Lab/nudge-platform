@@ -11,7 +11,7 @@ const Terms = () => {
 
       <p>
         These Terms of Service (“Terms”) govern your use of The Project PEACH
-        Social Media Dashboard (the “Dashboard”), operated by the{" "}
+        Nudge Dashboard (the “Dashboard”), operated by the{" "}
         <a href="http://tid.gatech.edu/">
           Technologies and International Development Lab
         </a>
