@@ -3,8 +3,8 @@ import { Card, Tag, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
-const PendingNudge = ({ data }) => {
-  const { text, demographics, assigned, color, order } = data;
+const PendingNudgeCard = ({ data, readonly }) => {
+  const { text, demographics, assigned, color, key, order } = data;
   const dispatch = useDispatch();
 
   // TODO: On Delete, can reassess distribution (since when you delete a category, the ones underneath could expand technically)
@@ -17,13 +17,14 @@ const PendingNudge = ({ data }) => {
     <StyledCard
       title={`#${order}`}
       extra={
-        <Space>
-          {/* Temporarily removed delete and edit buttons */}
-          {/* <Button type="link">Edit</Button>
-          <Button type="link" danger onClick={onDelete}>
-            Delete
-          </Button> */}
-        </Space>
+        !readonly && (
+          <Space>
+            <Button type="link">Edit</Button>
+            <Button type="link" danger onClick={onDelete}>
+              Delete
+            </Button>
+          </Space>
+        )
       }
       bordered={false}
       color={color}
@@ -72,4 +73,4 @@ const Space = styled.div`
   }
 `;
 
-export default PendingNudge;
+export default PendingNudgeCard;

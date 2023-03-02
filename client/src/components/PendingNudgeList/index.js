@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Card, Space, Statistic, Empty, Alert } from "antd";
 import styled from "styled-components";
 
-import PendingNudge from "../Cards/PendingNudgeCard";
+import PendingNudgeCard from "../Cards/PendingNudgeCard";
 import "./index.css";
 import { ConfirmSendModal } from "../Modals/ConfirmSend";
 
@@ -45,10 +45,11 @@ const PendingNudgeList = ({ total }) => {
         {pendingNudges.length === 0 ? (
           <Empty description="No pending nudges" />
         ) : (
-          pendingNudges.map((pendingNudge, index) => (
-            <PendingNudge
-              data={{ ...pendingNudge, order: index + 1 }}
-              key={pendingNudge.text}
+          pendingNudges.map((pendingNudge, i) => (
+            <PendingNudgeCard
+              data={{ ...pendingNudge, order: i + 1 }}
+              key={i}
+              readonly={i !== pendingNudges.length - 1}
             />
           ))
         )}

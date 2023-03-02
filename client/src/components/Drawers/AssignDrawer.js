@@ -11,13 +11,21 @@ import {
   Alert,
   Switch,
 } from "antd";
-import { presetPrimaryColors } from "@ant-design/colors";
+import { presetPrimaryColors, presetPalettes } from "@ant-design/colors";
 import styled from "styled-components";
 
 import { checkNudges } from "../../api/nudge";
 
-const colors = Object.values(presetPrimaryColors);
+const colors = Object.values(presetPrimaryColors).map((_, i, arr) => {
+  if (i % 2 === 0) {
+    return arr[i];
+  } else {
+    return arr[arr.length - i];
+  }
+});
 const { Title } = Typography;
+
+console.log(colors);
 
 const AssignDrawer = ({ open, onClose, nudge }) => {
   const dispatch = useDispatch();
