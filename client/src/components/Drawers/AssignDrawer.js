@@ -6,7 +6,7 @@ import {
   Drawer,
   Button,
   Card,
-  Radio,
+  Checkbox,
   Typography,
   Alert,
   Switch,
@@ -29,7 +29,9 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
   const pendingNudges = useSelector((state) => state.pendingNudges);
 
   const onFinish = (values) => {
-    const demographics = Object.values(values).filter((d) => d !== undefined);
+    const demographics = Object.values(values)
+      .filter((d) => d !== undefined)
+      .flat();
     demographics.pop();
     const reformattedNudges = pendingNudges.map(({ id, demographics }) => {
       return { nudge_id: id, demographics: demographics };
@@ -44,6 +46,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           dispatch({
             type: "pendingNudges/add",
             payload: {
+              id: nudge._id,
               text: nudge.message,
               demographics: demographics,
               assigned: lastRes.num_assigned,
@@ -108,7 +111,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         onValuesChange={onValuesChange}
       >
         <Form.Item label="Race" name="race">
-          <Radio.Group
+          <Checkbox.Group
             options={[
               { value: "black", label: "Black" },
               { value: "latinx", label: "Latinx" },
@@ -116,23 +119,19 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               { value: "white", label: "White" },
               { value: "native-american", label: "Native American" },
             ]}
-            optionType="button"
-            buttonStyle="solid"
           />
         </Form.Item>
         <Form.Item label="Gender" name="gender">
-          <Radio.Group
+          <Checkbox.Group
             options={[
               { value: "female", label: "Female" },
               { value: "male", label: "Male" },
               { value: "non-binary", label: "Non-binary" },
             ]}
-            optionType="button"
-            buttonStyle="solid"
           />
         </Form.Item>
         <Form.Item label="Age" name="age">
-          <Radio.Group
+          <Checkbox.Group
             options={[
               { value: "18-29", label: "18-29" },
               { value: "30-40", label: "30-40" },
@@ -140,29 +139,23 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               { value: "51-64", label: "51-64" },
               { value: "65+", label: "65 and older" },
             ]}
-            optionType="button"
-            buttonStyle="solid"
           />
         </Form.Item>
         <Form.Item label="Diabetes" name="diabetes">
-          <Radio.Group
+          <Checkbox.Group
             options={[
               { value: "has-diabetes", label: "Has Diabetes" },
               { value: "at-risk", label: "At Risk" },
               { value: "caretaker", label: "Caretaker" },
             ]}
-            optionType="button"
-            buttonStyle="solid"
           />
         </Form.Item>
         <Form.Item label="Testing Status" name="test_status">
-          <Radio.Group
+          <Checkbox.Group
             options={[
               { value: "tested", label: "Tested" },
               { value: "untested", label: "Untested" },
             ]}
-            optionType="button"
-            buttonStyle="solid"
           />
         </Form.Item>
 

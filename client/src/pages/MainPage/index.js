@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Col, Layout, Row, Space, Input, Button, Table, Tag } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
-import PostingMenu from "../../components/PostingMenu";
 import PendingNudgeList from "../../components/PendingNudgeList";
 import AssignDrawer from "../../components/Drawers/AssignDrawer";
 import NudgeBar from "../../components/NudgeBar";
@@ -19,12 +19,6 @@ const MainPage = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
   const pendingNudges = useSelector((state) => state.pendingNudges);
 
-  useEffect(() => {
-    fetchTotalParticipants()
-      .then((numParticipants) => setTotalParticipants(numParticipants))
-      .catch((err) => console.log("err:" + err));
-  }, []);
-
   const dispatch = useDispatch();
   const nudges = useSelector((state) => state.nudges);
 
@@ -39,6 +33,10 @@ const MainPage = () => {
         });
       })
       .catch((e) => console.log(e));
+
+    fetchTotalParticipants()
+      .then((numParticipants) => setTotalParticipants(numParticipants))
+      .catch((err) => console.log("err:" + err));
   }, [dispatch]);
 
   if (nudges.length === 0) {
@@ -68,7 +66,7 @@ const MainPage = () => {
                 columns={[
                   {
                     title: "#",
-                    render: (_, __, i) => <>{i + 1}</>,
+                    render: (nudge) => <>{nudge.key + 1}</>,
                   },
                   {
                     title: "Nudge Content",
@@ -91,18 +89,23 @@ const MainPage = () => {
                   {
                     title: "Actions",
                     render: (_, nudge) => (
-                      <Button
-                        onClick={() => {
-                          setIsAssignDrawerOpen(true);
-                          setAssignedNudge(nudge);
-                        }}
-                      >
-                        Assign
-                      </Button>
+                      <Space>
+                        <Button
+                          onClick={() => {
+                            setIsAssignDrawerOpen(true);
+                            setAssignedNudge(nudge);
+                          }}
+                        >
+                          Assign
+                        </Button>
+                        <Button icon={<DeleteOutlined />} danger />
+                      </Space>
                     ),
                   },
                 ]}
-                dataSource={nudges}
+                dataSource={[...nudges].sort(
+                  (a, b) => new Date(b.date_created) - new Date(a.date_created)
+                )}
               />
             </Col>
             <Col span={8}>

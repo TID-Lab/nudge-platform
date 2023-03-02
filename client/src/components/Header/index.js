@@ -50,7 +50,12 @@ const Header = () => {
               // TODO: More elegant way to sync/refetch. https://redux.js.org/tutorials/essentials/part-5-async-logic
               .then(() => fetchNudges())
               .then((nudges) =>
-                dispatch({ type: "nudges/set", payload: nudges })
+                dispatch({
+                  type: "nudges/set",
+                  payload: nudges.map((nudge, i) => {
+                    return { ...nudge, key: i };
+                  }),
+                })
               )
               .catch((err) => {
                 // TODO: Make alert messages more user-readable
