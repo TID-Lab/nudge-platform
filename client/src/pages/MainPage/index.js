@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
-import { Col, Layout, Row, Space, Input, Button, Table, Tag } from "antd";
+import {
+  Col,
+  Layout,
+  Row,
+  Space,
+  Input,
+  Button,
+  Table,
+  Tag,
+  Popconfirm,
+  message,
+} from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +49,19 @@ const MainPage = () => {
       .then((numParticipants) => setTotalParticipants(numParticipants))
       .catch((err) => console.log("err:" + err));
   }, [dispatch]);
+
+  const onNudgeArchive = (nudge) => {
+    const inActiveNudge = {
+      ...nudge,
+      is_active: false,
+    };
+
+    dispatch({
+      type: "nudges/replace",
+      payload: inActiveNudge,
+    });
+    message.success("Nudge archived.");
+  };
 
   if (nudges.length === 0) {
     return <>Loading</>;
@@ -98,14 +122,23 @@ const MainPage = () => {
                         >
                           Assign
                         </Button>
-                        <Button icon={<DeleteOutlined />} danger />
+                        <Popconfirm
+                          title="Archive nudge"
+                          description="Are you sure you want to archive this nudge?"
+                          onConfirm={() => onNudgeArchive(nudge)}
+                        >
+                          <Button icon={<DeleteOutlined />} danger />
+                        </Popconfirm>
                       </Space>
                     ),
                   },
                 ]}
-                dataSource={[...nudges].sort(
-                  (a, b) => new Date(b.date_created) - new Date(a.date_created)
-                )}
+                dataSource={[...nudges]
+                  .sort(
+                    (a, b) =>
+                      new Date(b.date_created) - new Date(a.date_created)
+                  )
+                  .filter((nudge) => nudge.is_active)}
               />
             </Col>
             <Col span={8}>

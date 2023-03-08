@@ -7,11 +7,10 @@ const nudgeSchema = new mongoose.Schema({
     unique: true,
   },
   date_created: { type: Date, required: true },
-  comment: {type: String },
+  comment: { type: String },
   com_b: { type: [String], default: [] },
   is_active: { type: Boolean, required: true, default: true },
 });
-
 
 //  searchable fields
 nudgeSchema.index({ message: 'text', com_b: 'text' });

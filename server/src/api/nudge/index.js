@@ -45,6 +45,9 @@ routes.post('/', async (req, res) => {
     res.status(500).send(err);
   }
 });
+
+routes.patch()
+
 // Checks the participant assignment of an ordered list of a list of nudge assignments
 // Input an ordered list of [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]
 // i.e. [{nudge_id: 12039, demographics: ['female', '18-29']}, {nudge_id: 1209, demographics: ['asian', 'female'], excluded: [['female', '18-29']]}]
@@ -52,7 +55,6 @@ routes.post('/', async (req, res) => {
 // Output (success): [{nudge_id, num_assigned, num_left, success_code}]
 // Output (failure object): [{nudge_id, success_code, error_object}]
 // NOTE: PREVIOUSLY_ASSIGNED should be handled on the front-end
-
 routes.post('/check', async (req, res) => {
   if (typeof req.body !== 'object') {
     res.status(400).send();
@@ -100,6 +102,6 @@ routes.post('/assign', async (req, res) => {
     res.status(500).send(err);
   }
 });
-    // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}   
+    // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}
 
 module.exports = routes;
