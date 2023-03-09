@@ -46,7 +46,18 @@ routes.post('/', async (req, res) => {
   }
 });
 
-routes.patch()
+/**
+ * Set is_active to false for an item with :id
+ */
+routes.patch('/deactivate/:id', async (req, res) => {
+  try {
+    await Nudge.updateOne({ _id: req.params.id }, { is_active: false })
+    res.status(200).send();
+  } catch(err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+})
 
 // Checks the participant assignment of an ordered list of a list of nudge assignments
 // Input an ordered list of [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]

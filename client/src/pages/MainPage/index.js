@@ -18,7 +18,11 @@ import { useDispatch, useSelector } from "react-redux";
 import PendingNudgeList from "../../components/PendingNudgeList";
 import AssignDrawer from "../../components/Drawers/AssignDrawer";
 import NudgeBar from "../../components/NudgeBar";
-import { fetchNudges, fetchTotalParticipants } from "../../api/nudge";
+import {
+  deactivateNudge,
+  fetchNudges,
+  fetchTotalParticipants,
+} from "../../api/nudge";
 import "./index.css";
 
 const { Content } = Layout;
@@ -50,17 +54,23 @@ const MainPage = () => {
       .catch((err) => console.log("err:" + err));
   }, [dispatch]);
 
-  const onNudgeArchive = (nudge) => {
+  const onNudgeArchive = async (nudge) => {
+    console.log(nudge);
     const inActiveNudge = {
       ...nudge,
       is_active: false,
     };
 
-    dispatch({
-      type: "nudges/replace",
-      payload: inActiveNudge,
-    });
-    message.success("Nudge archived.");
+    try {
+      await deactivateNudge(nudge._id);
+      dispatch({
+        type: "nudges/replace",
+        payload: inActiveNudge,
+      });
+      message.success("Nudge archived.");
+    } catch (e) {
+      message.error("An error occurred. Please try again.");
+    }
   };
 
   if (nudges.length === 0) {

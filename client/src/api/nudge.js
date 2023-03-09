@@ -67,10 +67,35 @@ async function createNudge(nudge) {
   return res.status === 200;
 }
 
+async function deactivateNudge(id) {
+  const options = {
+    ...defaultOptions,
+    method: "PATCH",
+  };
+
+  let res;
+
+  try {
+    res = await fetch(`/api/nudge/deactivate/${id}`, options);
+  } catch (err) {
+    console.error(`${res.status}: ${err}`);
+
+    return false;
+  }
+
+  return res.status === 200;
+}
+
 // Output (success): [{nudge_id, num_assigned, num_left, success_code}]
 // Output (failure object): [{nudge_id, success_code, error_object}]
 // NOTE: PREVIOUSLY_ASSIGNED should be handled on the front-end
 
 function handleCheckNudges(nudges) {}
 
-export { fetchNudges, checkNudges, fetchTotalParticipants, createNudge };
+export {
+  fetchNudges,
+  checkNudges,
+  fetchTotalParticipants,
+  createNudge,
+  deactivateNudge,
+};
