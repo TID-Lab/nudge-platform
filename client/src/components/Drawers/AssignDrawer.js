@@ -11,7 +11,7 @@ import {
   Alert,
   Switch,
 } from "antd";
-import { presetPrimaryColors, presetPalettes } from "@ant-design/colors";
+import { presetPrimaryColors } from "@ant-design/colors";
 import styled from "styled-components";
 
 import { checkNudges } from "../../api/nudge";
@@ -25,14 +25,13 @@ const colors = Object.values(presetPrimaryColors).map((_, i, arr) => {
 });
 const { Title } = Typography;
 
-console.log(colors);
-
 const AssignDrawer = ({ open, onClose, nudge }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const [error, setError] = useState("");
   const [colorIndex, setColorIndex] = useState(0);
+  const [isUnassignedDisabled, setIsUnassignedDisabled] = useState(true);
 
   const pendingNudges = useSelector((state) => state.pendingNudges);
 
@@ -87,6 +86,13 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       form.resetFields();
     } else {
       form.setFieldValue("unassigned", false);
+    }
+
+    // Let user toggle unassigned switch if demographics are chosen
+    if (Object.keys(form.getFieldsValue(true)).length !== 0) {
+      setIsUnassignedDisabled(false);
+    } else {
+      setIsUnassignedDisabled(true);
     }
   };
 
@@ -172,7 +178,9 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           valuePropName="checked"
           label="All Unassigned"
         >
-          <Switch defaultChecked>All Unassigned</Switch>
+          <Switch defaultChecked disabled={isUnassignedDisabled}>
+            All Unassigned
+          </Switch>
         </Form.Item>
       </Form>
 

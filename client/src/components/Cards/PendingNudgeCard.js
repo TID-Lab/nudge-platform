@@ -1,11 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Card, Tag, Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+import { PendingNudgeSelect } from "../Select/PendingNudgeSelect";
 
 const PendingNudgeCard = ({ data, readonly }) => {
   const { text, demographics, assigned, color, key, order } = data;
   const dispatch = useDispatch();
+
+  const [content, setContent] = useState(text);
 
   // TODO: On Delete, can reassess distribution (since when you delete a category, the ones underneath could expand technically)
   // Perhaps more intuitively, we can just delete the entire sequences
@@ -15,27 +20,35 @@ const PendingNudgeCard = ({ data, readonly }) => {
 
   return (
     <StyledCard
-      title={`#${order}`}
+      title={`#${order}`} // TODO: This should be nudge.key
       extra={
         !readonly && (
           <Space>
-            <Button type="link">Edit</Button>
-            <Button type="link" danger onClick={onDelete}>
-              Delete
-            </Button>
+            <Button
+              onClick={onDelete}
+              icon={<CloseOutlined />}
+              shape="circle"
+            />
           </Space>
         )
       }
       bordered={false}
       color={color}
     >
-      <p className="nudge-content">{text}</p>
+      <PendingNudgeSelect
+        value={content}
+        onSelect={(selected) => setContent(selected)}
+      />
       <Space>
         <div className="tags-list">
-          {demographics.map((category, i) => (
-            // Category values aren't very well formatted
-            <Tag key={i}>{category}</Tag>
-          ))}
+          {demographics.length === 0 ? (
+            <Tag>All Unassigned</Tag>
+          ) : (
+            demographics.map((category, i) => (
+              // Category values aren't very well formatted
+              <Tag key={i}>{category}</Tag>
+            ))
+          )}
         </div>
         <p className="text-assigned">
           <UserOutlined /> {assigned} assigned
