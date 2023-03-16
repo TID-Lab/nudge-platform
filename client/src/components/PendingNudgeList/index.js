@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Card, Space, Statistic, Empty, Alert } from "antd";
+import { Button, Card, Space, Empty, Alert, Typography } from "antd";
 import styled from "styled-components";
 
 import PendingNudgeCard from "../Cards/PendingNudgeCard";
 import "./index.css";
 import { ConfirmSendModal } from "../Modals/ConfirmSend";
+
+const { Title } = Typography;
 
 const PendingNudgeList = ({ total }) => {
   const dispatch = useDispatch();
@@ -31,13 +33,15 @@ const PendingNudgeList = ({ total }) => {
 
   return (
     <ListContainer direction="vertical">
-      <Card bordered={false}>
-        <Statistic
-          title="Assigned"
-          value={numParticipants}
-          suffix={`/ ${total}`}
-        />
-      </Card>
+      <AssignmentCard bordered={false}>
+        <Space size="middle">
+          <Space>
+            <Title>{numParticipants}</Title> <Title level={3}>/ {total}</Title>
+          </Space>
+
+          <Title level={3}>Assigned</Title>
+        </Space>
+      </AssignmentCard>
 
       <h3>Nudges to Send</h3>
 
@@ -142,4 +146,8 @@ const ButtonGroup = styled(Space)`
   .ant-space-item {
     flex: 1;
   }
+`;
+
+const AssignmentCard = styled(Card)`
+  background-color: #f1f5f9;
 `;

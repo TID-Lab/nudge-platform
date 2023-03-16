@@ -85,7 +85,7 @@ const MainPage = () => {
 
               <h3>Nudge List</h3>
 
-              <Space>
+              <Space style={{ marginBottom: "1rem" }}>
                 <Search
                   placeholder="Search for nudges"
                   allowClear
@@ -151,7 +151,7 @@ const MainPage = () => {
                   .filter((nudge) => nudge.is_active)}
               />
             </Col>
-            <Col span={8}>
+            <Col span={8} style={{ borderLeft: "2px solid #f0f0f0" }}>
               <PendingNudgeList total={totalParticipants} />
               {/* <PostingMenu /> */}
             </Col>

@@ -32,7 +32,6 @@ const PendingNudgeCard = ({ data, readonly }) => {
           </Space>
         )
       }
-      bordered={false}
       color={color}
     >
       <PendingNudgeSelect
