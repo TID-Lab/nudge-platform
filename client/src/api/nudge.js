@@ -14,7 +14,12 @@ async function fetchNudges() {
   const nudges = await res.json().then((nudges) => {
     return [...nudges];
   });
-  return nudges;
+
+  return nudges
+    .map((nudge, i) => {
+      return { ...nudge, key: i };
+    })
+    .sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
 }
 
 async function fetchTotalParticipants() {
