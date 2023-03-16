@@ -51,8 +51,9 @@ const PendingNudgeList = ({ total }) => {
         ) : (
           pendingNudges.map((pendingNudge, i) => (
             <PendingNudgeCard
-              data={{ ...pendingNudge, order: i + 1 }}
+              data={pendingNudge}
               key={i}
+              index={i}
               readonly={i !== pendingNudges.length - 1}
             />
           ))
