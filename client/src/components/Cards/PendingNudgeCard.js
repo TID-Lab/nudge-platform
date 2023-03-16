@@ -8,11 +8,7 @@ import { PendingNudgeSelect } from "../Select/PendingNudgeSelect";
 
 const PendingNudgeCard = ({ data, readonly, index }) => {
   const { text, demographics, assigned, color, key } = data;
-
-  console.log(index);
-
   const dispatch = useDispatch();
-
   const [content, setContent] = useState(text);
 
   // TODO: On Delete, can reassess distribution (since when you delete a category, the ones underneath could expand technically)
