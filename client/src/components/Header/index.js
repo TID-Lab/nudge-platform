@@ -52,9 +52,7 @@ const Header = () => {
               .then((nudges) =>
                 dispatch({
                   type: "nudges/set",
-                  payload: nudges.map((nudge, i) => {
-                    return { ...nudge, key: i };
-                  }),
+                  payload: nudges,
                 })
               )
               .catch((err) => {

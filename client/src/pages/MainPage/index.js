@@ -14,6 +14,7 @@ import {
 import { DeleteOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
+import Fuse from "fuse.js";
 
 import PendingNudgeList from "../../components/PendingNudgeList";
 import AssignDrawer from "../../components/Drawers/AssignDrawer";
@@ -29,22 +30,23 @@ const { Content } = Layout;
 const { Search } = Input;
 
 const MainPage = () => {
+  const dispatch = useDispatch();
+  const nudges = useSelector((state) => state.nudges);
+  const pendingNudges = useSelector((state) => state.pendingNudges);
+
   const [isAssignDrawerOpen, setIsAssignDrawerOpen] = useState(false);
   const [assignedNudge, setAssignedNudge] = useState({ key: 0, message: "" });
   const [totalParticipants, setTotalParticipants] = useState(0);
-  const pendingNudges = useSelector((state) => state.pendingNudges);
+  const [query, setQuery] = useState("");
 
-  const dispatch = useDispatch();
-  const nudges = useSelector((state) => state.nudges);
+  const fuse = new Fuse(nudges, { keys: ["message", "com_b", "comment"] });
 
   useEffect(() => {
     fetchNudges()
       .then((nudges) => {
         dispatch({
           type: "nudges/set",
-          payload: nudges.map((nudge, i) => {
-            return { ...nudge, key: i };
-          }),
+          payload: nudges,
         });
       })
       .catch((e) => console.log(e));
@@ -55,7 +57,6 @@ const MainPage = () => {
   }, [dispatch]);
 
   const onNudgeArchive = async (nudge) => {
-    console.log(nudge);
     const inActiveNudge = {
       ...nudge,
       is_active: false,
@@ -71,6 +72,10 @@ const MainPage = () => {
     } catch (e) {
       message.error("An error occurred. Please try again.");
     }
+  };
+
+  const onSearch = (value) => {
+    setQuery(value);
   };
 
   if (nudges.length === 0) {
@@ -89,11 +94,9 @@ const MainPage = () => {
                 <Search
                   placeholder="Search for nudges"
                   allowClear
-                  onSearch={() => {}}
-                  disabled
+                  enterButton="Search"
+                  onSearch={onSearch}
                 />
-                <Button type="primary">Search</Button>
-                <Button>Reset</Button>
               </Space>
 
               <Table
@@ -143,12 +146,11 @@ const MainPage = () => {
                     ),
                   },
                 ]}
-                dataSource={[...nudges]
-                  .sort(
-                    (a, b) =>
-                      new Date(b.date_created) - new Date(a.date_created)
-                  )
-                  .filter((nudge) => nudge.is_active)}
+                dataSource={[
+                  ...(query === ""
+                    ? nudges
+                    : fuse.search(query).map(({ item }) => item)),
+                ].filter((nudge) => nudge.is_active)}
               />
             </Col>
             <Col span={8} style={{ borderLeft: "2px solid #f0f0f0" }}>
