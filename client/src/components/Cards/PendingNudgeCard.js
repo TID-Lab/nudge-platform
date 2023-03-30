@@ -6,21 +6,26 @@ import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { PendingNudgeSelect } from "../Select/PendingNudgeSelect";
 
-const PendingNudgeCard = ({ data, readonly }) => {
-  const { text, demographics, assigned, color, key, order } = data;
+const PendingNudgeCard = ({ data, readonly, index }) => {
+  const { text, demographics, assigned, color } = data;
   const dispatch = useDispatch();
-
-  const [content, setContent] = useState(text);
+  const [message, setMessage] = useState(text);
+  const [key, setKey] = useState(data.key);
 
   // TODO: On Delete, can reassess distribution (since when you delete a category, the ones underneath could expand technically)
   // Perhaps more intuitively, we can just delete the entire sequences
   function onDelete() {
-    dispatch({ type: "pendingNudges/delete", payload: order - 1 });
+    dispatch({ type: "pendingNudges/delete", payload: index });
   }
+
+  const onSelect = (selected, rec) => {
+    setMessage(selected);
+    setKey(rec.key);
+  };
 
   return (
     <StyledCard
-      title={`#${order}`} // TODO: This should be nudge.key
+      title={`#${+key + 1}`}
       extra={
         !readonly && (
           <Space>
@@ -34,10 +39,7 @@ const PendingNudgeCard = ({ data, readonly }) => {
       }
       color={color}
     >
-      <PendingNudgeSelect
-        value={content}
-        onSelect={(selected) => setContent(selected)}
-      />
+      <PendingNudgeSelect key={key} message={message} onSelect={onSelect} />
       <Space>
         <div className="tags-list">
           {demographics.length === 0 ? (

@@ -58,6 +58,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               demographics: demographics,
               assigned: lastRes.num_assigned,
               color: colors[colorIndex],
+              key: nudge.key,
             },
           });
 

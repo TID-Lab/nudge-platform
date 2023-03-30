@@ -33,7 +33,7 @@ const Header = () => {
       />
 
       <Space>
-        <Input placeholder="Search" />
+        <Input placeholder="Search" disabled />
         <Button onClick={() => setIsDrawerOpen(true)}>Create Nudge</Button>
       </Space>
 
@@ -52,9 +52,7 @@ const Header = () => {
               .then((nudges) =>
                 dispatch({
                   type: "nudges/set",
-                  payload: nudges.map((nudge, i) => {
-                    return { ...nudge, key: i };
-                  }),
+                  payload: nudges,
                 })
               )
               .catch((err) => {

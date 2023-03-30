@@ -5,7 +5,9 @@ import { useSelector } from "react-redux";
 
 import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
 
-export const PendingNudgeSelect = ({ value, onSelect }) => {
+const { Option } = Select;
+
+export const PendingNudgeSelect = ({ message, onSelect }) => {
   const nudges = useSelector((state) => state.nudges);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -14,10 +16,11 @@ export const PendingNudgeSelect = ({ value, onSelect }) => {
       <Select
         showSearch
         bordered={false}
+        optionLabelProp="label"
         style={{
           width: "100%",
         }}
-        value={value}
+        value={message}
         dropdownRender={(menu) => (
           <>
             {menu}
@@ -41,14 +44,19 @@ export const PendingNudgeSelect = ({ value, onSelect }) => {
             </Space>
           </>
         )}
-        options={nudges
-          .filter((nudge) => nudge.is_active)
-          .map(({ message }) => ({
-            label: message,
-            value: message,
-          }))}
         onSelect={onSelect}
-      />
+      >
+        {nudges
+          .filter((nudge) => nudge.is_active)
+          .map(({ key, message }) => (
+            <Option key={key} value={message} label={message}>
+              <Space size="middle">
+                <span style={{ color: "#bfbfbf" }}>{key + 1}</span>
+                <span>{message}</span>
+              </Space>
+            </Option>
+          ))}
+      </Select>
 
       <CreateNudgeDrawer
         onClose={() => setIsDrawerOpen(false)}
