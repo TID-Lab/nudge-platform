@@ -39,7 +39,7 @@ const MainPage = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
   const [query, setQuery] = useState("");
 
-  const fuse = new Fuse(nudges, { keys: ["message", "com_b", "comment"] });
+  const fuse = new Fuse(nudges, { keys: ["message"] });
 
   useEffect(() => {
     fetchNudges()
@@ -112,6 +112,33 @@ const MainPage = () => {
                   {
                     title: "COM-B",
                     dataIndex: "com_b",
+                    filters: [
+                      {
+                        value: "c-psy",
+                        text: "Psychological Capability",
+                      },
+                      {
+                        value: "c-phy",
+                        text: "Physical Capability",
+                      },
+
+                      {
+                        value: "o-soc",
+                        text: "Social Opportunity",
+                      },
+                      {
+                        value: "o-phy",
+                        text: "Physical Opportunity",
+                      },
+                      {
+                        value: "m-ref",
+                        text: "Reflective Motivation",
+                      },
+                      {
+                        value: "m-auto",
+                        text: "Automatic Motivation",
+                      },
+                    ],
                     render: (_, { com_b }) => (
                       <>
                         {com_b.map((tag) => {
@@ -119,6 +146,7 @@ const MainPage = () => {
                         })}
                       </>
                     ),
+                    onFilter: (value, record) => record.com_b.includes(value),
                   },
                   {
                     title: "Comment",
