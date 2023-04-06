@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ConfigProvider } from "antd";
 
-import "./index.css";
-
 import Footer from "../../components/Footer";
 import Login from "../LoginPage";
 import Header from "../../components/Header";
@@ -14,9 +12,7 @@ const App = () => {
   return (
     <ConfigProvider
       theme={{
-        token: {
-          fontFamily: "Open Sauce Two, sans-serif",
-        },
+        token: {},
       }}
     >
       <div className="Root">

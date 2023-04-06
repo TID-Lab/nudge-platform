@@ -21,29 +21,6 @@ export const PendingNudgeSelect = ({ message, onSelect }) => {
           width: "100%",
         }}
         value={message}
-        dropdownRender={(menu) => (
-          <>
-            {menu}
-            <Divider
-              style={{
-                margin: "8px 0",
-              }}
-            />
-            <Space
-              style={{
-                padding: "0 8px 4px",
-              }}
-            >
-              <Button
-                type="text"
-                icon={<PlusOutlined />}
-                onClick={() => setIsDrawerOpen(true)}
-              >
-                New nudge
-              </Button>
-            </Space>
-          </>
-        )}
         onSelect={onSelect}
       >
         {nudges

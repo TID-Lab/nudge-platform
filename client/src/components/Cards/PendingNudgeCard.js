@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Card, Tag, Button } from "antd";
+import { CheckOutlined } from "@ant-design/icons";
 import { CloseOutlined } from "@ant-design/icons";
 import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
@@ -43,11 +44,15 @@ const PendingNudgeCard = ({ data, readonly, index }) => {
       <Space>
         <div className="tags-list">
           {demographics.length === 0 ? (
-            <Tag>All Unassigned</Tag>
+            <Tag color="blue" icon={<CheckOutlined />}>
+              All Unassigned
+            </Tag>
           ) : (
             demographics.map((category, i) => (
               // Category values aren't very well formatted
-              <Tag key={i}>{category}</Tag>
+              <Tag key={i} color="blue" icon={<CheckOutlined />}>
+                {category}
+              </Tag>
             ))
           )}
         </div>

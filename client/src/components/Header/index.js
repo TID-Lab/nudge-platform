@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Layout, Space, Button, Menu, Input, Form } from "antd";
-import "./index.css";
+import { FormOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
@@ -24,18 +25,31 @@ const Header = () => {
   }
 
   return (
-    <AntHeader>
-      <Logo />
+    <StyledHeader>
+      <nav className="nav">
+        <Space>
+          <Logo />
 
-      <Menu
-        mode="horizontal"
-        items={[{ label: "Nudges" }, { label: "Analytics" }]}
-      />
+          <Menu
+            mode="horizontal"
+            items={[{ label: "Nudges" }, { label: "Analytics" }]}
+          />
+        </Space>
 
-      <Space>
-        <Input placeholder="Search" disabled />
-        <Button onClick={() => setIsDrawerOpen(true)}>Create Nudge</Button>
-      </Space>
+        <Space>
+          <Input.Search placeholder="Search" disabled size="large" />
+          <Button
+            size="large"
+            type="primary"
+            icon={<FormOutlined />}
+            onClick={() => setIsDrawerOpen(true)}
+          >
+            Create Nudge
+          </Button>
+        </Space>
+
+        <Space style={{ width: 300 }}> </Space>
+      </nav>
 
       <Form.Provider
         onFormFinish={(name, { values }) => {
@@ -72,8 +86,31 @@ const Header = () => {
           open={isDrawerOpen}
         />
       </Form.Provider>
-    </AntHeader>
+    </StyledHeader>
   );
 };
 
 export default Header;
+
+const StyledHeader = styled(AntHeader)`
+  &.ant-layout-header {
+    background-color: var(--body-background);
+    padding: 1rem;
+  }
+
+  .ant-menu {
+    min-width: 15rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background-color: var(--body-background);
+  }
+
+  .menu-action-group {
+    display: flex;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+  }
+`;

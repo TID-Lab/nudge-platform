@@ -23,6 +23,10 @@ const PendingNudgeList = ({ total }) => {
   }, [pendingNudges]);
 
   function onSend() {
+    setIsModalOpen(true);
+
+    return;
+
     if (numParticipants === total) {
       console.log("TODO: Call backend API");
       setIsModalOpen(true);
@@ -66,6 +70,7 @@ const PendingNudgeList = ({ total }) => {
           type="error"
           showIcon
           closable
+          afterClose={() => setShowError(false)}
         />
       )}
 
@@ -131,7 +136,6 @@ const ListContainer = styled.div`
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    height: 35rem; // need to polish style here
     overflow-y: auto;
 
     .ant-empty {
