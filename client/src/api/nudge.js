@@ -35,13 +35,13 @@ async function fetchTotalParticipants() {
 }
 
 // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-async function checkNudges(nudges) {
+async function checkAssignment(nudges) {
   const options = {
     ...defaultOptions,
     method: "POST",
     body: JSON.stringify(nudges),
   };
-  const res = await fetch("/api/nudge/check", options);
+  const res = await fetch("/api/assignment/check", options);
   const checkedNudges = await res.json().then((checkedNudges) => {
     return [...checkedNudges];
   });
@@ -49,13 +49,14 @@ async function checkNudges(nudges) {
 }
 
 // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-async function sendNudges(nudges) {
+// If isSchedule = True, then timeToSend should be a Date to send (that is in the future!)
+async function dispatchAssignment(nudges, isScheduled, timeToSend=null) {
   const options = {
     ...defaultOptions,
     method: "POST",
-    body: JSON.stringify(nudges),
+    body: JSON.stringify({ assignments: nudges, isScheduled: isScheduled, timeToSend: timeToSend }),
   };
-  const res = await fetch("/api/nudge/assign", options);
+  const res = await fetch("/api/assignment/assign", options);
   const checkedNudges = await res.json().then((checkedNudges) => {
     return [...checkedNudges];
   });
@@ -105,16 +106,13 @@ async function deactivateNudge(id) {
   return res.status === 200;
 }
 
-// Output (success): [{nudge_id, num_assigned, num_left, success_code}]
-// Output (failure object): [{nudge_id, success_code, error_object}]
-// NOTE: PREVIOUSLY_ASSIGNED should be handled on the front-end
 
-function handleCheckNudges(nudges) {}
+
 
 export {
   fetchNudges,
-  checkNudges,
-  sendNudges,
+  checkAssignment,
+  dispatchAssignment,
   fetchTotalParticipants,
   createNudge,
   deactivateNudge,

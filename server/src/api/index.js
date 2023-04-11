@@ -8,11 +8,13 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const config = require('../util/config');
 const { is } = require('../util/org');
+const { Agenda } = require('@hokify/agenda')
 
 // API routes
 const orgRoutes = require('./org');
 const authRoutes = require('./auth');
 const nudgeRoutes = require('./nudge');
+const assignRoutes = require('./assignment')
 
 const debug = useDebug('api');
 const app = express();
@@ -66,6 +68,7 @@ module.exports = () => new Promise((resolve, reject) => {
   // apiRoutes.use('/proxy', is('org', 'admin'), proxyRoutes); // routes for oEmbed API proxies
   apiRoutes.use('/org', orgRoutes); // routes for partner organizations
   apiRoutes.use('/auth', authRoutes); // routes for user authentication
+  apiRoutes.use('/assignment', assignRoutes); // routes for assignment
   app.use('/api', apiRoutes); // mounts all the routes above to the /api route
 
   // Mount the client-side React app

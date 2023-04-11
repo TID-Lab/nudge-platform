@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Modal, Radio, Space, DatePicker, Result, message } from "antd";
 
 import { useSelector, useDispatch } from "react-redux";
-import { sendNudges } from "../../api/nudge";
+import { dispatchAssignment } from "../../api/nudge";
 
 const ConfirmSendModal = (props) => {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const ConfirmSendModal = (props) => {
           };
         });
 
-        sendNudges(reformattedNudges);
+        dispatchAssignment(reformattedNudges, false);
       }
 
       dispatch({ type: "pendingNudges/set", payload: [] });

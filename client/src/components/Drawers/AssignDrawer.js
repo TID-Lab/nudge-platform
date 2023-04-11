@@ -14,7 +14,7 @@ import {
 import { presetPrimaryColors } from "@ant-design/colors";
 import styled from "styled-components";
 
-import { checkNudges } from "../../api/nudge";
+import { checkAssignment } from "../../api/nudge";
 
 const colors = Object.values(presetPrimaryColors).map((_, i, arr) => {
   if (i % 2 === 0) {
@@ -45,7 +45,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
     });
     reformattedNudges.push({ nudge_id: nudge._id, demographics: demographics, nudge_message: nudge.message });
 
-    checkNudges(reformattedNudges)
+    checkAssignment(reformattedNudges)
       .then((res) => {
         const lastRes = res[reformattedNudges.length - 1];
 

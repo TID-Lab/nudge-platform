@@ -1,4 +1,6 @@
 const db = require('./db');
+const axios = require('axios').default;
+
 
 const demographic_enum = {
   Age: ['18-29', '30-40', '41-50', '51-64', '65+'],
@@ -47,15 +49,13 @@ const assignmentCodes = {
 //   success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED,
 // },
 // ]
-async function checkAssignments(assignments, participants, sendBoolean=false) {
+async function checkAssignments(assignments, participants) {
   let participants_inc = []
   let returned = []
-  let participant_mapping = {}
+  let participantMapping = {}
   try {
     for (let i = 0; i < assignments.length; i++) {
       const curr = assignments[i];
-      // console.log('starting ');
-      // console.log(curr)
       let { demographics } = curr;
       // Just to double check they're lowercase
       demographics = demographics.map(ele => ele.toLowerCase());
@@ -69,11 +69,13 @@ async function checkAssignments(assignments, participants, sendBoolean=false) {
           if (participants[parti_idx]['labels'].every((element) => includedDemographics.includes(element))) {
             participants_inc.push(...participants.splice(parti_idx, 1));
             const curr_participant = participants_inc[participants_inc.length - 1]
-            participant_mapping[curr_participant.participantId] = curr.nudge_id
+            if (participantMapping[curr_participant.participantId] != undefined) {
+              console.log("Something went wrong, a participant is being mapped two messages...");
+            }
+            participantMapping[curr_participant.participantId] = curr.nudge_message
             parti_idx = parti_idx - 1;
           }
         }
-        console.log(participants_inc)
         if (num_parti_before - participants.length == 0) {
           returned.push({nudge_id: curr['nudge_id'], num_assigned: num_parti_before - participants.length, num_left: participants.length, success_code: assignmentCodes.NO_PARTICIPANT});
           break;
@@ -110,12 +112,29 @@ async function checkAssignments(assignments, participants, sendBoolean=false) {
     console.log(e);
   }
 
-  return returned
+  return { checkedAssignments: returned, participantMapping: participantMapping }
 }
 
-async function assignNudges(assignments, participants) {
-
+async function dispatchNudges(participantMapping) {
+  const responsePromises = [];
+  // SHOULD BE EDITED FOR REAL URL
+  const endpoint = 'https://peach2nudge.ipat.gatech.edu/assign'
+  for (const participant in participantMapping) {
+    console.log(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
+    // HTTP get request
+    const resPromise = axios.post(endpoint, {
+      participant: participant,
+      nudgeMessage: participantMapping[participant]
+    }).catch((err) => {
+      console.log(`Issue sending nudge, ${err}`)
+    })
+    responsePromises.push(resPromise)
+  }
+  const responses = await Promise.all(responsePromises);
+  // Log/store the responses somehow?
+  return responses;
 }
+
 // Basically if a label is unspecified, then we assume all labels can be "assigned"
 // i.e. if we do demographics = ['female', 'black'],
 // we want includedDemographics = ['female', 'black', '18-29', '30-41', '42-53', '54-65']
@@ -157,5 +176,6 @@ function checkPreviouslyAssigned(assignment) {
 module.exports = {
   checkAssignments,
   assignmentCodes,
-  demographic_enum
+  demographic_enum,
+  dispatchNudges
 };
