@@ -11,7 +11,7 @@ import {
   Popconfirm,
   message,
 } from "antd";
-import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import Fuse from "fuse.js";
@@ -25,6 +25,7 @@ import {
   fetchTotalParticipants,
 } from "../../api/nudge";
 import "./index.css";
+import PostingMenu from "../../components/PostingMenu";
 
 const { Content } = Layout;
 

@@ -24,15 +24,6 @@ const PendingNudgeList = ({ total }) => {
 
   function onSend() {
     setIsModalOpen(true);
-
-    return;
-
-    if (numParticipants === total) {
-      console.log("TODO: Call backend API");
-      setIsModalOpen(true);
-    } else {
-      setShowError(true);
-    }
   }
 
   return (
@@ -81,7 +72,12 @@ const PendingNudgeList = ({ total }) => {
         >
           Reset
         </Button>
-        <Button block onClick={onSend} type="primary">
+        <Button
+          block
+          onClick={onSend}
+          type="primary"
+          disabled={numParticipants !== total}
+        >
           Send
         </Button>
       </ButtonGroup>
