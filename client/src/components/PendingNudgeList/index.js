@@ -4,17 +4,22 @@ import { Button, Card, Space, Empty, Alert, Typography } from "antd";
 import styled from "styled-components";
 
 import PendingNudgeCard from "../Cards/PendingNudgeCard";
+import ConfirmSendModal from "../Modals/ConfirmSend";
+import ScheduleModal from "../Modals/Schedule";
 import "./index.css";
-import { ConfirmSendModal } from "../Modals/ConfirmSend";
 
 const { Title } = Typography;
 
 const PendingNudgeList = ({ total }) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
+  const scheduledAssignments = useSelector(
+    (state) => state.scheduledAssignments
+  );
   const [numParticipants, setNumParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSendModalOpen, setIsSendModalOpen] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
   useEffect(() => {
     let participants = 0;
@@ -23,7 +28,7 @@ const PendingNudgeList = ({ total }) => {
   }, [pendingNudges]);
 
   function onSend() {
-    setIsModalOpen(true);
+    setIsSendModalOpen(true);
   }
 
   return (
@@ -38,7 +43,15 @@ const PendingNudgeList = ({ total }) => {
         </Space>
       </AssignmentCard>
 
-      <h3>Nudges to Send</h3>
+      <div className="list-title-wrapper">
+        <h3>Nudges to Send</h3>
+
+        {scheduledAssignments.length > 0 && (
+          <Button onClick={() => setIsScheduleModalOpen(true)}>
+            {scheduledAssignments.length} scheduled assignments
+          </Button>
+        )}
+      </div>
 
       <div className="list">
         {pendingNudges.length === 0 ? (
@@ -83,36 +96,15 @@ const PendingNudgeList = ({ total }) => {
       </ButtonGroup>
 
       <ConfirmSendModal
-        title="Confirm Send"
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        open={isSendModalOpen}
+        onCancel={() => setIsSendModalOpen(false)}
       />
 
-      {/* {showError && (
-        <ErrorBanner
-          text={"Not all participants assigned nudges!"}
-        ></ErrorBanner>
-      )} */}
-
-      {/* {showSuccess && (
-        <PopupModal
-          content={
-            <div>
-              <h3>[Placeholder for delivery time selector] </h3>{" "}
-              <button
-                onClick={() =>
-                  dispatch({ type: "pendingNudges/set", payload: [] })
-                }
-              >
-                Confirm?
-              </button>
-            </div>
-          }
-          handleClose={() => {
-            setShowSuccess(!showSuccess);
-          }}
-        />
-      )} */}
+      <ScheduleModal
+        open={isScheduleModalOpen}
+        onCancel={() => setIsScheduleModalOpen(false)}
+        schedules={scheduledAssignments}
+      />
     </ListContainer>
   );
 };

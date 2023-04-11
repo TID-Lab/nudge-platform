@@ -1,42 +1,54 @@
 import React, { useState } from "react";
-import {
-  Form,
-  Modal,
-  Radio,
-  Space,
-  TimePicker,
-  DatePicker,
-  Result,
-} from "antd";
+import { Form, Modal, Radio, Space, DatePicker, Result, message } from "antd";
 
 import { useSelector, useDispatch } from "react-redux";
 import { sendNudges } from "../../api/nudge";
 
-export const ConfirmSendModal = (props) => {
+const ConfirmSendModal = (props) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
-  const [sendOption, setSendOption] = useState(1);
+  const [isScheduled, setIsScheduled] = useState(false);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [okText, setOkText] = useState("Confirm");
+  const [scheduledTime, setScheduledTime] = useState(null);
 
   const onRadioChange = (e) => {
-    setSendOption(e.target.value);
+    setIsScheduled(e.target.value);
   };
 
   const onOk = () => {
-    if (okText === "Confirm") {
-      setOkText("Sending nudges...");
-      setLoading(true);
-      // const reformattedNudges = pendingNudges.map((nudge) => {
-      //   return { nudge_id: nudge.id, demographics: nudge.demographics, nudge_message: nudge.text };
-      // });
-      // sendNudges(reformattedNudges);
-      // dispatch({ type: "pendingNudges/set", payload: [] })
-    } else if (okText === "Close") {
-      props.onCancel();
-      setResult(null);
-      setOkText("Confirm");
+    if (!result) {
+      if (isScheduled) {
+        // TODO: Implement scheduling
+        if (!scheduledTime) {
+          message.error("Please select a time to schedule the nudges.");
+        }
+
+        dispatch({
+          type: "scheduledAssignment/add",
+          payload: { time: scheduledTime, nudges: pendingNudges },
+        });
+      } else {
+        setOkText("Sending nudges...");
+        setLoading(true);
+
+        const reformattedNudges = pendingNudges.map((nudge) => {
+          return {
+            nudge_id: nudge.id,
+            demographics: nudge.demographics,
+            nudge_message: nudge.text,
+          };
+        });
+
+        sendNudges(reformattedNudges);
+      }
+
+      dispatch({ type: "pendingNudges/set", payload: [] });
+      setResult("success");
+      setOkText("Ok");
+    } else if (result === "success") {
+      onCancel();
     }
   };
 
@@ -44,23 +56,28 @@ export const ConfirmSendModal = (props) => {
     props.onCancel();
     setResult(null);
     setOkText("Confirm");
+    setLoading(false);
   };
 
   let content = (
     <Form>
       <Form.Item>
-        <Radio.Group onChange={onRadioChange} value={sendOption}>
+        <Radio.Group onChange={onRadioChange} value={isScheduled}>
           <Space direction="vertical">
-            <Radio value={1}>Send it now</Radio>
-            <Radio value={2}>Schedule a time</Radio>
+            <Radio value={false}>Send it now</Radio>
+            <Radio value={true}>Schedule a time</Radio>
           </Space>
         </Radio.Group>
       </Form.Item>
 
       <Form.Item>
         <Space>
-          <DatePicker onChange={() => {}} disabled={sendOption === 1} />
-          <TimePicker onChange={() => {}} disabled={sendOption === 1} />
+          <DatePicker
+            showTime
+            disabled={!isScheduled}
+            value={scheduledTime}
+            onChange={(date) => setScheduledTime(date)}
+          />
         </Space>
       </Form.Item>
     </Form>
@@ -74,19 +91,11 @@ export const ConfirmSendModal = (props) => {
         subTitle="Your nudge has been sent to all your participants."
       />
     );
-  } else if (result === "error") {
-    content = (
-      <Result
-        status="error"
-        title="An error occurred."
-        subTitle="Please try again later."
-      />
-    );
   }
 
   return (
     <Modal
-      title={props.title}
+      title="Confirm Send"
       open={props.open}
       width={700}
       okText={okText}
@@ -98,3 +107,5 @@ export const ConfirmSendModal = (props) => {
     </Modal>
   );
 };
+
+export default ConfirmSendModal;
