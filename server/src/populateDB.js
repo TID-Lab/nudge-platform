@@ -46,9 +46,9 @@ async function createParticipants() {
     await db();
     console.log('connected to db');
     await createNudges();
-    console.log('created nudges');
+    // console.log('created nudges');
     await createParticipants();
-    console.log('created participants');
+    // console.log('created participants');
   } catch (e) {
     console.log('failed to populate database', e);
   }

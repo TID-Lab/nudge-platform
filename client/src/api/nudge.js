@@ -48,6 +48,20 @@ async function checkNudges(nudges) {
   return checkedNudges;
 }
 
+// console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
+async function sendNudges(nudges) {
+  const options = {
+    ...defaultOptions,
+    method: "POST",
+    body: JSON.stringify(nudges),
+  };
+  const res = await fetch("/api/nudge/assign", options);
+  const checkedNudges = await res.json().then((checkedNudges) => {
+    return [...checkedNudges];
+  });
+  return checkedNudges;
+}
+
 async function createNudge(nudge) {
   const options = {
     ...defaultOptions,
@@ -100,6 +114,7 @@ function handleCheckNudges(nudges) {}
 export {
   fetchNudges,
   checkNudges,
+  sendNudges,
   fetchTotalParticipants,
   createNudge,
   deactivateNudge,

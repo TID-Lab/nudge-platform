@@ -72,9 +72,11 @@ routes.post('/check', async (req, res) => {
     return;
   }
   try {
-    console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-    console.log(req.body);
+    // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
+    // console.log(req.body);
     const participants = await Participant.find({});
+    console.log("HERE 2 !!!!")
+    console.log(req.body)
     const checked_assignments = await checkAssignments(req.body, participants);
     res.status(200).send(checked_assignments);
   } catch (err) {
@@ -101,9 +103,23 @@ routes.get('/participantCount', async (req, res) => {
 // NOTE: add this to the backend on post history
 routes.post('/assign', async (req, res) => {
   try {
-    // const nudges = await Nudge.find();
-    const checked_assignments = await checkAssignments(req.body);
-
+    const participants = await Participant.find({});
+    let nudges = await Nudge.find({});
+    // Attaching the nudge message to the assignments
+    const assignments = req.body
+    for (let i = 0; i < assignments.length; i++) {
+      const nudge_id = assignments[i].nudge_id;
+      const nudge = await Nudge.find({_id: nudge_id});
+      
+      console.log("HERE!!!!")
+      console.log(nudge)
+    }
+    const checked_assignments = await checkAssignments(assignments, participants);
+    if (checked_assignments[checked_assignments.length - 1].success_code != 'SUCCESS') {
+      const err_msg = `Something went wrong with the assignments: \n${checked_assignments}`
+      debug(err_msg);
+      res.status(500).send(err_msg);
+    }
 
     // nudge: {nudge_msg: str, participant_ids: [ids]}
     // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}   

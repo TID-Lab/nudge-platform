@@ -47,15 +47,15 @@ const assignmentCodes = {
 //   success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED,
 // },
 // ]
-async function checkAssignments(assignments, participants) {
+async function checkAssignments(assignments, participants, sendBoolean=false) {
   let participants_inc = []
   let returned = []
+  let participant_mapping = {}
   try {
-    let remaining = assignments.length;
     for (let i = 0; i < assignments.length; i++) {
       const curr = assignments[i];
-      console.log('starting ');
-      console.log(curr)
+      // console.log('starting ');
+      // console.log(curr)
       let { demographics } = curr;
       // Just to double check they're lowercase
       demographics = demographics.map(ele => ele.toLowerCase());
@@ -66,9 +66,10 @@ async function checkAssignments(assignments, participants) {
         let includedDemographics = getIncludedDemographics(demographics);
         console.log(includedDemographics)
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
-
           if (participants[parti_idx]['labels'].every((element) => includedDemographics.includes(element))) {
             participants_inc.push(...participants.splice(parti_idx, 1));
+            const curr_participant = participants_inc[participants_inc.length - 1]
+            participant_mapping[curr_participant.participantId] = curr.nudge_id
             parti_idx = parti_idx - 1;
           }
         }
@@ -108,10 +109,13 @@ async function checkAssignments(assignments, participants) {
   } catch (e) {
     console.log(e);
   }
+
   return returned
 }
 
+async function assignNudges(assignments, participants) {
 
+}
 // Basically if a label is unspecified, then we assume all labels can be "assigned"
 // i.e. if we do demographics = ['female', 'black'],
 // we want includedDemographics = ['female', 'black', '18-29', '30-41', '42-53', '54-65']
@@ -127,6 +131,8 @@ function getIncludedDemographics(demographics) {
   }
   return includedDemographics;
 }
+
+
 
 // TODO
 function checkPreviouslyAssigned(assignment) {

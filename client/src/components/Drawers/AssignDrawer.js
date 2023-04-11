@@ -40,10 +40,10 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       .filter((d) => d !== undefined)
       .flat();
     demographics.pop();
-    const reformattedNudges = pendingNudges.map(({ id, demographics }) => {
-      return { nudge_id: id, demographics: demographics };
+    const reformattedNudges = pendingNudges.map(({ id, demographics, text }) => {
+      return { nudge_id: id, demographics: demographics, nudge_message: text };
     });
-    reformattedNudges.push({ nudge_id: nudge._id, demographics: demographics });
+    reformattedNudges.push({ nudge_id: nudge._id, demographics: demographics, nudge_message: nudge.message });
 
     checkNudges(reformattedNudges)
       .then((res) => {

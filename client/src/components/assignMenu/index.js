@@ -45,10 +45,10 @@ const AssignMenu = (props) => {
       return;
     }
     const reformattedNudges = pendingNudges.map((nudge) => {
-      return { nudge_id: nudge.id, demographics: nudge.demographics };
+      return { nudge_id: nudge.id, demographics: nudge.demographics, nudge_message: nudge.text};
     });
 
-    reformattedNudges.push({ nudge_id: nudge._id, demographics: demographics });
+    reformattedNudges.push({ nudge_id: nudge._id, demographics: demographics, nudge_message: nudge.message });
     console.log("SENDING");
     console.log(reformattedNudges);
     // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");

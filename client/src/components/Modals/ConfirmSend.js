@@ -9,7 +9,12 @@ import {
   Result,
 } from "antd";
 
+import { useSelector, useDispatch } from "react-redux";
+import { sendNudges } from "../../api/nudge";
+
 export const ConfirmSendModal = (props) => {
+  const dispatch = useDispatch();
+  const pendingNudges = useSelector((state) => state.pendingNudges);
   const [sendOption, setSendOption] = useState(1);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -23,6 +28,11 @@ export const ConfirmSendModal = (props) => {
     if (okText === "Confirm") {
       setOkText("Sending nudges...");
       setLoading(true);
+      // const reformattedNudges = pendingNudges.map((nudge) => {
+      //   return { nudge_id: nudge.id, demographics: nudge.demographics, nudge_message: nudge.text };
+      // });
+      // sendNudges(reformattedNudges);
+      // dispatch({ type: "pendingNudges/set", payload: [] })
     } else if (okText === "Close") {
       props.onCancel();
       setResult(null);
