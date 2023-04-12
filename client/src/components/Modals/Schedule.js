@@ -18,11 +18,11 @@ export default function ScheduleModal({ open, onCancel, schedules }) {
       footer={null}
     >
       <Collapse>
-        {schedules.map(({ time, nudges }, i) => (
+        {schedules.map(({ nextRunAt, nudges }, i) => (
           <StyledPanel
             header={
               <Space size={"large"}>
-                <div>{dayjs(time).format("MM/DD/YYYY h:mmA")}</div>
+                <div>{dayjs(nextRunAt).format("MM/DD/YYYY h:mmA")}</div>
                 <div>
                   {nudges.length} nudge{nudges.length > 1 ? "s" : ""} assigned
                 </div>
@@ -32,7 +32,7 @@ export default function ScheduleModal({ open, onCancel, schedules }) {
             extra={[
               <Button
                 type="link"
-                onClick={() => onAssignmentCancel({ time, nudges })}
+                onClick={() => onAssignmentCancel({ nextRunAt, nudges })}
               >
                 Cancel
               </Button>,

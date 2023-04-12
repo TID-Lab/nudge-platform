@@ -3,7 +3,7 @@ import { Form, Modal, Radio, Space, DatePicker, Result, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import dayjs from "dayjs";
 
-import { dispatchAssignment } from "../../api/nudge";
+import { dispatchAssignment, fetchAssignments } from "../../api/nudge";
 
 const ConfirmSendModal = (props) => {
   const dispatch = useDispatch();
@@ -20,7 +20,6 @@ const ConfirmSendModal = (props) => {
 
   const onOk = async () => {
     if (isScheduled) {
-      // TODO: Implement scheduling
       if (!scheduledTime) {
         Modal.error({
           content: "Please select a time to schedule the nudges.",
@@ -29,11 +28,23 @@ const ConfirmSendModal = (props) => {
         return;
       }
 
-      dispatchAssignment(pendingNudges, true, dayjs(scheduledTime).toDate());
-      dispatch({
-        type: "scheduledAssignment/add",
-        payload: { time: scheduledTime, nudges: pendingNudges },
-      });
+      dispatchAssignment(pendingNudges, true, dayjs(scheduledTime).toDate()); // can this give me the latest schedule?
+
+      // this code repeats in PendingNudgeList/index.js
+      fetchAssignments()
+        .then((jobs) => {
+          const assignments = jobs
+            .filter(({ lastRunAt }) => !lastRunAt)
+            .map(({ _id, nextRunAt, data }) => {
+              return { id: _id, nextRunAt, nudges: data.nudges };
+            });
+
+          dispatch({
+            type: "scheduledAssignments/set",
+            payload: assignments,
+          });
+        })
+        .catch((e) => console.log(e));
     } else {
       setOkText("Sending nudges...");
       setLoading(true);

@@ -44,21 +44,24 @@ routes.post('/check', async (req, res) => {
 routes.post('/assign', async (req, res) => {
   try {
     // May need to format timeToSend
-    console.log("bruh")
+    console.log("=======================")
     console.log(`req body: ${req.body}`)
-    const { assignments, isScheduled, timeToSend } = req.body
+    const { nudges, assignments, isScheduled, timeToSend } = req.body
     console.log("Assignment given for time: ", timeToSend)
     // Checks to see if assignment is valid
     const participants = await Participant.find({});
     const { checkedAssignments, participantMapping } = await checkAssignments(assignments, participants);
+
     if (checkedAssignments[checkedAssignments.length - 1].success_code != 'SUCCESS') {
       const err_msg = `Something went wrong with the assignments: \n${checkedAssignments}`
       debug(err_msg);
       res.status(500).send(err_msg);
     }
+
     let agendaResponse;
+
     if (isScheduled) {
-      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', participantMapping)
+      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', { participantMapping, nudges })
     } else {
       agendaResponse = agenda.now('sendNudge', participantMapping)
     }

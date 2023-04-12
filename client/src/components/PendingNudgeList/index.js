@@ -7,6 +7,7 @@ import PendingNudgeCard from "../Cards/PendingNudgeCard";
 import ConfirmSendModal from "../Modals/ConfirmSend";
 import ScheduleModal from "../Modals/Schedule";
 import "./index.css";
+import { fetchAssignments } from "../../api/nudge";
 
 const { Title } = Typography;
 
@@ -26,6 +27,23 @@ const PendingNudgeList = ({ total }) => {
     pendingNudges.forEach((nudge) => (participants += nudge.assigned));
     setNumParticipants(participants);
   }, [pendingNudges]);
+
+  useEffect(() => {
+    fetchAssignments()
+      .then((jobs) => {
+        const assignments = jobs
+          .filter(({ lastRunAt }) => !lastRunAt)
+          .map(({ _id, nextRunAt, data }) => {
+            return { id: _id, nextRunAt, nudges: data.nudges };
+          });
+
+        dispatch({
+          type: "scheduledAssignments/set",
+          payload: assignments,
+        });
+      })
+      .catch((e) => console.log(e));
+  }, [dispatch]);
 
   function onSend() {
     setIsSendModalOpen(true);

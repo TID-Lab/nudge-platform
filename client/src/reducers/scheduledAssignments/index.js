@@ -2,11 +2,11 @@ const initState = [];
 
 export default function scheduledAssignmentsReducer(state = initState, action) {
   switch (action.type) {
-    case "scheduledAssignment/add":
+    case "scheduledAssignments/add":
       return [...state, action.payload];
-    case "scheduledAssignment/set":
+    case "scheduledAssignments/set":
       return action.payload;
-    case "scheduledAssignment/delete":
+    case "scheduledAssignments/delete":
       if (action.payload < state.length) {
         state.splice(action.payload, 1);
         return [...state];

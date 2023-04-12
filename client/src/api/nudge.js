@@ -111,6 +111,7 @@ async function dispatchAssignment(nudges, isScheduled, timeToSend = null) {
     ...defaultOptions,
     method: "POST",
     body: JSON.stringify({
+      nudges: nudges,
       assignments: formatNudges(nudges),
       isScheduled: isScheduled,
       timeToSend: timeToSend,
