@@ -48,7 +48,7 @@ const PendingNudgeList = ({ total }) => {
 
         {scheduledAssignments.length > 0 && (
           <Button onClick={() => setIsScheduleModalOpen(true)}>
-            {scheduledAssignments.length} scheduled assignments
+            <b>{scheduledAssignments.length} </b>scheduled assignments
           </Button>
         )}
       </div>
@@ -130,6 +130,12 @@ const ListContainer = styled.div`
       width: 100%;
       margin: auto;
     }
+  }
+
+  .list-title-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 `;
 

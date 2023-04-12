@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Card, Tag, Button } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
-import { CloseOutlined } from "@ant-design/icons";
-import { UserOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { PendingNudgeSelect } from "../Select/PendingNudgeSelect";
 

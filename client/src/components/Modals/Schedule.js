@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { Modal, List, Typography, Button, Space, Collapse } from "antd";
-import "dayjs";
+import { Modal, List, Button, Space, Collapse, Tag } from "antd";
+import { CheckOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import styled from "styled-components";
 
 const { Panel } = Collapse;
 
 export default function ScheduleModal({ open, onCancel, schedules }) {
+  onCancel = (assignment) => {};
+
   return (
     <Modal
       width={800}
@@ -15,8 +18,8 @@ export default function ScheduleModal({ open, onCancel, schedules }) {
       footer={null}
     >
       <Collapse>
-        {schedules.map(({ time, nudges }) => (
-          <Panel
+        {schedules.map(({ time, nudges }, i) => (
+          <StyledPanel
             header={
               <Space size={"large"}>
                 <div>{dayjs(time).format("MM/DD/YYYY h:mmA")}</div>
@@ -25,21 +28,51 @@ export default function ScheduleModal({ open, onCancel, schedules }) {
                 </div>
               </Space>
             }
-            key="1"
+            key={i}
             extra={[
-              <Button type="link">Cancel</Button>,
-              <Button type="link">Reschedule</Button>,
+              <Button type="link" onClick={() => onCancel({ time, nudges })}>
+                Cancel
+              </Button>,
             ]}
           >
-            {console.log(time)}
             <List
-              bordered
               dataSource={nudges}
-              renderItem={(nudges) => <List.Item></List.Item>}
+              renderItem={({ text, demographics, assigned, color }) => (
+                <List.Item
+                  style={{
+                    borderLeft: `${color} solid 3px`,
+                  }}
+                >
+                  <Space size={"large"}>
+                    <div>{text}</div>
+                    <div>{assigned} Assigned</div>
+                    <div>
+                      {demographics.length === 0 ? (
+                        <Tag color="blue" icon={<CheckOutlined />}>
+                          All Unassigned
+                        </Tag>
+                      ) : (
+                        demographics.map((category, i) => (
+                          // Category values aren't very well formatted
+                          <Tag key={i} color="blue" icon={<CheckOutlined />}>
+                            {category}
+                          </Tag>
+                        ))
+                      )}
+                    </div>
+                  </Space>
+                </List.Item>
+              )}
             />
-          </Panel>
+          </StyledPanel>
         ))}
       </Collapse>
     </Modal>
   );
 }
+
+const StyledPanel = styled(Panel)`
+  .ant-collapse-header {
+    align-items: center !important;
+  }
+`;
