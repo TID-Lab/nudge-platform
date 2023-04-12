@@ -61,7 +61,7 @@ routes.post('/assign', async (req, res) => {
     let agendaResponse;
 
     if (isScheduled) {
-      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', { participantMapping, nudges })
+      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', participantMapping)
     } else {
       agendaResponse = agenda.now('sendNudge', participantMapping)
     }
