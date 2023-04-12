@@ -28,31 +28,41 @@ const ConfirmSendModal = (props) => {
         return;
       }
 
-      dispatchAssignment(pendingNudges, true, dayjs(scheduledTime).toDate()); // can this give me the latest schedule?
+      try {
+        await dispatchAssignment(
+          pendingNudges,
+          true,
+          dayjs(scheduledTime).toDate()
+        ); // can this give me the latest schedule?
 
-      // this code repeats in PendingNudgeList/index.js
-      fetchAssignments()
-        .then((jobs) => {
-          const assignments = jobs
-            .filter(({ lastRunAt }) => !lastRunAt)
-            .map(({ _id, nextRunAt, data }) => {
-              return { id: _id, nextRunAt, nudges: data.nudges };
+        // this code repeats in PendingNudgeList/index.js
+        fetchAssignments()
+          .then((jobs) => {
+            const assignments = jobs
+              .filter(({ lastRunAt }) => !lastRunAt)
+              .map(({ _id, nextRunAt, data }) => {
+                return { id: _id, nextRunAt, nudges: data.nudges };
+              });
+
+            dispatch({
+              type: "scheduledAssignments/set",
+              payload: assignments,
             });
-
-          dispatch({
-            type: "scheduledAssignments/set",
-            payload: assignments,
-          });
-        })
-        .catch((e) => console.log(e));
+          })
+          .catch((e) => console.log(e));
+      } catch (e) {
+        Modal.error({
+          content: "Error scheduling nudges. Please try again.",
+        });
+      }
     } else {
       setOkText("Sending nudges...");
       setLoading(true);
-      dispatchAssignment(pendingNudges, false);
+      await dispatchAssignment(pendingNudges, false);
     }
 
     dispatch({ type: "pendingNudges/set", payload: [] });
-    props.onCancel();
+    onCancel();
   };
 
   const onCancel = () => {

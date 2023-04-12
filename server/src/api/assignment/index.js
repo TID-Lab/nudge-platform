@@ -61,14 +61,14 @@ routes.post('/assign', async (req, res) => {
     let agendaResponse;
 
     if (isScheduled) {
-      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', participantMapping)
+      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', { participantMapping, nudges })
     } else {
-      agendaResponse = agenda.now('sendNudge', participantMapping)
+      agendaResponse = agenda.now('sendNudge', { participantMapping, nudges })
     }
 
     // nudge: {nudge_msg: str, participant_ids: [ids]}
     // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}   
-    res.status(200).send(agendaResponse);
+    res.status(200).send(checkedAssignments);
   } catch (err) {
     debug(`${err}`);
     res.status(500).send(err);
