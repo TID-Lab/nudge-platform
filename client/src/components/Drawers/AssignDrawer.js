@@ -40,14 +40,19 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       .filter((d) => d !== undefined)
       .flat();
     demographics.pop();
-    const reformattedNudges = pendingNudges.map(({ id, demographics, text }) => {
-      return { nudge_id: id, demographics: demographics, nudge_message: text };
-    });
-    reformattedNudges.push({ nudge_id: nudge._id, demographics: demographics, nudge_message: nudge.message });
 
-    checkAssignment(reformattedNudges)
+    const newPendingNudges = [
+      ...pendingNudges,
+      {
+        id: nudge._id,
+        text: nudge.message,
+        demographics: demographics,
+      },
+    ];
+
+    checkAssignment(newPendingNudges)
       .then((res) => {
-        const lastRes = res[reformattedNudges.length - 1];
+        const lastRes = res[newPendingNudges.length - 1];
 
         if (lastRes.success_code === "SUCCESS") {
           dispatch({

@@ -75,8 +75,8 @@ routes.post('/assign', async (req, res) => {
 
 routes.get('/', async (req, res) => {
   try {
-    const jobs = await agenda.jobs();
-    // FILTER ACTIVE?
+    const jobs = (await agenda.jobs({name: "sendNudge"})).map(job => job.attrs);
+
     res.status(200).send(jobs);
   } catch (err) {
     debug(`${err}`);

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Form, Modal, Radio, Space, DatePicker, Result, message } from "antd";
-
 import { useSelector, useDispatch } from "react-redux";
+import dayjs from "dayjs";
+
 import { dispatchAssignment } from "../../api/nudge";
 
 const ConfirmSendModal = (props) => {
@@ -17,7 +18,7 @@ const ConfirmSendModal = (props) => {
     setIsScheduled(e.target.value);
   };
 
-  const onOk = () => {
+  const onOk = async () => {
     if (isScheduled) {
       // TODO: Implement scheduling
       if (!scheduledTime) {
@@ -28,6 +29,7 @@ const ConfirmSendModal = (props) => {
         return;
       }
 
+      dispatchAssignment(pendingNudges, true, dayjs(scheduledTime).toDate());
       dispatch({
         type: "scheduledAssignment/add",
         payload: { time: scheduledTime, nudges: pendingNudges },
@@ -35,16 +37,7 @@ const ConfirmSendModal = (props) => {
     } else {
       setOkText("Sending nudges...");
       setLoading(true);
-
-      const reformattedNudges = pendingNudges.map((nudge) => {
-        return {
-          nudge_id: nudge.id,
-          demographics: nudge.demographics,
-          nudge_message: nudge.text,
-        };
-      });
-
-      dispatchAssignment(reformattedNudges, false);
+      dispatchAssignment(pendingNudges, false);
     }
 
     dispatch({ type: "pendingNudges/set", payload: [] });

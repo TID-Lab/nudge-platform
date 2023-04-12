@@ -7,7 +7,7 @@ import styled from "styled-components";
 const { Panel } = Collapse;
 
 export default function ScheduleModal({ open, onCancel, schedules }) {
-  onCancel = (assignment) => {};
+  const onAssignmentCancel = (assignment) => {};
 
   return (
     <Modal
@@ -30,7 +30,10 @@ export default function ScheduleModal({ open, onCancel, schedules }) {
             }
             key={i}
             extra={[
-              <Button type="link" onClick={() => onCancel({ time, nudges })}>
+              <Button
+                type="link"
+                onClick={() => onAssignmentCancel({ time, nudges })}
+              >
                 Cancel
               </Button>,
             ]}

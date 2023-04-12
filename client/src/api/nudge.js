@@ -34,35 +34,6 @@ async function fetchTotalParticipants() {
   return count;
 }
 
-// console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-async function checkAssignment(nudges) {
-  const options = {
-    ...defaultOptions,
-    method: "POST",
-    body: JSON.stringify(nudges),
-  };
-  const res = await fetch("/api/assignment/check", options);
-  const checkedNudges = await res.json().then((checkedNudges) => {
-    return [...checkedNudges];
-  });
-  return checkedNudges;
-}
-
-// console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-// If isSchedule = True, then timeToSend should be a Date to send (that is in the future!)
-async function dispatchAssignment(nudges, isScheduled, timeToSend=null) {
-  const options = {
-    ...defaultOptions,
-    method: "POST",
-    body: JSON.stringify({ assignments: nudges, isScheduled: isScheduled, timeToSend: timeToSend }),
-  };
-  const res = await fetch("/api/assignment/assign", options);
-  const checkedNudges = await res.json().then((checkedNudges) => {
-    return [...checkedNudges];
-  });
-  return checkedNudges;
-}
-
 async function createNudge(nudge) {
   const options = {
     ...defaultOptions,
@@ -106,14 +77,70 @@ async function deactivateNudge(id) {
   return res.status === 200;
 }
 
+/** Maybe move assignment related APIs to new file */
 
+async function fetchAssignments() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch("/api/assignment", options);
+  const jobs = await res.json().then((jobs) => jobs);
 
+  return jobs;
+}
+
+// console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
+async function checkAssignment(nudges) {
+  const options = {
+    ...defaultOptions,
+    method: "POST",
+    body: JSON.stringify(formatNudges(nudges)),
+  };
+  const res = await fetch("/api/assignment/check", options);
+  const checkedNudges = await res.json().then((checkedNudges) => {
+    return [...checkedNudges];
+  });
+  return checkedNudges;
+}
+
+// console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
+// If isSchedule = True, then timeToSend should be a Date to send (that is in the future!)
+async function dispatchAssignment(nudges, isScheduled, timeToSend = null) {
+  const options = {
+    ...defaultOptions,
+    method: "POST",
+    body: JSON.stringify({
+      assignments: formatNudges(nudges),
+      isScheduled: isScheduled,
+      timeToSend: timeToSend,
+    }),
+  };
+  const res = await fetch("/api/assignment/assign", options);
+  const checkedNudges = await res.json().then((checkedNudges) => {
+    return [...checkedNudges];
+  });
+
+  return checkedNudges;
+}
 
 export {
   fetchNudges,
+  fetchAssignments,
   checkAssignment,
   dispatchAssignment,
   fetchTotalParticipants,
   createNudge,
   deactivateNudge,
 };
+
+// Helper function to format nudges for assignments
+function formatNudges(nudges) {
+  return nudges.map((nudge) => {
+    return {
+      nudge_id: nudge.id,
+      demographics: nudge.demographics,
+      nudge_message: nudge.text,
+    };
+  });
+}
