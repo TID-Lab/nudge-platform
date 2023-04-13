@@ -25,11 +25,16 @@ import {
   fetchTotalParticipants,
 } from "../../api/nudge";
 import "./index.css";
+
+import useAuth from '../../hooks/auth';
+
 import PostingMenu from "../../components/PostingMenu";
 
 const { Content } = Layout;
 
 const MainPage = () => {
+  useAuth();
+
   const dispatch = useDispatch();
   const nudges = useSelector((state) => state.nudges);
   const pendingNudges = useSelector((state) => state.pendingNudges);

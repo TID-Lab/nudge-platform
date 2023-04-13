@@ -18,7 +18,10 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "mongoose": "^5.12.2",
-    "oauth": "^0.9.15"
+    "oauth": "^0.9.15",
+    "cas-authentication": "^0.0.8",
+    "node-cas-authentication": "^0.0.15",
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "eslint": "^7.23.0",
