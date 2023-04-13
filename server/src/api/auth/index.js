@@ -10,11 +10,12 @@ const Organization = require('../../models/organization');
 const { comparePassword } = require('../../util/org');
 const oauth = require('../../util/oauth-promise')(process.env.CALLBACK_URL || "https://peach.ipat.gatech.edu/social-media-dashboard");
 const debug = useDebug('api');
+const casServiceUrl = process.env.NODE_ENV === 'production' ? 'https://peach2.ipat.gatech.edu/api/auth' : 'http://localhost:3000/api/auth';
 
 var cas = new CASAuthentication({
   cas_version: '3.0',
   cas_url: 'https://login.gatech.edu/cas',
-  service_url: 'http://localhost:3000/api/auth',
+  service_url: casServiceUrl,
   // http://localhost:5001//authenticate?ticket=ST-22282-eGZSy6F17H9uBnQGQoF7x-eXJE4-ip-10-128-1-139
 });
 
@@ -29,7 +30,7 @@ routes.get('/caslogin', async (req, res, next) => {
 
   if (!('cas_user' in req.session)) {
     debug('NOT logged in. Time for CAS redirect!');
-    req.query.redirectTo = 'bob';
+    // req.query.redirectTo = 'bob';
     cas.bounce_redirect(req, res, next);
     return;
   }
