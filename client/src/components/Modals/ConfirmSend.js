@@ -1,92 +1,79 @@
 import React, { useState } from "react";
-import {
-  Form,
-  Modal,
-  Radio,
-  Space,
-  TimePicker,
-  DatePicker,
-  Result,
-} from "antd";
-
+import { Form, Modal, Radio, Space, DatePicker, Result, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { sendNudges } from "../../api/nudge";
+import dayjs from "dayjs";
 
-export const ConfirmSendModal = (props) => {
+import { dispatchAssignment, fetchAssignments } from "../../api/nudge";
+
+const ConfirmSendModal = (props) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
-  const [sendOption, setSendOption] = useState(1);
-  const [result, setResult] = useState(null);
+
+  const [isScheduled, setIsScheduled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [okText, setOkText] = useState("Confirm");
+  const [scheduledTime, setScheduledTime] = useState(null);
 
   const onRadioChange = (e) => {
-    setSendOption(e.target.value);
+    setIsScheduled(e.target.value);
   };
 
-  const onOk = () => {
-    if (okText === "Confirm") {
+  const onOk = async () => {
+    if (isScheduled) {
+      if (!scheduledTime) {
+        Modal.error({
+          content: "Please select a time to schedule the nudges.",
+        });
+
+        return;
+      }
+
+      try {
+        await dispatchAssignment(
+          pendingNudges,
+          true,
+          dayjs(scheduledTime).toDate()
+        ); // can this give me the latest schedule?
+
+        // this code repeats in PendingNudgeList/index.js
+        fetchAssignments()
+          .then((jobs) => {
+            const assignments = jobs
+              .filter(({ lastRunAt }) => !lastRunAt)
+              .map(({ _id, nextRunAt, data }) => {
+                return { id: _id, nextRunAt, nudges: data.nudges };
+              });
+
+            dispatch({
+              type: "scheduledAssignments/set",
+              payload: assignments,
+            });
+          })
+          .catch((e) => console.log(e));
+      } catch (e) {
+        Modal.error({
+          content: "Error scheduling nudges. Please try again.",
+        });
+      }
+    } else {
       setOkText("Sending nudges...");
       setLoading(true);
-      // const reformattedNudges = pendingNudges.map((nudge) => {
-      //   return { nudge_id: nudge.id, demographics: nudge.demographics, nudge_message: nudge.text };
-      // });
-      // sendNudges(reformattedNudges);
-      // dispatch({ type: "pendingNudges/set", payload: [] })
-    } else if (okText === "Close") {
-      props.onCancel();
-      setResult(null);
-      setOkText("Confirm");
+      await dispatchAssignment(pendingNudges, false);
     }
+
+    dispatch({ type: "pendingNudges/set", payload: [] });
+    onCancel();
   };
 
   const onCancel = () => {
     props.onCancel();
-    setResult(null);
     setOkText("Confirm");
+    setLoading(false);
   };
-
-  let content = (
-    <Form>
-      <Form.Item>
-        <Radio.Group onChange={onRadioChange} value={sendOption}>
-          <Space direction="vertical">
-            <Radio value={1}>Send it now</Radio>
-            <Radio value={2}>Schedule a time</Radio>
-          </Space>
-        </Radio.Group>
-      </Form.Item>
-
-      <Form.Item>
-        <Space>
-          <DatePicker onChange={() => {}} disabled={sendOption === 1} />
-          <TimePicker onChange={() => {}} disabled={sendOption === 1} />
-        </Space>
-      </Form.Item>
-    </Form>
-  );
-
-  if (result === "success") {
-    content = (
-      <Result
-        status="success"
-        title="Successfully sent your nudge!"
-        subTitle="Your nudge has been sent to all your participants."
-      />
-    );
-  } else if (result === "error") {
-    content = (
-      <Result
-        status="error"
-        title="An error occurred."
-        subTitle="Please try again later."
-      />
-    );
-  }
 
   return (
     <Modal
-      title={props.title}
+      title="Confirm Send"
       open={props.open}
       width={700}
       okText={okText}
@@ -94,7 +81,29 @@ export const ConfirmSendModal = (props) => {
       onOk={onOk}
       onCancel={onCancel}
     >
-      {content}
+      <Form>
+        <Form.Item>
+          <Radio.Group onChange={onRadioChange} value={isScheduled}>
+            <Space direction="vertical">
+              <Radio value={false}>Send it now</Radio>
+              <Radio value={true}>Schedule a time</Radio>
+            </Space>
+          </Radio.Group>
+        </Form.Item>
+
+        <Form.Item>
+          <Space>
+            <DatePicker
+              showTime
+              disabled={!isScheduled}
+              value={scheduledTime}
+              onChange={(date) => setScheduledTime(date)}
+            />
+          </Space>
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };
+
+export default ConfirmSendModal;

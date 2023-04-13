@@ -25,7 +25,6 @@ import {
   fetchTotalParticipants,
 } from "../../api/nudge";
 import "./index.css";
-import PostingMenu from "../../components/PostingMenu";
 
 const { Content } = Layout;
 
@@ -190,7 +189,6 @@ const MainPage = () => {
             </Col>
             <Col span={8} style={{ borderLeft: "2px solid #f0f0f0" }}>
               <PendingNudgeList total={totalParticipants} />
-              {/* <PostingMenu /> */}
             </Col>
           </Row>
         </StyledContent>
