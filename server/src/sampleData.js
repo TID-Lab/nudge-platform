@@ -1,5 +1,10 @@
 // Assuming 18-29, 30-41, 42-53, 54-65...
 const data = {
+  authUserData: [
+    {
+      username: 'jw199',
+    },
+  ],
   participantData: [
     {
       participantId: 5,

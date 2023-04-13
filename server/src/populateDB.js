@@ -5,7 +5,23 @@ console.log('This script populates some sample nudges and participants to your d
 const Nudge = require('./models/nudge');
 const sampleData = require('./sampleData');
 const Participant = require('./models/participant');
+const AuthUsers = require('./models/authUsers');
 const db = require('./util/db');
+
+/**
+ * Creates auth users if they don't exist
+ */
+async function createAuthUsers() {
+  const authUser = await AuthUsers.findOne({});
+  if (!authUser) {
+    try {
+      await AuthUsers.create(sampleData.authUserData);
+      console.log('created sample authUsers');
+    } catch (err) {
+      console.log(`${err}`);
+    }
+  }
+}
 
 /**
  * Creates a new admin organization with the
@@ -45,10 +61,12 @@ async function createParticipants() {
     console.log('connecting to db...');
     await db();
     console.log('connected to db');
+    await createAuthUsers();
+    console.log('created auth users');
     await createNudges();
-    // console.log('created nudges');
+    console.log('created nudges');
     await createParticipants();
-    // console.log('created participants');
+    console.log('created participants');
   } catch (e) {
     console.log('failed to populate database', e);
   }

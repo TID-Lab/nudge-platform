@@ -5,7 +5,7 @@
 async function authFetch(url, options) {
   const res = await fetch(url, options);
   if (res.status === 401) {
-    window.location.href = "/login";
+    window.location.href = "/api/auth/caslogin"; //was /login for LoginModal back when Oauth was used
     return null;
   }
   return res;
