@@ -7,9 +7,13 @@ import {useEffect, useState} from 'react';
 import AssignMenu from '../../components/assignMenu';
 import { fetchNudges, createNudge } from '../../api/nudge';
 
+import useAuth from '../../hooks/auth';
+
 console.log(fetchNudges());
 
 const MainPage = () => {
+  useAuth();
+
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [nudges, setNudges] = useState([]);

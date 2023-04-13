@@ -3,6 +3,7 @@ const chalk = require('chalk');
 const db = require('./util/db');
 const api = require('./api');
 const { createAdminOrganization } = require('./util/org');
+const AuthUsers = require('./models/authUsers');
 
 const debug = useDebug('core');
 
@@ -16,6 +17,9 @@ const debug = useDebug('core');
   try {
   // Initialize the database connection
     await db();
+
+    const usrsFromDB = await AuthUsers.findOne({username: 'jw199'});
+    debug(`User: ${usrsFromDB}`);
 
     // Initialize the API
     await api();

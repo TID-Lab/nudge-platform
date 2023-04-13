@@ -10,6 +10,8 @@ import './index.css';
 import Footer from '../../components/Footer';
 import Dashboard from '../../components/Dashboard';
 import Login from '../LoginPage';
+import Logout from '../LogoutPage';
+import LandingPage from '../LandingPage';
 import Header from '../../components/Header';
 import MainPage from '../MainPage';
 
@@ -27,8 +29,16 @@ const App = () => {
             <Route exact path="/"> 
               <MainPage />
             </Route>
+            <Route path="/landing">
+              <LandingPage />
+              <Footer />
+            </Route>
             <Route path="/login">
               <Login />
+              <Footer />
+            </Route>
+            <Route path="/logout">
+              <Logout />
               <Footer />
             </Route>
           </Switch>

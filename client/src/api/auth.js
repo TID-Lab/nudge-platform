@@ -6,7 +6,7 @@
  * Returns whether the user is authenticated via GET /api/auth/check
  */
 async function checkAuth() {
-  const res = await fetch('/api/auth/check', { method: 'GET' });
+  const res = await fetch('/api/auth/cascheck', { method: 'GET' });
   return res.status === 200;
 }
 
