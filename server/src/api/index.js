@@ -81,7 +81,7 @@ module.exports = () => new Promise((resolve, reject) => {
     app.get('/login', sendClientIndex); // do not authenticate the login page
     app.get('/', sendClientIndex); // do not authenticate the landing page
     app.use(express.static(path.join(...build))); // static files for dashboard
-    app.get('*', is('org', 'admin'), sendClientIndex); // authenticate everything else
+    //app.get('*', is('org', 'admin'), sendClientIndex); // authenticate everything else
   }
 
   // Swallow errors
