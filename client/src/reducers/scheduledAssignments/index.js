@@ -7,12 +7,7 @@ export default function scheduledAssignmentsReducer(state = initState, action) {
     case "scheduledAssignments/set":
       return action.payload;
     case "scheduledAssignments/delete":
-      if (action.payload < state.length) {
-        state.splice(action.payload, 1);
-        return [...state];
-      } else {
-        return state;
-      }
+      return state.filter(({ id }) => id !== action.payload);
     default:
       return state;
   }

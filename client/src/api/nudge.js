@@ -90,6 +90,15 @@ async function fetchAssignments() {
   return jobs;
 }
 
+async function cancelSchedule(id) {
+  const options = {
+    ...defaultOptions,
+    method: "DELETE",
+  };
+
+  fetch(`/api/assignment/${id}`, options);
+}
+
 // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
 async function checkAssignment(nudges) {
   const options = {
@@ -128,6 +137,7 @@ async function dispatchAssignment(nudges, isScheduled, timeToSend = null) {
 export {
   fetchNudges,
   fetchAssignments,
+  cancelSchedule,
   checkAssignment,
   dispatchAssignment,
   fetchTotalParticipants,

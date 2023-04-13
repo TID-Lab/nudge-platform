@@ -5,6 +5,7 @@
 
 const routes = require('express').Router();
 const useDebug = require('debug');
+const { ObjectId } = require('mongodb');
 
 const debug = useDebug('api');
 const Nudge = require('../../models/nudge');
@@ -87,11 +88,13 @@ routes.get('/', async (req, res) => {
   }
 });
 
-routes.delete('/', async (req, res) => {
+routes.delete('/:id', async (req, res) => {
+  const id = req.params.id;
+
   try {
-    const jobs = await agenda.jobs();
-    // IMPLEMENT DELETE FUNCTIONALITY
-    res.status(200).send(jobs);
+    await agenda.cancel({ _id: ObjectId(id) });
+
+    res.status(200);
   } catch (err) {
     debug(`${err}`);
     res.status(500).send(err);
