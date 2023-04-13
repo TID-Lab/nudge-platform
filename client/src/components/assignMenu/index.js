@@ -3,7 +3,7 @@ import "./index.css";
 import { useState } from "react";
 import DemographicButton from "../DemographicButton";
 import { useDispatch, useSelector } from "react-redux";
-import { checkNudges } from "../../api/nudge";
+import { checkAssignment } from "../../api/nudge";
 
 import ErrorBanner from "../ErrorBanner";
 const AssignMenu = (props) => {
@@ -52,7 +52,7 @@ const AssignMenu = (props) => {
     console.log("SENDING");
     console.log(reformattedNudges);
     // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-    checkNudges(reformattedNudges)
+    checkAssignment(reformattedNudges)
       .then((res) => {
         console.log(res);
         const last_res = res[reformattedNudges.length - 1];
