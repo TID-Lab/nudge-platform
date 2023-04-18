@@ -52,7 +52,6 @@ routes.post('/assign', async (req, res) => {
     // Checks to see if assignment is valid
     const participants = await Participant.find({});
     const { checkedAssignments, participantMapping } = await checkAssignments(assignments, participants);
-
     if (checkedAssignments[checkedAssignments.length - 1].success_code != 'SUCCESS') {
       const err_msg = `Something went wrong with the assignments: \n${checkedAssignments}`
       debug(err_msg);
@@ -60,11 +59,12 @@ routes.post('/assign', async (req, res) => {
     }
 
     let agendaResponse;
-
+    // TODO: CHECK AUTH USER ONE LAST TIME HERE
+    const { username } = req.session.authUser;
     if (isScheduled) {
-      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', { participantMapping, nudges })
+      agendaResponse = await agenda.schedule(timeToSend, 'sendNudge', { participantMapping, nudges, username })
     } else {
-      agendaResponse = agenda.now('sendNudge', { participantMapping, nudges })
+      agendaResponse = agenda.now('sendNudge', { participantMapping, nudges, username })
     }
 
     // nudge: {nudge_msg: str, participant_ids: [ids]}

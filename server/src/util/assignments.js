@@ -115,16 +115,17 @@ async function checkAssignments(assignments, participants) {
   return { checkedAssignments: returned, participantMapping: participantMapping }
 }
 
-async function dispatchNudges(participantMapping) {
+async function dispatchNudges(participantMapping, sender) {
   const responsePromises = [];
   // SHOULD BE EDITED FOR REAL URL
-  const endpoint = 'https://peach2nudge.ipat.gatech.edu/assign'
+  const endpoint = 'https://peach2nudge.ipat.gatech.edu/api/nudges'
   for (const participant in participantMapping) {
     console.log(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
     // HTTP get request
     const resPromise = axios.post(endpoint, {
-      participant: participant,
-      nudgeMessage: participantMapping[participant]
+      recipient: participant,
+      mesg: participantMapping[participant],
+      sender: username
     }).catch((err) => {
       console.log(`Issue sending nudge, ${err}`)
     })

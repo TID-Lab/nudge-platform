@@ -8,12 +8,12 @@ const agenda = new Agenda(connectionOpts);
 
 async function scheduleNudgeHandler(job) {
   console.log(job.attrs)
-  const nudges = job.attrs.data;
+  const { participantMapping, nudges, username } = job.attrs.data;
   // We may want to recheck that all participants still exist. However, we do the participant accounted for check initially
   // const participants = await Participant.find({});
   console.log("sending nudges!")
-  console.log(nudges)
-  const responses = await dispatchNudges(nudges);
+  console.log(participantMapping)
+  const responses = await dispatchNudges(participantMapping, username);
   console.log("all responses:")
   for (const res in responses) {
     console.log(res);
