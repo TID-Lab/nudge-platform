@@ -26,7 +26,7 @@ import {
 } from "../../api/nudge";
 import "./index.css";
 
-import useAuth from '../../hooks/auth';
+import useAuth from "../../hooks/auth";
 
 import PostingMenu from "../../components/PostingMenu";
 

@@ -119,18 +119,20 @@ async function dispatchNudges(participantMapping, sender) {
   const responsePromises = [];
   // SHOULD BE EDITED FOR REAL URL
   const endpoint = 'https://peach2nudge.ipat.gatech.edu/api/nudges'
-  for (const participant in participantMapping) {
+
+  Object.keys(participantMapping).forEach((participant) => {
     console.log(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
     // HTTP get request
     const resPromise = axios.post(endpoint, {
       recipient: participant,
       mesg: participantMapping[participant],
-      sender: username
+      sender,
     }).catch((err) => {
       console.log(`Issue sending nudge, ${err}`)
     })
     responsePromises.push(resPromise)
-  }
+  });
+
   const responses = await Promise.all(responsePromises);
   // Log/store the responses somehow?
   return responses;
@@ -142,17 +144,17 @@ async function dispatchNudges(participantMapping, sender) {
 // (and then we can check each participant's demographics against the included list)
 function getIncludedDemographics(demographics) {
   const includedDemographics = [...demographics];
-  for (const category in demographic_enum) {
+
+  Object.keys(demographic_enum).forEach((category) => {
     // Checks if there is any overlap (i.e. there exists a demographic label in the age category)
     const contains = demographic_enum[category].some((element) => demographics.includes(element));
     if (!contains) {
       includedDemographics.push(...demographic_enum[category]);
     }
-  }
+  });
+
   return includedDemographics;
 }
-
-
 
 // TODO
 function checkPreviouslyAssigned(assignment) {
