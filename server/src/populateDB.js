@@ -7,11 +7,15 @@ const sampleData = require('./sampleData');
 const Participant = require('./models/participant');
 const AuthUsers = require('./models/authUsers');
 const db = require('./util/db');
+const dropDatabase = process.env.DROP_DB_ENTRIES || false
 
 /**
  * Creates auth users if they don't exist
  */
 async function createAuthUsers() {
+  if (dropDatabase) {
+    await AuthUsers.remove({})
+  }
   const authUser = await AuthUsers.findOne({});
   if (!authUser) {
     try {
@@ -28,6 +32,9 @@ async function createAuthUsers() {
  * default password if one does not already exist.
  */
 async function createNudges() {
+  if (dropDatabase) {
+    await Nudge.remove({})
+  }
   const nudges = await Nudge.findOne({});
   if (!nudges) {
     try {
@@ -44,6 +51,9 @@ async function createNudges() {
  * default password if one does not already exist.
  */
 async function createParticipants() {
+  if (dropDatabase) {
+    await Participant.remove({})
+  }
   const nudges = await Participant.findOne({});
   if (!nudges) {
     try {
