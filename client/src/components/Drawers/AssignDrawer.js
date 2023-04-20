@@ -27,19 +27,21 @@ const { Title } = Typography;
 
 const AssignDrawer = ({ open, onClose, nudge }) => {
   const dispatch = useDispatch();
+  const pendingNudges = useSelector((state) => state.pendingNudges);
   const [form] = Form.useForm();
 
   const [error, setError] = useState("");
-  const [colorIndex, setColorIndex] = useState(0);
-  const [isUnassignedDisabled, setIsUnassignedDisabled] = useState(true);
-
-  const pendingNudges = useSelector((state) => state.pendingNudges);
 
   const onFinish = (values) => {
-    const demographics = Object.values(values)
-      .filter((d) => d !== undefined)
-      .flat();
-    demographics.pop();
+    let demographics = Object.values(values).filter((d) => d !== undefined);
+
+    if (demographics.length === 0) {
+      setError("Please select at least one demographic");
+      return;
+    } else {
+      demographics = demographics.flat();
+      demographics.pop();
+    }
 
     const newPendingNudges = [
       ...pendingNudges,
@@ -62,12 +64,10 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               text: nudge.message,
               demographics: demographics,
               assigned: lastRes.num_assigned,
-              color: colors[colorIndex],
+              color: colors[pendingNudges.length % colors.length],
               key: nudge.key,
             },
           });
-
-          setColorIndex((colorIndex + 1) % colors.length);
           handleClose();
         } else if (lastRes.success_code === "NO_PARTICIPANT") {
           setError(
@@ -90,15 +90,9 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       changedValues.unassigned
     ) {
       form.resetFields();
+      form.setFieldValue("unassigned", true);
     } else {
       form.setFieldValue("unassigned", false);
-    }
-
-    // Let user toggle unassigned switch if demographics are chosen
-    if (Object.keys(form.getFieldsValue(true)).length !== 0) {
-      setIsUnassignedDisabled(false);
-    } else {
-      setIsUnassignedDisabled(true);
     }
   };
 
@@ -184,9 +178,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           valuePropName="checked"
           label="All Unassigned"
         >
-          <Switch defaultChecked disabled={isUnassignedDisabled}>
-            All Unassigned
-          </Switch>
+          <Switch>All Unassigned</Switch>
         </Form.Item>
       </Form>
 

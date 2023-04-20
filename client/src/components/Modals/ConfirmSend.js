@@ -18,6 +18,9 @@ const ConfirmSendModal = (props) => {
     setIsScheduled(e.target.value);
   };
 
+  const disabledDate = (current) => {
+    return current < dayjs().subtract(1, "day");
+  };
   const onOk = async () => {
     if (isScheduled) {
       if (!scheduledTime) {
@@ -46,7 +49,9 @@ const ConfirmSendModal = (props) => {
 
             dispatch({
               type: "scheduledAssignments/set",
-              payload: assignments,
+              payload: assignments.filter(
+                (assignment) => !assignment.lastRunAt
+              ),
             });
           })
           .catch((e) => console.log(e));
@@ -95,9 +100,12 @@ const ConfirmSendModal = (props) => {
           <Space>
             <DatePicker
               showTime
+              use12Hours
               disabled={!isScheduled}
               value={scheduledTime}
               onChange={(date) => setScheduledTime(date)}
+              format={"MM/DD/YYYY HH:mm A"}
+              disabledDate={disabledDate}
             />
           </Space>
         </Form.Item>

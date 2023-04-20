@@ -103,10 +103,6 @@ const MainPage = () => {
                     allowClear
                     onSearch={onSearch}
                   />
-                  <Button type="primary" size="large">
-                    Search
-                  </Button>
-                  <Button size="large">Reset</Button>
                 </Space>
 
                 <Table
