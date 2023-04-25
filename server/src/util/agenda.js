@@ -2,6 +2,7 @@ const { Agenda } = require('@hokify/agenda');
 const Participant = require('../models/participant');
 const { dispatchNudges } = require('./assignments');
 
+
 const connectionOpts = { db: { address: 'mongodb://127.0.0.1/nudge-platform', collection: 'agendaJobs' } };
 
 const agenda = new Agenda(connectionOpts);

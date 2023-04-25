@@ -1,5 +1,7 @@
 const db = require('./db');
 const axios = require('axios').default;
+const useDebug = require('debug');
+const debug = useDebug('core');
 
 
 const demographic_enum = {
@@ -118,16 +120,19 @@ async function checkAssignments(assignments, participants) {
 async function dispatchNudges(participantMapping, sender) {
   const responsePromises = [];
   // SHOULD BE EDITED FOR REAL URL
-  const endpoint = 'https://peach2nudge.ipat.gatech.edu/api/nudges'
+  const endpoint = 'https://peach2nudge.ipat.gatech.edu/api/nudges/'
 
   Object.keys(participantMapping).forEach((participant) => {
     console.log(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
     // HTTP get request
+    debug(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
     const resPromise = axios.post(endpoint, {
       recipient: participant,
       mesg: participantMapping[participant],
-      sender,
-    }).catch((err) => {
+      sender: username
+    }, { headers: {
+      'Content-Type': 'application/json'
+    }}).catch((err) => {
       console.log(`Issue sending nudge, ${err}`)
     })
     responsePromises.push(resPromise)
