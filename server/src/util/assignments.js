@@ -128,8 +128,7 @@ async function dispatchNudges(participantMapping, sender) {
     debug(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
     const resPromise = axios.post(endpoint, {
       recipient: participant,
-      mesg: participantMapping[participant],
-      sender: username
+      mesg: participantMapping[participant]
     }, { headers: {
       'Content-Type': 'application/json'
     }}).catch((err) => {
