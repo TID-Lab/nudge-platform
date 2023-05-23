@@ -16,6 +16,9 @@ const data = {
     {
       username: 'kchen430',
     },
+    {
+      username: 'jsomasundaram3'
+    }
   ],
   participantData: [
     {

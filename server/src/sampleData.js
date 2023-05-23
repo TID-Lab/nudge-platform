@@ -7,6 +7,9 @@ const data = {
     {
       username: 'azhao63',
     },
+    { 
+      username: 'jsomasundaram3'
+    }
   ],
   participantData: [
     {
