@@ -31,7 +31,7 @@ The platform...
 
 1. Clone this repository on your local machine.
 
-2. Download the [MongoDB Community](https://mongodb.com) server to your computer.
+2. Download the [MongoDB Community](https://mongodb.com) server to your computer. It can also be convenient to have this automatically start up with your computer (i.e. set it up as a macOS service).
 
 3. Install [nvm](https://github.com/nvm-sh/nvm). We'll use this to install Node.js properly in the next step.
 
@@ -52,7 +52,7 @@ Create an empty `.env` file in the root folder for this repo and add the followi
 To populate the database with sample data found in `server\src\sampleData.js`, simply start the MongoDB server and run `node populateDB.js` within `server\src`.
 ### Running
 
-Running the dashboard in development requires starting up two separate Node.js applications.
+Running the dashboard in development requires starting up two separate Node.js applications, as well as having a MongoDB database running in the background. Follow the running instructions on the MongoDB installation page that you used. For instance, on MAC you can setup MongoDB to automatically start as a service with `brew services start mongodb-community@6.0`, changing the version as appropriate.
 
 Open up 2 terminal windows or tabs, and then execute the commands below in the order they are listed, one to each terminal. In each case, make sure to `cd` into the corresponding folder first.
 
