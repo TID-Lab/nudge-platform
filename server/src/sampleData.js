@@ -13,7 +13,7 @@ const data = {
   ],
   participantData: [
     {
-      participantId: 5,
+      participantId: 500,
       labels: ['asian', 'female', '65+', 'tested', 'at-risk'],
     },
     {

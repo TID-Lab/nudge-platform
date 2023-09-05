@@ -34,6 +34,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
 
   const onFinish = (values) => {
     let demographics = Object.values(values).filter((d) => d !== undefined);
+    console.log(demographics)
 
     if (demographics.length === 0) {
       setError("Please select at least one demographic");
@@ -124,6 +125,25 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         onFinish={onFinish}
         onValuesChange={onValuesChange}
       >
+        <Form.Item label="Study Group" name="studygroup">
+          <Checkbox.Group
+            options={[
+              { value: "intervention", label: "Intervention" },
+              { value: "control", label: "Control" }
+            ]}
+          />
+        </Form.Item>
+        <Form.Item label="Testing Status" name="testingstatus">
+          <Checkbox.Group
+            options={[
+              { value: "sickxtested", label: "Sick x Tested" },
+              { value: "notsickxtested", label: "Not Sick x Tested" },
+              { value: "sickxnottested", label: "Sick x Not Tested" },
+              { value: "notsickxnottested", label: "Not Sick x Not Tested" },
+              { value: "notreported", label: "Not Reported" },
+            ]}
+          />
+        </Form.Item>
         <Form.Item label="Race" name="race">
           <Checkbox.Group
             options={[

@@ -3,10 +3,11 @@ import { Form, Modal, Radio, Space, DatePicker, Result, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { SmileOutlined } from '@ant-design/icons';
+import { reSchedule } from "../../api/nudge";
 
 import { dispatchAssignment, fetchAssignments } from "../../api/nudge";
 
-const ConfirmSendModal = (props) => {
+const ConfirmRescheduleModal = (props) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
 
@@ -15,6 +16,8 @@ const ConfirmSendModal = (props) => {
   const [loading, setLoading] = useState(false);
   const [okText, setOkText] = useState("Confirm");
   const [scheduledTime, setScheduledTime] = useState(null);
+  const id = props.jobid
+  console.log(id)
 
   const onRadioChange = (e) => {
     setIsScheduled(e.target.value);
@@ -34,42 +37,25 @@ const ConfirmSendModal = (props) => {
       }
 
       try {
-        await dispatchAssignment(
-          pendingNudges,
-          true,
+        await reSchedule(
+          id,
           dayjs(scheduledTime).toDate()
         ); // can this give me the latest schedule?
 
-        // this code repeats in PendingNudgeList/index.js
-        // By my understand (Jay) this is updating the scheduled nudge list without having to force refresh the whole page via Redux
-        fetchAssignments()
-          .then((jobs) => {
-            const assignments = jobs
-              .filter(({ lastRunAt }) => !lastRunAt)
-              .map(({ _id, nextRunAt, data }) => {
-                return { id: _id, nextRunAt, nudges: data.nudges };
-              });
-
-            dispatch({
-              type: "scheduledAssignments/set",
-              payload: assignments.filter(
-                (assignment) => !assignment.lastRunAt
-              ),
-            });
-          })
-          .catch((e) => console.log(e));
+        
       } catch (e) {
         Modal.error({
           content: "Error scheduling nudges. Please try again.",
         });
       }
     } else {
+      return;
       setOkText("Sending nudges...");
       setLoading(true);
       await dispatchAssignment(pendingNudges, false);
     }
 
-    dispatch({ type: "pendingNudges/set", payload: [] });
+    //dispatch({ type: "pendingNudges/set", payload: [] });
     onCancel();
     setSuccessModal(true)
     
@@ -130,7 +116,7 @@ const ConfirmSendModal = (props) => {
       <Result
           icon={<SmileOutlined />}
           title="Congratulations!"
-          subTitle="You achieved something great!"
+          subTitle={"You have updated your nudges time to" + dayjs(scheduledTime).toDate()}
         />
     </Modal>
     </div>
@@ -139,4 +125,4 @@ const ConfirmSendModal = (props) => {
   );
 };
 
-export default ConfirmSendModal;
+export default ConfirmRescheduleModal;

@@ -9,6 +9,29 @@ const AuthUsers = require('./models/authUsers');
 const db = require('./util/db');
 const dropDatabase = process.env.DROP_DB_ENTRIES || false
 
+
+async function checkParticipantExists() {
+  if (dropDatabase) {
+    await Participant.remove({})
+  }
+  const participantIds = sampleData.participantData.map(item => item.participantId);
+  for (const participantId of participantIds) {
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/api/data_objects/${participantId}`);
+      const data = await response.json();
+
+      if (data.result === false) {
+        console.log(`Participant ID ${participantId}: Result is false`);
+      }
+    } catch (error) {
+      console.error(`Error querying participant ID ${participantId}: ${error.message}`);
+    }
+  }
+
+}
+
+
+
 /**
  * Creates auth users if they don't exist
  */
@@ -71,6 +94,8 @@ async function createParticipants() {
     console.log('connecting to db...');
     await db();
     console.log('connected to db');
+    //await checkParticipantExists();
+    //console.log('checked participant existance')
     await createAuthUsers();
     console.log('created auth users');
     await createNudges();

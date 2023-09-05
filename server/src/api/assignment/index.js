@@ -27,7 +27,7 @@ routes.post('/check', async (req, res) => {
     return;
   }
   try {
-    // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
+    //console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
     // console.log(req.body);
     const participants = await Participant.find({});
     const { checkedAssignments, participantMapping } = await checkAssignments(req.body, participants);
@@ -99,6 +99,20 @@ routes.delete('/:id', async (req, res) => {
     debug(`${err}`);
     res.status(500).send(err);
   }
+});
+
+routes.post('/reschedule', async(req, res) => {
+  try {
+    const jobs = await agenda.jobs({_id: ObjectId(req.body.the_id)})
+    Object.assign(jobs[0].attrs, {nextRunAt:req.body.the_time})
+    //jobs[0].attrs.nextRunAt=req.body.the_time
+    await jobs[0].save()
+    res.status(200).send();
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+
 });
 
 module.exports = routes

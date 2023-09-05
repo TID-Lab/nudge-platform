@@ -68,6 +68,7 @@ async function checkAssignments(assignments, participants) {
         let includedDemographics = getIncludedDemographics(demographics);
         console.log(includedDemographics)
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
+          console.log(participants[parti_idx]['labels'])
           if (participants[parti_idx]['labels'].every((element) => includedDemographics.includes(element))) {
             participants_inc.push(...participants.splice(parti_idx, 1));
             const curr_participant = participants_inc[participants_inc.length - 1]

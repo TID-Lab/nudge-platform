@@ -6,6 +6,7 @@ import styled from "styled-components";
 import PendingNudgeCard from "../Cards/PendingNudgeCard";
 import ConfirmSendModal from "../Modals/ConfirmSend";
 import ScheduleModal from "../Modals/Schedule";
+import ConfirmRescheduleModal from "../Modals/ConfirmReschedule";
 import "./index.css";
 import { fetchAssignments } from "../../api/nudge";
 
@@ -21,6 +22,8 @@ const PendingNudgeList = ({ total }) => {
   const [showError, setShowError] = useState(false);
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [isReModalOpen, setIsReModalOpen] = useState(false)
+  const [jobRescheduleId, setJobRescheduleId] = useState(null)
 
   useEffect(() => {
     let participants = 0;
@@ -31,6 +34,7 @@ const PendingNudgeList = ({ total }) => {
   useEffect(() => {
     fetchAssignments()
       .then((jobs) => {
+        console.log(jobs)
         const assignments = jobs
           .filter(({ lastRunAt }) => !lastRunAt)
           .map(({ _id, nextRunAt, data }) => {
@@ -122,7 +126,18 @@ const PendingNudgeList = ({ total }) => {
         open={isScheduleModalOpen}
         onCancel={() => setIsScheduleModalOpen(false)}
         schedules={scheduledAssignments}
+        openReSch={()=>{setIsReModalOpen(true); console.log("Modal Triggered")}}
+        setReJobId = {(the_id)=>setJobRescheduleId(the_id)}
       />
+      <ConfirmRescheduleModal
+      open={isReModalOpen}
+      onCancel={()=>setIsReModalOpen(false)}
+      jobid={jobRescheduleId}>
+      
+        
+
+      </ConfirmRescheduleModal>
+
     </ListContainer>
   );
 };

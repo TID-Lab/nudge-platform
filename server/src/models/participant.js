@@ -7,7 +7,9 @@ const labels = {
   Race: ['black', 'latinx', 'white', 'asian', 'native-american'],
   Gender: ['female', 'male', 'non-binary'],
   Diabetes: ['has-diabetes', 'at-risk', 'caretaker'],
-  TestingStatus: ['tested', 'untested']
+  TestingStatus: ['tested', 'untested'],
+  StudyGroup:['intervention', 'control'],
+  TestStatus: ['sickxtested', 'notsickxtested','sickxnottested','notsickxnottersted', 'notreported'],
 };
 const participantSchema = new mongoose.Schema({
   participantId: {

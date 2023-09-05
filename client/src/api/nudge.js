@@ -99,6 +99,18 @@ async function cancelSchedule(id) {
   fetch(`/api/assignment/${id}`, options);
 }
 
+async function reSchedule(id,newTime) {
+  const temp_body = {the_id: id, the_time:newTime}
+  console.log(temp_body)
+  const options = {
+    ...defaultOptions,
+    method: "POST",
+    body: JSON.stringify(temp_body),
+  };
+  const res = await fetch("/api/assignment/reschedule", options);
+
+}
+
 // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
 async function checkAssignment(nudges) {
   const options = {
@@ -143,6 +155,7 @@ export {
   fetchTotalParticipants,
   createNudge,
   deactivateNudge,
+  reSchedule
 };
 
 // Helper function to format nudges for assignments
