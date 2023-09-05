@@ -61,7 +61,7 @@ const PendingNudgeList = ({ total }) => {
             <Title>{numParticipants}</Title> <Title level={3}>/ {total}</Title>
           </Space>
 
-          <Title level={3}>Assigned</Title>
+          <Title level={3}>Participants Assigned</Title>
         </Space>
       </AssignmentCard>
 

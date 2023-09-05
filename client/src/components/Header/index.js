@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { Layout, Space, Button, Menu, Input, Form } from "antd";
-import { FormOutlined } from "@ant-design/icons";
+import { Layout, Space, Button, Menu, Input, Form, Modal, Upload } from "antd";
+import { FormOutlined, UploadOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
 import { createNudge, fetchNudges } from "../../api/nudge";
+import { participantCsvToJson } from "../../util/participant";
 
 const { Header: AntHeader } = Layout;
 
@@ -16,12 +17,26 @@ const Header = () => {
   const dispatch = useDispatch();
   const postingMenu = useSelector((state) => state.postingMenu);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [participants, setParticipants] = useState([]); // List of new participants to upload to server
   const [resp, setResp] = useState({
     state: "",
   });
 
   function onMenuClick() {
     dispatch({ type: "postingMenu/set", payload: !postingMenu });
+  }
+
+  // Transform CSV to JSON before uploading to server
+  function onBeforeUpload(file) {
+    const reader = new FileReader();
+    reader.readAsText(file, "UTF-8");
+    reader.onload = (e) => {
+      const csv = e.target.result;
+      const participantsJson = participantCsvToJson(csv);
+      setParticipants(participantsJson);
+    };
+
+    return false;
   }
 
   return (
@@ -46,6 +61,17 @@ const Header = () => {
           >
             Create Nudge
           </Button>
+
+          <Upload
+            maxCount={1}
+            accept=".csv"
+            showUploadList={false}
+            beforeUpload={onBeforeUpload}
+          >
+            <Button size="large" type="secondary" icon={<UploadOutlined />}>
+              Upload Participants
+            </Button>
+          </Upload>
         </Space>
 
         <Space style={{ width: 300 }}> </Space>
