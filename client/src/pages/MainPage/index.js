@@ -10,6 +10,7 @@ import {
   Tag,
   Popconfirm,
   message,
+  Tabs,
 } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import styled from "styled-components";
@@ -27,8 +28,6 @@ import {
 import "./index.css";
 
 import useAuth from "../../hooks/auth";
-
-import PostingMenu from "../../components/PostingMenu";
 
 const { Content } = Layout;
 
@@ -190,7 +189,26 @@ const MainPage = () => {
               </div>
             </Col>
             <Col span={8} style={{ borderLeft: "2px solid #f0f0f0" }}>
-              <PendingNudgeList total={totalParticipants} />
+              <Tabs
+                defaultActiveKey=""
+                items={[
+                  {
+                    key: "pending",
+                    label: "Pending",
+                    children: <PendingNudgeList total={totalParticipants} />,
+                  },
+                  {
+                    key: "scheduled",
+                    label: "Scheduled",
+                    children: "Scheduled",
+                  },
+                  {
+                    key: "sent",
+                    label: "Sent",
+                    children: "Sent",
+                  },
+                ]}
+              />
             </Col>
           </Row>
         </StyledContent>

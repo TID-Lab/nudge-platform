@@ -131,6 +131,7 @@ const PendingNudgeList = ({ total }) => {
         }}
         setReJobId={(the_id) => setJobRescheduleId(the_id)}
       />
+
       <ConfirmRescheduleModal
         open={isReModalOpen}
         onCancel={() => setIsReModalOpen(false)}
