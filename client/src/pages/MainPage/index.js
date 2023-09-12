@@ -10,6 +10,8 @@ import {
   Tag,
   Popconfirm,
   message,
+  Tabs,
+  Badge,
 } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import styled from "styled-components";
@@ -27,8 +29,8 @@ import {
 import "./index.css";
 
 import useAuth from "../../hooks/auth";
-
-import PostingMenu from "../../components/PostingMenu";
+import ScheduledAssignmentsList from "../../components/Lists/ScheduledAssignments";
+import SentAssignmentsList from "../../components/Lists/SentAssignments";
 
 const { Content } = Layout;
 
@@ -38,6 +40,10 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const nudges = useSelector((state) => state.nudges);
   const pendingNudges = useSelector((state) => state.pendingNudges);
+  const scheduledAssignments = useSelector(
+    (state) => state.scheduledAssignments
+  );
+  const sentAssignments = useSelector((state) => state.sentAssignments);
 
   const [isAssignDrawerOpen, setIsAssignDrawerOpen] = useState(false);
   const [assignedNudge, setAssignedNudge] = useState({ key: 0, message: "" });
@@ -190,7 +196,55 @@ const MainPage = () => {
               </div>
             </Col>
             <Col span={8} style={{ borderLeft: "2px solid #f0f0f0" }}>
-              <PendingNudgeList total={totalParticipants} />
+              <Tabs
+                defaultActiveKey=""
+                items={[
+                  {
+                    key: "pending",
+                    label: (
+                      <Badge dot={pendingNudges.length !== 0}>Pending</Badge>
+                    ),
+                    children: (
+                      <PendingNudgeList
+                        total={totalParticipants}
+                        pendingNudges={pendingNudges}
+                      />
+                    ),
+                  },
+                  {
+                    key: "scheduled",
+                    label: (
+                      <Badge
+                        count={scheduledAssignments.length}
+                        size="small"
+                        offset={[5, 0]}
+                      >
+                        Scheduled
+                      </Badge>
+                    ),
+                    children: (
+                      <ScheduledAssignmentsList
+                        schedules={scheduledAssignments}
+                      />
+                    ),
+                  },
+                  {
+                    key: "sent",
+                    label: (
+                      <Badge
+                        count={sentAssignments.length}
+                        size="small"
+                        offset={[5, 0]}
+                      >
+                        Scheduled
+                      </Badge>
+                    ),
+                    children: (
+                      <SentAssignmentsList schedules={sentAssignments} />
+                    ),
+                  },
+                ]}
+              />
             </Col>
           </Row>
         </StyledContent>

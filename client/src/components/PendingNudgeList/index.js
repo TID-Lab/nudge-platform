@@ -12,9 +12,8 @@ import { fetchAssignments } from "../../api/nudge";
 
 const { Title } = Typography;
 
-const PendingNudgeList = ({ total }) => {
+const PendingNudgeList = ({ total, pendingNudges }) => {
   const dispatch = useDispatch();
-  const pendingNudges = useSelector((state) => state.pendingNudges);
   const scheduledAssignments = useSelector(
     (state) => state.scheduledAssignments
   );
@@ -22,8 +21,8 @@ const PendingNudgeList = ({ total }) => {
   const [showError, setShowError] = useState(false);
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
-  const [isReModalOpen, setIsReModalOpen] = useState(false)
-  const [jobRescheduleId, setJobRescheduleId] = useState(null)
+  const [isReModalOpen, setIsReModalOpen] = useState(false);
+  const [jobRescheduleId, setJobRescheduleId] = useState(null);
 
   useEffect(() => {
     let participants = 0;
@@ -34,16 +33,20 @@ const PendingNudgeList = ({ total }) => {
   useEffect(() => {
     fetchAssignments()
       .then((jobs) => {
-        console.log(jobs)
-        const assignments = jobs
-          .filter(({ lastRunAt }) => !lastRunAt)
-          .map(({ _id, nextRunAt, data }) => {
-            return { id: _id, nextRunAt, nudges: data.nudges };
-          });
+        const scheduled = jobs.filter(({ lastRunAt }) => !lastRunAt);
+        const sent = jobs.filter(({ lastRunAt }) => lastRunAt);
 
         dispatch({
           type: "scheduledAssignments/set",
-          payload: assignments,
+          payload: scheduled.map(({ _id, nextRunAt, data }) => {
+            return { id: _id, nextRunAt, nudges: data.nudges };
+          }),
+        });
+        dispatch({
+          type: "sentAssignments/set",
+          payload: sent.map(({ _id, lastRunAt, data }) => {
+            return { id: _id, lastRunAt, nudges: data.nudges };
+          }),
         });
       })
       .catch((e) => console.log(e));
@@ -61,7 +64,7 @@ const PendingNudgeList = ({ total }) => {
             <Title>{numParticipants}</Title> <Title level={3}>/ {total}</Title>
           </Space>
 
-          <Title level={3}>Assigned</Title>
+          <Title level={3}>Participants Assigned</Title>
         </Space>
       </AssignmentCard>
 
@@ -126,18 +129,17 @@ const PendingNudgeList = ({ total }) => {
         open={isScheduleModalOpen}
         onCancel={() => setIsScheduleModalOpen(false)}
         schedules={scheduledAssignments}
-        openReSch={()=>{setIsReModalOpen(true); console.log("Modal Triggered")}}
-        setReJobId = {(the_id)=>setJobRescheduleId(the_id)}
+        openReSch={() => {
+          setIsReModalOpen(true);
+        }}
+        setReJobId={(the_id) => setJobRescheduleId(the_id)}
       />
+
       <ConfirmRescheduleModal
-      open={isReModalOpen}
-      onCancel={()=>setIsReModalOpen(false)}
-      jobid={jobRescheduleId}>
-      
-        
-
-      </ConfirmRescheduleModal>
-
+        open={isReModalOpen}
+        onCancel={() => setIsReModalOpen(false)}
+        jobid={jobRescheduleId}
+      ></ConfirmRescheduleModal>
     </ListContainer>
   );
 };

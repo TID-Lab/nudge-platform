@@ -9,7 +9,13 @@ import { cancelSchedule } from "../../api/nudge";
 
 const { Panel } = Collapse;
 
-export default function ScheduleModal({ open, onCancel, schedules, openReSch, setReJobId}) {
+export default function ScheduleModal({
+  open,
+  onCancel,
+  schedules,
+  openReSch,
+  setReJobId,
+}) {
   const dispatch = useDispatch();
 
   const onAssignmentCancel = async (id) => {
@@ -23,8 +29,7 @@ export default function ScheduleModal({ open, onCancel, schedules, openReSch, se
       console.log(e);
     }
   };
-  const [rescheduleOpen, setRescheduleOpen] = useState(false)
-  console.log(schedules)
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
 
   return (
     <div>
@@ -45,7 +50,8 @@ export default function ScheduleModal({ open, onCancel, schedules, openReSch, se
                   <Space size={"large"}>
                     <div>{dayjs(nextRunAt).format("MM/DD/YYYY h:mmA")}</div>
                     <div>
-                      {nudges.length} nudge{nudges.length > 1 ? "s" : ""} assigned
+                      {nudges.length} nudge{nudges.length > 1 ? "s" : ""}{" "}
+                      assigned
                     </div>
                   </Space>
                 }
@@ -54,9 +60,15 @@ export default function ScheduleModal({ open, onCancel, schedules, openReSch, se
                   <Button type="link" onClick={() => onAssignmentCancel(id)}>
                     Cancel
                   </Button>,
-                  <Button type="link" onClick={() => {setReJobId(id);openReSch()}}>
-                  Reschedule
-                </Button>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      setReJobId(id);
+                      openReSch();
+                    }}
+                  >
+                    Reschedule
+                  </Button>,
                 ]}
               >
                 <List
@@ -78,7 +90,11 @@ export default function ScheduleModal({ open, onCancel, schedules, openReSch, se
                           ) : (
                             demographics.map((category, i) => (
                               // Category values aren't very well formatted
-                              <Tag key={i} color="blue" icon={<CheckOutlined />}>
+                              <Tag
+                                key={i}
+                                color="blue"
+                                icon={<CheckOutlined />}
+                              >
                                 {category}
                               </Tag>
                             ))
@@ -92,13 +108,6 @@ export default function ScheduleModal({ open, onCancel, schedules, openReSch, se
             ))}
           </Collapse>
         )}
-      </Modal>
-      <Modal>
-        width={800}
-        title="Scheduled Nudge Assignments"
-        open={rescheduleOpen}
-        onCancel = {()=>setRescheduleOpen(false)}
-        footer={null}
       </Modal>
     </div>
   );
