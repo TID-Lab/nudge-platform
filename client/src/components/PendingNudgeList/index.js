@@ -127,7 +127,6 @@ const PendingNudgeList = ({ total }) => {
         schedules={scheduledAssignments}
         openReSch={() => {
           setIsReModalOpen(true);
-          console.log("Modal Triggered");
         }}
         setReJobId={(the_id) => setJobRescheduleId(the_id)}
       />

@@ -109,12 +109,6 @@ export default function ScheduleModal({
           </Collapse>
         )}
       </Modal>
-      <Modal>
-        width={800}
-        title="Scheduled Nudge Assignments" open={rescheduleOpen}
-        onCancel = {() => setRescheduleOpen(false)}
-        footer={null}
-      </Modal>
     </div>
   );
 }
