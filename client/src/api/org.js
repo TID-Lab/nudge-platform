@@ -62,9 +62,20 @@ async function editOrganization(org) {
   return body;
 }
 
+async function uploadParticipants(parts) {
+  const options = {
+    ...defaultOptions,
+    method: "POST",
+    body: JSON.stringify(parts),
+  };
+  const res = await fetch("/api/org/uploadPart", options);
+  return res.status === 200;
+}
+
 export {
   fetchOrganizations,
   deleteOrganization,
   createOrganization,
   editOrganization,
+  uploadParticipants,
 };

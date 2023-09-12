@@ -7,6 +7,7 @@ const routes = require('express').Router();
 const Organization = require('../../models/organization');
 const { hashPassword } = require('../../util/org');
 const { is } = require('../../util/org');
+const {createParticipants} = require('../../util/uploadParticipants')
 
 const debug = useDebug('api');
 
@@ -124,5 +125,19 @@ routes.delete('/:id', is('admin'), async (req, res) => {
     res.status(500).send();
   }
 });
+
+routes.post('/uploadPart', async(req,res) => {
+  const data = req.body.participantData
+  console.log(data);
+  try {
+    createParticipants(data)
+    res.status(200).send();
+  } catch (err)  {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+
+})
+
 
 module.exports = routes;
