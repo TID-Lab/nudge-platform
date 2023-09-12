@@ -236,7 +236,7 @@ const MainPage = () => {
                         size="small"
                         offset={[5, 0]}
                       >
-                        Scheduled
+                        Sent
                       </Badge>
                     ),
                     children: (
