@@ -9,6 +9,7 @@ import { dispatchAssignment, fetchAssignments } from "../../api/nudge";
 const ConfirmSendModal = (props) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
+  const scheduledNudges = useSelector((state) => state.scheduledAssignments);
 
   const [isScheduled, setIsScheduled] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
@@ -24,6 +25,10 @@ const ConfirmSendModal = (props) => {
     return current < dayjs().subtract(1, "day");
   };
   const onOk = async () => {
+    console.log("Pending Nudges");
+    console.log(pendingNudges);
+    console.log("Scheduled Nudges");
+    console.log(scheduledNudges);
     if (isScheduled) {
       if (!scheduledTime) {
         Modal.error({

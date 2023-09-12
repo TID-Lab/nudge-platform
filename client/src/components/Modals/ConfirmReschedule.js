@@ -5,11 +5,16 @@ import dayjs from "dayjs";
 import { SmileOutlined } from "@ant-design/icons";
 import { reSchedule } from "../../api/nudge";
 
-import { dispatchAssignment, fetchAssignments } from "../../api/nudge";
+import {
+  dispatchAssignment,
+  fetchAssignments,
+  cancelSchedule,
+} from "../../api/nudge";
 
 const ConfirmRescheduleModal = (props) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
+  const scheduledNudges = useSelector((state) => state.scheduledAssignments);
 
   const [isScheduled, setIsScheduled] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
@@ -43,10 +48,18 @@ const ConfirmRescheduleModal = (props) => {
         });
       }
     } else {
-      return;
-      setOkText("Sending nudges...");
-      setLoading(true);
-      await dispatchAssignment(pendingNudges, false);
+      //filter only the job with the id from the scheduledNudges
+      console.log(id);
+      console.log(scheduledNudges);
+      const toSendNudge = scheduledNudges.filter((job) => job.id == id)[0]
+        .nudges;
+      await dispatchAssignment(toSendNudge, false).then((res) => {
+        //console.log(res);
+        console.log(res);
+        if (res != []) {
+          cancelSchedule(id);
+        }
+      });
     }
 
     //dispatch({ type: "pendingNudges/set", payload: [] });
