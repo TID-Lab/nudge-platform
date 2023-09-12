@@ -34,7 +34,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
 
   const onFinish = (values) => {
     let demographics = Object.values(values).filter((d) => d !== undefined);
-    console.log(demographics)
 
     if (demographics.length === 0) {
       setError("Please select at least one demographic");
@@ -129,7 +128,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           <Checkbox.Group
             options={[
               { value: "intervention", label: "Intervention" },
-              { value: "control", label: "Control" }
+              { value: "control", label: "Control" },
             ]}
           />
         </Form.Item>

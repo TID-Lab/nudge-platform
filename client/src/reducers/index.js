@@ -11,6 +11,7 @@ import postingImageReducer from "./postingImage";
 import pendingNudgesReducer from "./pendingNudges";
 import nudgeReducer from "./nudges";
 import scheduledAssignmentsReducer from "./scheduledAssignments";
+import sentAssignmentsReducer from "./sentAssignments";
 
 const rootReducer = combineReducers({
   filters: filtersReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   pendingNudges: pendingNudgesReducer,
   nudges: nudgeReducer,
   scheduledAssignments: scheduledAssignmentsReducer,
+  sentAssignments: sentAssignmentsReducer,
 });
 
 export default rootReducer;

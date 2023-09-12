@@ -39,24 +39,6 @@ const ConfirmSendModal = (props) => {
           true,
           dayjs(scheduledTime).toDate()
         ); // can this give me the latest schedule?
-
-        // this code repeats in PendingNudgeList/index.js
-        fetchAssignments()
-          .then((jobs) => {
-            const assignments = jobs
-              .filter(({ lastRunAt }) => !lastRunAt)
-              .map(({ _id, nextRunAt, data }) => {
-                return { id: _id, nextRunAt, nudges: data.nudges };
-              });
-
-            dispatch({
-              type: "scheduledAssignments/set",
-              payload: assignments.filter(
-                (assignment) => !assignment.lastRunAt
-              ),
-            });
-          })
-          .catch((e) => console.log(e));
       } catch (e) {
         Modal.error({
           content: "Error scheduling nudges. Please try again.",
@@ -67,6 +49,28 @@ const ConfirmSendModal = (props) => {
       setLoading(true);
       await dispatchAssignment(pendingNudges, false);
     }
+
+    // Update scheduled assignments list
+    // this code repeats in PendingNudgeList/index.js
+    fetchAssignments()
+      .then((jobs) => {
+        const scheduled = jobs.filter(({ lastRunAt }) => !lastRunAt);
+        const sent = jobs.filter(({ lastRunAt }) => lastRunAt);
+
+        dispatch({
+          type: "scheduledAssignments/set",
+          payload: scheduled.map(({ _id, nextRunAt, data }) => {
+            return { id: _id, nextRunAt, nudges: data.nudges };
+          }),
+        });
+        dispatch({
+          type: "sentAssignments/set",
+          payload: sent.map(({ _id, lastRunAt, data }) => {
+            return { id: _id, lastRunAt, nudges: data.nudges };
+          }),
+        });
+      })
+      .catch((e) => console.log(e));
 
     dispatch({ type: "pendingNudges/set", payload: [] });
     onCancel();

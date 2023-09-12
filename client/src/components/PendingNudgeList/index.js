@@ -12,9 +12,8 @@ import { fetchAssignments } from "../../api/nudge";
 
 const { Title } = Typography;
 
-const PendingNudgeList = ({ total }) => {
+const PendingNudgeList = ({ total, pendingNudges }) => {
   const dispatch = useDispatch();
-  const pendingNudges = useSelector((state) => state.pendingNudges);
   const scheduledAssignments = useSelector(
     (state) => state.scheduledAssignments
   );
@@ -34,15 +33,20 @@ const PendingNudgeList = ({ total }) => {
   useEffect(() => {
     fetchAssignments()
       .then((jobs) => {
-        const assignments = jobs
-          .filter(({ lastRunAt }) => !lastRunAt)
-          .map(({ _id, nextRunAt, data }) => {
-            return { id: _id, nextRunAt, nudges: data.nudges };
-          });
+        const scheduled = jobs.filter(({ lastRunAt }) => !lastRunAt);
+        const sent = jobs.filter(({ lastRunAt }) => lastRunAt);
 
         dispatch({
           type: "scheduledAssignments/set",
-          payload: assignments,
+          payload: scheduled.map(({ _id, nextRunAt, data }) => {
+            return { id: _id, nextRunAt, nudges: data.nudges };
+          }),
+        });
+        dispatch({
+          type: "sentAssignments/set",
+          payload: sent.map(({ _id, lastRunAt, data }) => {
+            return { id: _id, lastRunAt, nudges: data.nudges };
+          }),
         });
       })
       .catch((e) => console.log(e));
