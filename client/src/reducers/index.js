@@ -12,6 +12,7 @@ import pendingNudgesReducer from "./pendingNudges";
 import nudgeReducer from "./nudges";
 import scheduledAssignmentsReducer from "./scheduledAssignments";
 import sentAssignmentsReducer from "./sentAssignments";
+import participantsReducer from "./participants";
 
 const rootReducer = combineReducers({
   filters: filtersReducer,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   nudges: nudgeReducer,
   scheduledAssignments: scheduledAssignmentsReducer,
   sentAssignments: sentAssignmentsReducer,
+  participants: participantsReducer,
 });
 
 export default rootReducer;

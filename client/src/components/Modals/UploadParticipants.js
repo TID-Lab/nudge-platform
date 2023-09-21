@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Modal, Table, Tag } from "antd";
+import { Alert, Modal, Table, Tag } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import styled from "styled-components";
@@ -36,11 +36,20 @@ export default function UploadParticipantsModal({
         );
       },
     },
+    {
+      title: "New",
+      dataIndex: "missing",
+      key: "missing",
+      render: (missing) => {
+        return missing ? <CheckOutlined /> : null;
+      },
+    },
   ];
   const data = participants.map((participant) => {
     return {
       key: participant.participantId,
       ...participant,
+      missing: true,
     };
   });
 
@@ -50,7 +59,15 @@ export default function UploadParticipantsModal({
       open={open}
       onCancel={onCancel}
       onOk={onOk}
+      width={800}
     >
+      {data.some((user) => user.missing) && (
+        <Alert
+          message="Some participants are not in the database. Please check the table below."
+          type="warning"
+        />
+      )}
+
       <Table columns={columns} dataSource={data} />
     </Modal>
   );

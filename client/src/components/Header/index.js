@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Layout,
   Space,
@@ -50,6 +50,10 @@ const Header = () => {
   function onUploadParticipantModalOk() {
     // Update on server and DB
     console.log(participants);
+    dispatch({
+      type: "participants/set",
+      payload: participants,
+    });
     setParticipants([]);
     messageApi.success("Participants uploaded successfully");
   }

@@ -9,6 +9,7 @@ import ScheduleModal from "../Modals/Schedule";
 import ConfirmRescheduleModal from "../Modals/ConfirmReschedule";
 import "./index.css";
 import { fetchAssignments } from "../../api/nudge";
+import UploadParticipantsModal from "../Modals/UploadParticipants";
 
 const { Title } = Typography;
 
@@ -17,11 +18,14 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
   const scheduledAssignments = useSelector(
     (state) => state.scheduledAssignments
   );
+  const participants = useSelector((state) => state.participants);
+
   const [numParticipants, setNumParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
-  const [isSendModalOpen, setIsSendModalOpen] = useState(false);
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
-  const [isReModalOpen, setIsReModalOpen] = useState(false);
+  const [isSendModalOpen, setIsSendModalOpen] = useState(false); // Modal for assignment confirmation
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false); // Modal for assignment scheduling form
+  const [isReModalOpen, setIsReModalOpen] = useState(false); // Modal for rescheduling
+  const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false); // Modal for participant list (orphan)
   const [jobRescheduleId, setJobRescheduleId] = useState(null);
 
   useEffect(() => {
@@ -51,10 +55,6 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
       })
       .catch((e) => console.log(e));
   }, [dispatch]);
-
-  function onSend() {
-    setIsSendModalOpen(true);
-  }
 
   return (
     <ListContainer direction="vertical">
@@ -112,7 +112,7 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         </Button>
         <Button
           block
-          onClick={onSend}
+          onClick={() => setIsParticipantModalOpen(true)}
           type="primary"
           disabled={numParticipants !== total}
         >
@@ -140,6 +140,13 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         onCancel={() => setIsReModalOpen(false)}
         jobid={jobRescheduleId}
       ></ConfirmRescheduleModal>
+
+      <UploadParticipantsModal
+        open={isParticipantModalOpen}
+        onCancel={() => setIsParticipantModalOpen(false)}
+        onOk={() => setIsSendModalOpen(true)}
+        participants={participants}
+      ></UploadParticipantsModal>
     </ListContainer>
   );
 };

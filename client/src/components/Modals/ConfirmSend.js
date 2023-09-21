@@ -29,6 +29,7 @@ const ConfirmSendModal = (props) => {
     console.log(pendingNudges);
     console.log("Scheduled Nudges");
     console.log(scheduledNudges);
+
     if (isScheduled) {
       if (!scheduledTime) {
         Modal.error({
