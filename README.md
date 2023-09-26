@@ -112,9 +112,10 @@ First, make sure that you've pushed those changes to this GitHub repo, and then 
 
 **If you made changes...**
 
-- in the `client/` folder, **do nothing**. There should be a git hook on the production VM that automatically builds the client-side React application for you with the new code. If you're paranoid, just run `npm run build` from the `client/` folder to manually build the React app. (NOTE: haven't had luck with the git hook, so run this to be safe.)
+- in the `client/` folder, run `npm run build` from the `client/` folder to manually build the React app. 
 
 - in the `server/` folder, run `pm2 restart server`.
+  - if it's the first time running the app, or you're starting a new PM2 instance, instead run `pm2 start ecosystem.config.js`
 
 And that's it. You've upgraded the dashboard! Woo woo 🎉
 
