@@ -5,9 +5,6 @@ import styled from "styled-components";
 
 import PendingNudgeCard from "../Cards/PendingNudgeCard";
 import ConfirmSendModal from "../Modals/ConfirmSend";
-import ScheduleModal from "../Modals/Schedule";
-import ConfirmRescheduleModal from "../Modals/ConfirmReschedule";
-import "./index.css";
 import { fetchAssignments } from "../../api/nudge";
 import UploadParticipantsModal from "../Modals/UploadParticipants";
 
@@ -15,18 +12,12 @@ const { Title } = Typography;
 
 const PendingNudgeList = ({ total, pendingNudges }) => {
   const dispatch = useDispatch();
-  const scheduledAssignments = useSelector(
-    (state) => state.scheduledAssignments
-  );
   const participants = useSelector((state) => state.participants);
 
   const [numParticipants, setNumParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
   const [isSendModalOpen, setIsSendModalOpen] = useState(false); // Modal for assignment confirmation
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false); // Modal for assignment scheduling form
-  const [isReModalOpen, setIsReModalOpen] = useState(false); // Modal for rescheduling
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false); // Modal for participant list (orphan)
-  const [jobRescheduleId, setJobRescheduleId] = useState(null);
 
   useEffect(() => {
     let participants = 0;
@@ -56,6 +47,16 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
       .catch((e) => console.log(e));
   }, [dispatch]);
 
+  const handleAssignmentSend = () => {
+    const hasOrphans = false; // TODO: check if there are orphans
+
+    if (hasOrphans) {
+      setIsParticipantModalOpen(true);
+    } else {
+      setIsSendModalOpen(true);
+    }
+  };
+
   return (
     <ListContainer direction="vertical">
       <AssignmentCard bordered={false}>
@@ -70,12 +71,6 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
 
       <div className="list-title-wrapper">
         <h3>Nudges to Send</h3>
-
-        {scheduledAssignments.length > 0 && (
-          <Button onClick={() => setIsScheduleModalOpen(true)}>
-            <b>{scheduledAssignments.length} </b>scheduled assignments
-          </Button>
-        )}
       </div>
 
       <div className="list">
@@ -112,7 +107,7 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         </Button>
         <Button
           block
-          onClick={() => setIsParticipantModalOpen(true)}
+          onClick={handleAssignmentSend}
           type="primary"
           disabled={numParticipants !== total}
         >
@@ -124,22 +119,6 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         open={isSendModalOpen}
         onCancel={() => setIsSendModalOpen(false)}
       />
-
-      <ScheduleModal
-        open={isScheduleModalOpen}
-        onCancel={() => setIsScheduleModalOpen(false)}
-        schedules={scheduledAssignments}
-        openReSch={() => {
-          setIsReModalOpen(true);
-        }}
-        setReJobId={(the_id) => setJobRescheduleId(the_id)}
-      />
-
-      <ConfirmRescheduleModal
-        open={isReModalOpen}
-        onCancel={() => setIsReModalOpen(false)}
-        jobid={jobRescheduleId}
-      ></ConfirmRescheduleModal>
 
       <UploadParticipantsModal
         open={isParticipantModalOpen}

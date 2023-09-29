@@ -1,21 +1,18 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Modal, List, Button, Space, Collapse, Tag, Empty } from "antd";
+import { useDispatch } from "react-redux";
+import { List, Button, Space, Collapse, Tag, Empty } from "antd";
 import { useState } from "react";
 import { CheckOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { cancelSchedule } from "../../api/nudge";
+import SendAssignmentModal from "../Modals/ConfirmReschedule";
 
 const { Panel } = Collapse;
 
-export default function ScheduledAssignmentsList({
-  openReSch,
-  setReJobId,
-  schedules,
-}) {
+export default function ScheduledAssignmentsList({ schedules }) {
   const dispatch = useDispatch();
-  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const [rescheduleJobId, setRescheduleJobId] = useState();
 
   const onAssignmentCancel = async (id) => {
     try {
@@ -37,6 +34,7 @@ export default function ScheduledAssignmentsList({
         <Collapse>
           {schedules.map(({ id, nextRunAt, nudges }) => (
             <StyledPanel
+              key={id}
               header={
                 <Space size={"large"}>
                   <div>{dayjs(nextRunAt).format("MM/DD/YYYY h:mmA")}</div>
@@ -45,17 +43,21 @@ export default function ScheduledAssignmentsList({
                   </div>
                 </Space>
               }
-              key={id}
               extra={[
-                <Button type="link" onClick={() => onAssignmentCancel(id)}>
+                <Button
+                  type="link"
+                  onClick={() => onAssignmentCancel(id)}
+                  key="cancel-btn"
+                >
                   Cancel
                 </Button>,
                 <Button
                   type="link"
-                  onClick={() => {
-                    setReJobId(id);
-                    openReSch();
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setRescheduleJobId(id);
                   }}
+                  key="reschedule-btn"
                 >
                   Reschedule
                 </Button>,
@@ -63,7 +65,7 @@ export default function ScheduledAssignmentsList({
             >
               <List
                 dataSource={nudges}
-                renderItem={({ text, demographics, assigned, color }) => (
+                renderItem={({ text, demographics, assigned, color }, i) => (
                   <List.Item
                     style={{
                       borderLeft: `${color} solid 3px`,
@@ -94,6 +96,12 @@ export default function ScheduledAssignmentsList({
           ))}
         </Collapse>
       )}
+
+      <SendAssignmentModal
+        open={rescheduleJobId !== undefined}
+        onCancel={() => setRescheduleJobId(undefined)}
+        jobid={rescheduleJobId}
+      />
     </div>
   );
 }
