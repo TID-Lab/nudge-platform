@@ -21,9 +21,9 @@ async function scheduleNudgeHandler(job) {
   const responses = await dispatchNudges(participantMapping, username);
   console.log("all responses:");
   console.log(responses);
-  for (const res in responses) {
-    console.log(res);
-    console.log(res.data);
+  for (var i = 0; i < responses.length; i++) {
+    var jsonData = responses[i];
+    console.log("Index:", i, "Data:", jsonData.data);
   }
   // Some way of saving response success/failure to the job
 }
