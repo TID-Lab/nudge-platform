@@ -31,66 +31,68 @@ const data = {
   ],
   participantData: [
     {
-      participantId: 500,
+      participantId: "jeff",
       labels: ["asian", "female", "65+", "tested", "at-risk"],
     },
     {
-      participantId: 3,
+      participantId: "andrew",
       labels: ["black", "male", "30-40", "untested", "has-diabetes"],
     },
     {
-      participantId: 2,
+      participantId: "mike",
       labels: ["white", "female", "18-29", "untested", "at-risk"],
     },
     {
-      participantId: 7,
+      participantId: "richard",
       labels: ["asian", "female", "41-50", "untested", "caretaker"],
     },
     {
-      participantId: 1,
+      participantId: "amy",
       labels: ["black", "female", "65+", "untested", "has-diabetes"],
     },
     {
-      participantId: 234,
+      participantId: "amy2",
       labels: ["white", "female", "18-29", "untested", "at-risk"],
     },
     {
-      participantId: 2346,
+      participantId: "kenneth",
       labels: ["latinx", "male", "30-40", "untested", "at-risk"],
     },
     {
-      participantId: 456,
-      labels: [
-        "native-american",
-        "female",
-        "18-29",
-        "untested",
-        "has-diabetes",
-      ],
+      participantId: "jay",
+      labels: ["latinx", "male", "30-40", "untested", "at-risk"],
     },
     {
-      participantId: 9087,
-      labels: ["asian", "female", "18-29", "untested", "at-risk"],
+      participantId: "demo001_0",
+      labels: ["asian", "female", "41-50", "untested", "caretaker"],
     },
     {
-      participantId: 4523,
-      labels: ["latinx", "male", "30-40", "tested", "caretaker"],
+      participantId: "demo001_1",
+      labels: ["black", "female", "65+", "untested", "has-diabetes"],
     },
     {
-      participantId: 32452,
-      labels: ["black", "male", "41-50", "untested", "at-risk"],
+      participantId: "demo001_2",
+      labels: ["white", "female", "18-29", "untested", "at-risk"],
     },
     {
-      participantId: 25,
-      labels: ["black", "male", "51-64", "tested", "has-diabetes"],
+      participantId: "demo001_3",
+      labels: ["latinx", "male", "30-40", "untested", "at-risk"],
     },
     {
-      participantId: 66,
-      labels: ["latinx", "female", "41-50", "untested", "caretaker"],
+      participantId: "demo001_4",
+      labels: ["black", "female", "65+", "untested", "has-diabetes"],
     },
     {
-      participantId: 2341,
-      labels: ["asian", "female", "18-29", "untested", "at-risk"],
+      participantId: "demo001_5",
+      labels: ["white", "female", "18-29", "untested", "at-risk"],
+    },
+    {
+      participantId: "demo001_6",
+      labels: ["latinx", "male", "30-40", "untested", "at-risk"],
+    },
+    {
+      participantId: "demo001_7",
+      labels: ["latinx", "male", "30-40", "untested", "at-risk"],
     },
   ],
   nudgeData: [
