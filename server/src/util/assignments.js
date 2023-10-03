@@ -1,22 +1,21 @@
-const db = require('./db');
-const axios = require('axios').default;
-const useDebug = require('debug');
-const debug = useDebug('core');
-
+const db = require("./db");
+const axios = require("axios").default;
+const useDebug = require("debug");
+const debug = useDebug("core");
 
 const demographic_enum = {
-  Age: ['18-29', '30-40', '41-50', '51-64', '65+'],
-  Race: ['black', 'latinx', 'white', 'asian', 'native-american'],
-  Gender: ['female', 'male', 'non-binary'],
-  Diabetes: ['has-diabetes', 'at-risk', 'caretaker'],
-  TestingStatus: ['tested', 'untested']
+  Age: ["18-29", "30-40", "41-50", "51-64", "65+"],
+  Race: ["black", "latinx", "white", "asian", "native-american"],
+  Gender: ["female", "male", "non-binary"],
+  Diabetes: ["has-diabetes", "at-risk", "caretaker"],
+  TestingStatus: ["tested", "untested"],
 };
 
 const assignmentCodes = {
-  SUCCESS: 'SUCCESS',
-  NO_PARTICIPANT: 'NO_PARTICIPANT',
-  PREVIOUSLY_ASSIGNED: 'PREVIOUSLY_ASSIGNED',
-  ASSIGNMENT_ABOVE_FAILED: 'ASSIGNMENT_ABOVE_FAILED',
+  SUCCESS: "SUCCESS",
+  NO_PARTICIPANT: "NO_PARTICIPANT",
+  PREVIOUSLY_ASSIGNED: "PREVIOUSLY_ASSIGNED",
+  ASSIGNMENT_ABOVE_FAILED: "ASSIGNMENT_ABOVE_FAILED",
 };
 
 // Checks the participant assignment of an ordered list of a list of nudge assignments
@@ -26,7 +25,7 @@ const assignmentCodes = {
 // Output (success): [{nudge_id, num_assigned, num_left, success_code}]
 // Output (failure object): [{nudge_id, success_code, error_object}]
 // NOTE: PREVIOUSLY_ASSIGNED should be handled on the front-end
-// EXAMPLE OUTPUT 
+// EXAMPLE OUTPUT
 // [{
 //   nudge_id: 7,
 //   num_assigned: 80,
@@ -52,93 +51,130 @@ const assignmentCodes = {
 // },
 // ]
 async function checkAssignments(assignments, participants) {
-  let participants_inc = []
-  let returned = []
-  let participantMapping = {}
+  let participants_inc = [];
+  let returned = [];
+  let participantMapping = {};
   try {
     for (let i = 0; i < assignments.length; i++) {
       const curr = assignments[i];
       let { demographics } = curr;
       // Just to double check they're lowercase
-      demographics = demographics.map(ele => ele.toLowerCase());
+      demographics = demographics.map((ele) => ele.toLowerCase());
       const num_parti_before = participants.length;
       const prevAssigned = checkPreviouslyAssigned(curr);
       if (!prevAssigned) {
         // FOR EACH PARTICIPANT, CHECK IF label in the included
         let includedDemographics = getIncludedDemographics(demographics);
-        console.log(includedDemographics)
+        console.log(includedDemographics);
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
-          console.log(participants[parti_idx]['labels'])
-          if (participants[parti_idx]['labels'].every((element) => includedDemographics.includes(element))) {
+          console.log(participants[parti_idx]["labels"]);
+          if (
+            participants[parti_idx]["labels"].every((element) =>
+              includedDemographics.includes(element)
+            )
+          ) {
             participants_inc.push(...participants.splice(parti_idx, 1));
-            const curr_participant = participants_inc[participants_inc.length - 1]
-            if (participantMapping[curr_participant.participantId] != undefined) {
-              console.log("Something went wrong, a participant is being mapped two messages...");
+            const curr_participant =
+              participants_inc[participants_inc.length - 1];
+            if (
+              participantMapping[curr_participant.participantId] != undefined
+            ) {
+              console.log(
+                "Something went wrong, a participant is being mapped two messages..."
+              );
             }
-            participantMapping[curr_participant.participantId] = curr.nudge_message
+            participantMapping[curr_participant.participantId] =
+              curr.nudge_message;
             parti_idx = parti_idx - 1;
           }
         }
         if (num_parti_before - participants.length == 0) {
-          returned.push({nudge_id: curr['nudge_id'], num_assigned: num_parti_before - participants.length, num_left: participants.length, success_code: assignmentCodes.NO_PARTICIPANT});
+          returned.push({
+            nudge_id: curr["nudge_id"],
+            num_assigned: num_parti_before - participants.length,
+            num_left: participants.length,
+            success_code: assignmentCodes.NO_PARTICIPANT,
+          });
           break;
         } else {
-          returned.push({nudge_id: curr['nudge_id'], num_assigned: num_parti_before - participants.length, num_left: participants.length, success_code: assignmentCodes.SUCCESS});
+          returned.push({
+            nudge_id: curr["nudge_id"],
+            num_assigned: num_parti_before - participants.length,
+            num_left: participants.length,
+            success_code: assignmentCodes.SUCCESS,
+          });
         }
         // TODO: excluded demographics
       } else {
-        console.log("nudge prev assigned!")
+        console.log("nudge prev assigned!");
         // TODO: Handle previously assigned
-        returned.push(
-          {nudge_id: curr['nudge_id'],
+        returned.push({
+          nudge_id: curr["nudge_id"],
           success_code: assignmentCodes.PREVIOUSLY_ASSIGNED,
           error_object: {
-          potential_num_assigned: 50,
-          // Is this ambiguous?
-          previously_assigned_errors: [{ demographics: ['female', '18-29'], count: 30 }, { demographics: ['all'], count: 50 }],
-        },
+            potential_num_assigned: 50,
+            // Is this ambiguous?
+            previously_assigned_errors: [
+              { demographics: ["female", "18-29"], count: 30 },
+              { demographics: ["all"], count: 50 },
+            ],
+          },
         });
         break;
       }
     }
 
-    // Populate the rest of returned 
+    // Populate the rest of returned
     while (returned.length < assignments.length) {
-      returned.push(
-        {
-          nudge_id: assignments[returned.length]['nudge_id'],
-          success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED
-        })
+      returned.push({
+        nudge_id: assignments[returned.length]["nudge_id"],
+        success_code: assignmentCodes.ASSIGNMENT_ABOVE_FAILED,
+      });
     }
-
   } catch (e) {
     console.log(e);
   }
 
-  return { checkedAssignments: returned, participantMapping: participantMapping }
+  return {
+    checkedAssignments: returned,
+    participantMapping: participantMapping,
+  };
 }
 
 async function dispatchNudges(participantMapping, sender) {
   const responsePromises = [];
   // SHOULD BE EDITED FOR REAL URL
-  const endpoint = 'https://peach2nudge.ipat.gatech.edu/api/nudges/'
+  const endpoint = "https://peach2nudge.ipat.gatech.edu/api/nudges/";
 
   Object.keys(participantMapping).forEach((participant) => {
-    console.log(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
+    console.log(
+      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`
+    );
     // HTTP get request
-    debug(`Sending participant id ${participant} the following message: ${participantMapping[participant]}`);
-    const resPromise = axios.post(endpoint, {
-      recipient: participant,
-      mesg: participantMapping[participant]
-    }, { headers: {
-      'Content-Type': 'application/json'
-    }}).catch((err) => {
-      console.log(`Issue sending nudge, ${err}`)
-    })
-    responsePromises.push(resPromise)
+    debug(
+      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`
+    );
+    const resPromise = axios
+      .post(
+        endpoint,
+        {
+          recipient: participant,
+          mesg: participantMapping[participant],
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .catch((err) => {
+        console.log(`Issue sending nudge, ${err}`);
+      });
+    responsePromises.push(resPromise);
   });
 
   const responses = await Promise.all(responsePromises);
+  console.log(responses);
   // Log/store the responses somehow?
   return responses;
 }
@@ -152,7 +188,9 @@ function getIncludedDemographics(demographics) {
 
   Object.keys(demographic_enum).forEach((category) => {
     // Checks if there is any overlap (i.e. there exists a demographic label in the age category)
-    const contains = demographic_enum[category].some((element) => demographics.includes(element));
+    const contains = demographic_enum[category].some((element) =>
+      demographics.includes(element)
+    );
     if (!contains) {
       includedDemographics.push(...demographic_enum[category]);
     }
@@ -185,5 +223,5 @@ module.exports = {
   checkAssignments,
   assignmentCodes,
   demographic_enum,
-  dispatchNudges
+  dispatchNudges,
 };
