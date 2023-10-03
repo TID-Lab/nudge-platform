@@ -16,11 +16,11 @@ export default function SentAssignmentsList({ schedules }) {
         <Empty description="No assignments scheduled" />
       ) : (
         <Collapse>
-          {schedules.map(({ id, nextRunAt, nudges }) => (
+          {schedules.map(({ id, lastRunAt, nudges }) => (
             <StyledPanel
               header={
                 <Space size={"large"}>
-                  <div>{dayjs(nextRunAt).format("MM/DD/YYYY h:mmA")}</div>
+                  <div>{dayjs(lastRunAt).format("MM/DD/YYYY h:mmA")}</div>
                   <div>
                     {nudges.length} nudge{nudges.length > 1 ? "s" : ""} assigned
                   </div>
