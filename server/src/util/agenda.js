@@ -22,7 +22,7 @@ async function scheduleNudgeHandler(job) {
   console.log("all responses:");
   for (const res in responses) {
     console.log(res);
-    console.log(res["data"]);
+    console.log(res.data);
   }
   // Some way of saving response success/failure to the job
 }
