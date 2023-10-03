@@ -202,7 +202,7 @@ const MainPage = () => {
                   {
                     key: "pending",
                     label: (
-                      <Badge dot={pendingNudges.length !== 0}>Pending</Badge>
+                      <Badge dot={pendingNudges.length !== 0}>Drafting</Badge>
                     ),
                     children: (
                       <PendingNudgeList

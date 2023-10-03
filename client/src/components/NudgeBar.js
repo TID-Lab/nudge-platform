@@ -1,4 +1,5 @@
-import { Tooltip } from "antd";
+import { Badge, Space, Tooltip } from "antd";
+import { useMemo } from "react";
 import styled from "styled-components";
 
 /**
@@ -14,32 +15,60 @@ import styled from "styled-components";
  */
 
 const MultiProgressBar = ({ nudges, total }) => {
+  const getTotalAssigned = () => {
+    return nudges.reduce((acc, nudge) => acc + nudge.assigned, 0);
+  };
+
+  const totalAssigned = useMemo(getTotalAssigned, [nudges]);
+
   return (
-    <StyledBar>
-      {nudges &&
-        nudges.map((nudge, i) => (
-          <Tooltip title={nudge.text} key={i} placement="bottom">
-            <Progress
-              percent={(nudge.assigned / total) * 100}
-              background={nudge.color}
-            />
-          </Tooltip>
-        ))}
-    </StyledBar>
+    <BarContainer>
+      <StyledBar>
+        {nudges &&
+          nudges.map((nudge, i) => (
+            <Tooltip title={nudge.text} key={i} placement="bottom">
+              <Progress
+                percent={(nudge.assigned / total) * 100}
+                background={nudge.color}
+              >
+                <Space>
+                  <Badge
+                    color="white"
+                    count={nudge.assigned}
+                    style={{ color: "black" }}
+                  />
+                </Space>
+              </Progress>
+            </Tooltip>
+          ))}
+      </StyledBar>
+
+      <div>
+        {totalAssigned} / {total}
+      </div>
+    </BarContainer>
   );
 };
 
 export default MultiProgressBar;
 
+const BarContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
 const StyledBar = styled.div`
+  flex: 1;
+
   background-color: #f1f5f9;
   border: 1px solid #e2e8f0;
   border-radius: 0.5em;
   height: 38px;
 
   & > div {
-    display: inline-block;
     height: 100%;
+    display: inline-flex;
   }
 
   & > div:first-child {
@@ -56,4 +85,8 @@ const StyledBar = styled.div`
 const Progress = styled.div`
   width: ${(props) => props.percent}%;
   background-color: ${(props) => props.background};
+  padding: 0 1rem;
+
+  display: flex;
+  align-items: center;
 `;
