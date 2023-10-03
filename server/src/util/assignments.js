@@ -160,6 +160,7 @@ async function dispatchNudges(participantMapping, sender) {
         {
           recipient: participant,
           mesg: participantMapping[participant],
+          sender: sender,
         },
         {
           headers: {
