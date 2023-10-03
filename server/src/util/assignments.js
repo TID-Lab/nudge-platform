@@ -175,7 +175,7 @@ async function dispatchNudges(participantMapping, sender) {
   });
 
   const responses = await Promise.all(responsePromises);
-  console.log(responses);
+  //console.log(responses);
   // Log/store the responses somehow?
   return responses;
 }

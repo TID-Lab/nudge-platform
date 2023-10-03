@@ -20,6 +20,7 @@ async function scheduleNudgeHandler(job) {
   console.log(participantMapping);
   const responses = await dispatchNudges(participantMapping, username);
   console.log("all responses:");
+  console.log(responses);
   for (const res in responses) {
     console.log(res);
     console.log(res.data);
