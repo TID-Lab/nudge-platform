@@ -23,7 +23,7 @@ async function scheduleNudgeHandler(job) {
   console.log(responses);
   for (var i = 0; i < responses.length; i++) {
     var jsonData = responses[i];
-    var part = JSON.parse(jsonData.config.data).recepient;
+    var part = jsonData.config.data;
     console.log("Index:", i, "Part: ", part, "Response:", jsonData.data);
   }
   // Some way of saving response success/failure to the job
