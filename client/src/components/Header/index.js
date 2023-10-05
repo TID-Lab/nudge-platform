@@ -18,6 +18,7 @@ import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
 import { createNudge, fetchNudges } from "../../api/nudge";
 import { participantCsvToJson } from "../../util/participant";
 import UploadParticipantsModal from "../Modals/UploadParticipants";
+import { uploadParticipants } from "../../api/org";
 
 const { Header: AntHeader } = Layout;
 
@@ -54,6 +55,7 @@ const Header = () => {
       type: "participants/set",
       payload: participants,
     });
+    uploadParticipants(participants);
     setParticipants([]);
     messageApi.success("Participants uploaded successfully");
   }
