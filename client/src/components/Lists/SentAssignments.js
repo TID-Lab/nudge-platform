@@ -16,49 +16,56 @@ export default function SentAssignmentsList({ schedules }) {
         <Empty description="No assignments scheduled" />
       ) : (
         <Collapse>
-          {schedules.map(({ id, lastRunAt, nudges }) => (
-            <StyledPanel
-              header={
-                <Space size={"large"}>
-                  <div>{dayjs(lastRunAt).format("MM/DD/YYYY h:mmA")}</div>
-                  <div>
-                    {nudges.length} nudge{nudges.length > 1 ? "s" : ""} assigned
-                  </div>
-                </Space>
-              }
-              key={id}
-            >
-              <List
-                dataSource={nudges}
-                renderItem={({ text, demographics, assigned, color }) => (
-                  <List.Item
-                    style={{
-                      borderLeft: `${color} solid 3px`,
-                    }}
-                  >
-                    <Space size={"large"}>
-                      <div>{text}</div>
-                      <div>{assigned} Assigned</div>
-                      <div>
-                        {demographics.length === 0 ? (
-                          <Tag color="blue" icon={<CheckOutlined />}>
-                            All Unassigned
-                          </Tag>
-                        ) : (
-                          demographics.map((category, i) => (
-                            // Category values aren't very well formatted
-                            <Tag key={i} color="blue" icon={<CheckOutlined />}>
-                              {category}
+          {schedules
+            .sort((a, b) => new Date(b.lastRunAt) - new Date(a.lastRunAt))
+            .map(({ id, lastRunAt, nudges }) => (
+              <StyledPanel
+                header={
+                  <Space size={"large"}>
+                    <div>{dayjs(lastRunAt).format("MM/DD/YYYY h:mmA")}</div>
+                    <div>
+                      {nudges.length} nudge{nudges.length > 1 ? "s" : ""}{" "}
+                      assigned
+                    </div>
+                  </Space>
+                }
+                key={id}
+              >
+                <List
+                  dataSource={nudges}
+                  renderItem={({ text, demographics, assigned, color }) => (
+                    <List.Item
+                      style={{
+                        borderLeft: `${color} solid 3px`,
+                      }}
+                    >
+                      <Space size={"large"}>
+                        <div>{text}</div>
+                        <div>{assigned} Assigned</div>
+                        <div>
+                          {demographics.length === 0 ? (
+                            <Tag color="blue" icon={<CheckOutlined />}>
+                              All Unassigned
                             </Tag>
-                          ))
-                        )}
-                      </div>
-                    </Space>
-                  </List.Item>
-                )}
-              />
-            </StyledPanel>
-          ))}
+                          ) : (
+                            demographics.map((category, i) => (
+                              // Category values aren't very well formatted
+                              <Tag
+                                key={i}
+                                color="blue"
+                                icon={<CheckOutlined />}
+                              >
+                                {category}
+                              </Tag>
+                            ))
+                          )}
+                        </div>
+                      </Space>
+                    </List.Item>
+                  )}
+                />
+              </StyledPanel>
+            ))}
         </Collapse>
       )}
     </div>
