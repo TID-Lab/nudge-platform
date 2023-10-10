@@ -75,7 +75,6 @@ const Header = () => {
         </Space>
 
         <Space>
-          <Input.Search placeholder="Search" disabled size="large" />
           <Button
             size="large"
             type="primary"
@@ -103,6 +102,7 @@ const Header = () => {
       <Form.Provider
         onFormFinish={(name, { values }) => {
           if (name === "createNudgeForm") {
+            console.log(values);
             const newNudge = {
               ...values,
               date_created: Date(),

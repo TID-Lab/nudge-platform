@@ -162,6 +162,7 @@ const MainPage = () => {
                     },
                     {
                       title: "Comment",
+                      dataIndex: "comment",
                     },
                     {
                       title: "Actions",
