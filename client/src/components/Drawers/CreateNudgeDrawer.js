@@ -1,5 +1,6 @@
 import React from "react";
-import { Space, Form, Drawer, Button, Input, Select } from "antd";
+import { Space, Form, Drawer, Button, Input, Select, Tag } from "antd";
+import { CombColorMap } from "../../util/constants";
 
 const { TextArea } = Input;
 
@@ -31,6 +32,11 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
             mode="multiple"
             allowClear
             placeholder="Please select a Com-B component."
+            tagRender={(props) => (
+              <Tag {...props} color={CombColorMap[props.value]}>
+                {props.label}
+              </Tag>
+            )}
             options={[
               {
                 value: "c-psy",
@@ -64,18 +70,29 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
         <Form.Item
           label="Nudge content"
           name="message"
+          hasFeedback
+          validateFirst
           rules={[
             {
               required: true,
               message:
-                "Nudge content is empty! If you would like to delete this nudge hit CANCEL.",
+                "Nudge content is empty. Please input your nudge content.",
+            },
+            {
+              max: 300,
+              message: "Nudge content cannot be longer than 300 characters.",
+            },
+            {
+              max: 130,
+              message:
+                "We recommend your nudge to be less than 130 characters.",
+              warningOnly: true,
             },
           ]}
         >
           <TextArea
             rows={6}
             placeholder="Please input your nudge content here. Type <NAME> to include your recipient’s first name in the Nudge mesage."
-            maxLength={300}
           />
         </Form.Item>
 

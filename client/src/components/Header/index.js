@@ -102,7 +102,6 @@ const Header = () => {
       <Form.Provider
         onFormFinish={(name, { values }) => {
           if (name === "createNudgeForm") {
-            console.log(values);
             const newNudge = {
               ...values,
               date_created: Date(),

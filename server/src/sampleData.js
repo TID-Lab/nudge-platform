@@ -99,13 +99,13 @@ const data = {
     {
       message: "Hello world!",
       date_created: Date(),
-      com_b: ["O-SOC", "C-PHY"],
+      com_b: ["o-soc", "c-phy"],
       is_active: true,
     },
     {
       message: "Make sure to test for the football game!",
       date_created: Date(),
-      com_b: ["O-SOC"],
+      com_b: ["o-soc"],
       is_active: true,
     },
     {
@@ -118,12 +118,12 @@ const data = {
     {
       message: "It would be a good time to use your at-home kit!",
       date_created: Date(),
-      com_b: ["C-PHY"],
+      com_b: ["c-phy"],
       is_active: true,
     },
     {
       message: "Save your friends and family the hassle... test often!",
-      com_b: ["O-SOC", "M-AUTO"],
+      com_b: ["o-soc", "m-auto"],
       date_created: Date(),
     },
   ],

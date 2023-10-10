@@ -9,7 +9,6 @@ import { dispatchAssignment, fetchAssignments } from "../../api/nudge";
 const ConfirmSendModal = (props) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
-  const scheduledNudges = useSelector((state) => state.scheduledAssignments);
 
   const [isScheduled, setIsScheduled] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
@@ -25,11 +24,6 @@ const ConfirmSendModal = (props) => {
     return current < dayjs().subtract(1, "day");
   };
   const onOk = async () => {
-    console.log("Pending Nudges");
-    console.log(pendingNudges);
-    console.log("Scheduled Nudges");
-    console.log(scheduledNudges);
-
     if (isScheduled) {
       if (!scheduledTime) {
         Modal.error({
@@ -125,21 +119,23 @@ const ConfirmSendModal = (props) => {
           </Form.Item>
         </Form>
       </Modal>
+
       <Modal
-        title="Congratulations"
+        title={isScheduled ? "Nudge Scheduled" : "Nudge Sent"}
         open={successModal}
-        width={700}
-        height={700}
-        okText={okText}
-        confirmLoading={loading}
         onCancel={() => setSuccessModal(false)}
         onOk={() => setSuccessModal(false)}
-        footer={null}
       >
         <Result
-          icon={<SmileOutlined />}
-          title="Congratulations!"
-          subTitle="You achieved something great!"
+          status="success"
+          title={isScheduled ? "Nudge Scheduled" : "Nudge Sent"}
+          subTitle={
+            isScheduled
+              ? `Nudge scheduled at ${dayjs(scheduledTime).format(
+                  "MM/DD/YYYY HH:mm A"
+                )}`
+              : "See the results in the Sent Nudges tab"
+          }
         />
       </Modal>
     </div>

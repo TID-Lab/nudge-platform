@@ -75,7 +75,10 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
 
       <div className="list">
         {pendingNudges.length === 0 ? (
-          <Empty description="No pending nudges" />
+          <Empty
+            description="No pending nudges"
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
         ) : (
           pendingNudges.map((pendingNudge, i) => (
             <PendingNudgeCard

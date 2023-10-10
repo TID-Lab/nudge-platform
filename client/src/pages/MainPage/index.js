@@ -18,7 +18,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import Fuse from "fuse.js";
 
-import PendingNudgeList from "../../components/PendingNudgeList";
+import PendingNudgeList from "../../components/Lists/PendingNudge";
 import AssignDrawer from "../../components/Drawers/AssignDrawer";
 import NudgeBar from "../../components/NudgeBar";
 import {
@@ -31,6 +31,7 @@ import "./index.css";
 import useAuth from "../../hooks/auth";
 import ScheduledAssignmentsList from "../../components/Lists/ScheduledAssignments";
 import SentAssignmentsList from "../../components/Lists/SentAssignments";
+import { CombColorMap } from "../../util/constants";
 
 const { Content } = Layout;
 
@@ -50,7 +51,7 @@ const MainPage = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
   const [query, setQuery] = useState("");
 
-  const fuse = new Fuse(nudges, { keys: ["message"] });
+  const fuse = new Fuse(nudges, { keys: ["message", "comment"] });
 
   useEffect(() => {
     fetchNudges()
@@ -120,6 +121,7 @@ const MainPage = () => {
                     {
                       title: "Nudge Content",
                       dataIndex: "message",
+                      width: "50%",
                     },
                     {
                       title: "COM-B",
@@ -154,7 +156,11 @@ const MainPage = () => {
                       render: (_, { com_b }) => (
                         <>
                           {com_b.map((tag) => {
-                            return <Tag key={tag}>{tag.toUpperCase()}</Tag>;
+                            return (
+                              <Tag key={tag} color={CombColorMap[tag]}>
+                                {tag.toUpperCase()}
+                              </Tag>
+                            );
                           })}
                         </>
                       ),
