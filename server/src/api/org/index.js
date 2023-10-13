@@ -126,16 +126,4 @@ routes.delete("/:id", is("admin"), async (req, res) => {
   }
 });
 
-routes.post("/uploadPart", async (req, res) => {
-  const data = req.body;
-  console.log(data);
-  try {
-    createParticipants(data);
-    res.status(200).send();
-  } catch (err) {
-    debug(`${err}`);
-    res.status(500).send(err);
-  }
-});
-
 module.exports = routes;

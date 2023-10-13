@@ -59,16 +59,4 @@ routes.patch("/deactivate/:id", async (req, res) => {
   }
 });
 
-routes.get("/participantCount", async (req, res) => {
-  try {
-    const participants = await Participant.find({});
-    res.status(200).send({ participantCount: participants.length });
-    return;
-  } catch (err) {
-    debug(`${err}`);
-    res.status(500).send(err);
-    return;
-  }
-});
-
 module.exports = routes;

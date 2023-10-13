@@ -18,7 +18,7 @@ import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
 import { createNudge, fetchNudges } from "../../api/nudge";
 import { participantCsvToJson } from "../../util/participant";
 import UploadParticipantsModal from "../Modals/UploadParticipants";
-import { uploadParticipants } from "../../api/org";
+import { uploadParticipants } from "../../api/participant";
 
 const { Header: AntHeader } = Layout;
 
@@ -50,7 +50,6 @@ const Header = () => {
 
   function onUploadParticipantModalOk() {
     // Update on server and DB
-    console.log(participants);
     dispatch({
       type: "participants/set",
       payload: participants,
