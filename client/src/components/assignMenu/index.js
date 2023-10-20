@@ -45,10 +45,18 @@ const AssignMenu = (props) => {
       return;
     }
     const reformattedNudges = pendingNudges.map((nudge) => {
-      return { nudge_id: nudge.id, demographics: nudge.demographics, nudge_message: nudge.text};
+      return {
+        nudge_id: nudge.id,
+        demographics: nudge.demographics,
+        nudge_message: nudge.text,
+      };
     });
 
-    reformattedNudges.push({ nudge_id: nudge._id, demographics: demographics, nudge_message: nudge.message });
+    reformattedNudges.push({
+      nudge_id: nudge._id,
+      demographics: demographics,
+      nudge_message: nudge.message,
+    });
     console.log("SENDING");
     console.log(reformattedNudges);
     // console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
@@ -56,7 +64,7 @@ const AssignMenu = (props) => {
       .then((res) => {
         console.log(res);
         const last_res = res[reformattedNudges.length - 1];
-        if (last_res.success_code == "SUCCESS") {
+        if (last_res.success_code === "SUCCESS") {
           dispatch({
             type: "pendingNudges/add",
             payload: {
@@ -66,7 +74,7 @@ const AssignMenu = (props) => {
             },
           });
           setShowModal(false);
-        } else if (last_res.success_code == "NO_PARTICIPANT") {
+        } else if (last_res.success_code === "NO_PARTICIPANT") {
           setErrorMessage(
             'No participants are left with this demographic grouping. Please try a different combination, or use "All Remaining."'
           );
