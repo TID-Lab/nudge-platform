@@ -142,7 +142,7 @@ routes.get("/allParts", async (req, res) => {
   const protocol_code = req.query.protcode;
   var ret_object = {};
   //start comment for test
-  const data = {
+  /* const data = {
     mesg: [
       {
         active: true,
@@ -152,14 +152,14 @@ routes.get("/allParts", async (req, res) => {
     ],
     result: true,
   };
-  ret_object = data;
+  ret_object = data; */
 
   //end comment for test
 
   //    const response = await fetch(`http://127.0.0.1:5000/api/users`);
 
   //start comment for live
-  /* try {
+  try {
     const response = await fetch(
       `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`
     ); 
@@ -173,7 +173,7 @@ routes.get("/allParts", async (req, res) => {
   } catch (error) {
     console.error(`Error getting participants from backend`);
     res.status(500).send(err);
-  }  */
+  } 
   //end comment for live
 
   debug(`${ret_object}`);
