@@ -143,29 +143,28 @@ routes.get("/allParts", async (req, res) => {
   var ret_object = {};
   //start comment for test
   const data = {
-    "mesg": [
+    mesg: [
       {
-        "active": true, 
-        "part_code": "demo001_29", 
-        "protocols": [
-          "nudge_demo_001"
-        ]
-      }, 
-    ], 
-    "result": true
-  }
+        active: true,
+        part_code: "demo001_29",
+        protocols: ["nudge_demo_001"],
+      },
+    ],
+    result: true,
+  };
   ret_object = data;
+
   //end comment for test
 
-  
   //    const response = await fetch(`http://127.0.0.1:5000/api/users`);
-  
+
   //start comment for live
   /* try {
     const response = await fetch(
       `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`
     ); 
     const data = await response.json();
+
     if (data.result === false) {
       console.log(`Messed Up`);
     }
@@ -176,6 +175,7 @@ routes.get("/allParts", async (req, res) => {
     res.status(500).send(err);
   }  */
   //end comment for live
+
   debug(`${ret_object}`);
   res.status(200).send(ret_object);
 });

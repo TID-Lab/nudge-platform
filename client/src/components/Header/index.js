@@ -17,7 +17,7 @@ import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
 import { createNudge, fetchNudges } from "../../api/nudge";
 import { participantCsvToJson } from "../../util/participant";
-import UploadParticipantsModal from "../Modals/UploadParticipants";
+import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
 import { uploadParticipants } from "../../api/participant";
 
 const { Header: AntHeader } = Layout;

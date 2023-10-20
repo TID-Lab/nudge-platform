@@ -6,7 +6,7 @@ import styled from "styled-components";
 import PendingNudgeCard from "../Cards/PendingNudgeCard";
 import ConfirmSendModal from "../Modals/ConfirmSend";
 import { fetchAssignments } from "../../api/nudge";
-import UploadParticipantsModal from "../Modals/UploadParticipants";
+import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
 
 const { Title } = Typography;
 
