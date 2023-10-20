@@ -126,4 +126,38 @@ routes.delete("/:id", is("admin"), async (req, res) => {
   }
 });
 
+routes.post("/uploadPart", async (req, res) => {
+  const data = req.body;
+  console.log(data);
+  try {
+    createParticipants(data);
+    res.status(200).send();
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
+
+routes.get("/allParts", async (req, res) => {
+  const protocol_code = req.query.protcode;
+  var ret_object = {};
+  try {
+    //const response = await fetch(`http://127.0.0.1:5000/api/users`);
+    const response = await fetch(
+      `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`
+    );
+    const data = await response.json();
+    if (data.result === false) {
+      console.log(`Messed Up`);
+    }
+    ret_object = data;
+    //debug(`${data}`);
+  } catch (error) {
+    console.error(`Error getting participants from backend`);
+    res.status(500).send(err);
+  }
+  debug(`${ret_object}`);
+  res.status(200).send(ret_object);
+});
+
 module.exports = routes;

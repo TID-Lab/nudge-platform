@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Alert, Modal, Table, Tag } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { cancelSchedule } from "../../api/nudge";
+import { getParticipants } from "../../api/org";
 
 export default function UploadParticipantsModal({
   participants,
@@ -12,6 +13,11 @@ export default function UploadParticipantsModal({
   onCancel,
   onOk,
 }) {
+  console.log(participants);
+  const [backEndParts, setBackEndParts] = useState({});
+  const [backEndPartCodes, setBackEndPartCodes] = useState([]);
+  const [onlyDbPartCodesObject, setOnlyDbPartCodesObject] = useState({});
+  const [tableRender, setTableRender] = useState([]);
   const columns = [
     {
       title: "ID",
@@ -38,7 +44,7 @@ export default function UploadParticipantsModal({
     },
     {
       title: "New",
-      dataIndex: "missing",
+      dataIndex: "missing", // Use participantId for the dataIndex
       key: "missing",
       render: (missing) => {
         return missing ? <CheckOutlined /> : null;
@@ -49,9 +55,43 @@ export default function UploadParticipantsModal({
     return {
       key: participant.participantId,
       ...participant,
-      missing: true, // TODO: How do I get this value?
+      missing: !backEndPartCodes.includes(participant.participantId), // TODO: How do I get this value?
     };
   });
+  //pulling backend server participants
+  useEffect(() => {
+    // Fetch data from the backend when the component mounts
+    getParticipants("nudge_demo_001")
+      .then((res) => {
+        //console.log(res);
+        setBackEndParts(res);
+        const actualPartCodes = res.mesg.map(
+          (participant) => participant.part_code
+        );
+        console.log(actualPartCodes);
+        setBackEndPartCodes(actualPartCodes);
+
+        const filteredPartCodes = actualPartCodes.filter((partCode) => {
+          return !participants.some(
+            (participant) => participant.participantId === partCode
+          );
+        });
+        console.log(filteredPartCodes);
+        // Create objects for the filtered part_codes
+        const filteredPartCodeObjects = filteredPartCodes.map((partCode) => {
+          return {
+            participantId: partCode,
+            labels: ["Only in backend DB"], // You can provide labels or any other data here
+          };
+        });
+        console.log(filteredPartCodeObjects);
+        setOnlyDbPartCodesObject(filteredPartCodeObjects);
+        setTableRender([...data, ...filteredPartCodeObjects]);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the backend:", error);
+      });
+  }, [participants]);
 
   return (
     <Modal
@@ -68,7 +108,7 @@ export default function UploadParticipantsModal({
         />
       )}
 
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={tableRender} />
     </Modal>
   );
 }
