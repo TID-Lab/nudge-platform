@@ -81,7 +81,7 @@ export default function UploadParticipantsModal({
         const filteredPartCodeObjects = filteredPartCodes.map((partCode) => {
           return {
             participantId: partCode,
-            labels: ["Only in backend DB"], // You can provide labels or any other data here
+            labels: ["No changes to participant"], // You can provide labels or any other data here
           };
         });
         console.log(filteredPartCodeObjects);
