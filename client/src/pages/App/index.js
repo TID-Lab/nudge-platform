@@ -8,10 +8,33 @@ import LandingPage from "../LandingPage";
 import Header from "../../components/Header";
 import MainPage from "../MainPage";
 import SettingsPage from "../SettingsPage";
+import { useEffect } from "react";
+import { fetchParticipants } from "../../api/participant";
+import { useDispatch } from "react-redux";
+import { fetchNudges } from "../../api/nudge";
 
 // TODO: Style hyperlinks in the Terms, etc. pages
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetchNudges()
+      .then((nudges) => {
+        dispatch({
+          type: "nudges/set",
+          payload: nudges,
+        });
+      })
+      .catch((e) => console.log(e));
+
+    fetchParticipants()
+      .then((participants) =>
+        dispatch({ type: "participants/set", payload: participants })
+      )
+      .catch((err) => console.log("err:" + err));
+  }, [dispatch]);
+
   return (
     <ConfigProvider
       theme={{

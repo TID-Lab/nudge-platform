@@ -101,6 +101,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
   return (
     <Drawer
       title="Assign"
+      width={900}
       size="large"
       onClose={handleClose}
       open={open}
@@ -190,15 +191,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               { value: "has-diabetes", label: "Has Diabetes" },
               { value: "at-risk", label: "At Risk" },
               { value: "caretaker", label: "Caretaker" },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="Testing Status" name="test_status">
-          <Checkbox.Group
-            disabled={isControl}
-            options={[
-              { value: "tested", label: "Tested" },
-              { value: "untested", label: "Untested" },
             ]}
           />
         </Form.Item>

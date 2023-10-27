@@ -52,23 +52,6 @@ const MainPage = () => {
 
   const fuse = new Fuse(nudges, { keys: ["message", "comment"] });
 
-  useEffect(() => {
-    fetchNudges()
-      .then((nudges) => {
-        dispatch({
-          type: "nudges/set",
-          payload: nudges,
-        });
-      })
-      .catch((e) => console.log(e));
-
-    fetchParticipants()
-      .then((participants) =>
-        dispatch({ type: "participants/set", payload: participants })
-      )
-      .catch((err) => console.log("err:" + err));
-  }, [dispatch]);
-
   const onNudgeArchive = async (nudge) => {
     const inActiveNudge = {
       ...nudge,
