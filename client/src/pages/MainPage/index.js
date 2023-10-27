@@ -270,8 +270,6 @@ const MainPage = () => {
 export default MainPage;
 
 const StyledContent = styled(Content)`
-  padding: 1rem;
-
   .nudge-list-container {
     margin-top: 2rem;
   }

@@ -140,7 +140,7 @@ routes.post("/uploadPart", async (req, res) => {
 
 routes.get("/allParts", async (req, res) => {
   const protocol_code = req.query.protcode;
-  var ret_object = {};
+  let ret_object = {};
   //start comment for test
   /* const data = {
     mesg: [
@@ -161,8 +161,8 @@ routes.get("/allParts", async (req, res) => {
   //start comment for live
   try {
     const response = await fetch(
-      `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`
-    ); 
+      `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`,
+    );
     const data = await response.json();
 
     if (data.result === false) {
@@ -170,14 +170,15 @@ routes.get("/allParts", async (req, res) => {
     }
 
     ret_object = data;
+    res.status(200).send(ret_object);
   } catch (error) {
     console.error(`Error getting participants from backend`);
-    res.status(500).send(err);
-  } 
+    res.status(500).send(error);
+  }
+
   //end comment for live
 
   debug(`${ret_object}`);
-  res.status(200).send(ret_object);
 });
 
 module.exports = routes;

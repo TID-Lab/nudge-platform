@@ -98,7 +98,7 @@ export default function UploadParticipantsModal({
     // Fetch data from the backend when the component mounts
     getParticipants("nudge_demo_001")
       .then((res) => {
-        setExistingParticipants(res.mesg);
+        setExistingParticipants(res.mesg ?? []);
       })
       .catch((error) => {
         console.error("Error fetching data from the backend:", error);
