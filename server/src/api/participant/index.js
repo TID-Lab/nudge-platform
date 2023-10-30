@@ -30,7 +30,7 @@ routes.get("/count", async (req, res) => {
     return;
   }
 });
-
+//this should not be being used right now
 routes.post("/upload", async (req, res) => {
   const data = req.body;
 

@@ -7,7 +7,7 @@ const routes = require("express").Router();
 const Organization = require("../../models/organization");
 const { hashPassword } = require("../../util/org");
 const { is } = require("../../util/org");
-const { createParticipants } = require("../../util/uploadParticipants");
+const { createParticipantsUpload } = require("../../util/uploadParticipants");
 
 const debug = useDebug("api");
 
@@ -130,7 +130,7 @@ routes.post("/uploadPart", async (req, res) => {
   const data = req.body;
   console.log(data);
   try {
-    createParticipants(data);
+    createParticipantsUpload(data);
     res.status(200).send();
   } catch (err) {
     debug(`${err}`);

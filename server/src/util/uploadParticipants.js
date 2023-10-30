@@ -2,10 +2,10 @@ const useDebug = require("debug");
 const debug = useDebug("core");
 const Participant = require("../models/participant");
 
-async function createParticipants(participantData) {
+async function createParticipantsUpload(participantData) {
   try {
     for (const participant of participantData) {
-      // Find the participant by part_code
+      // Find the participant by participantId (make sure it matches your MongoDB schema)
       const filter = { participantId: participant.participantId };
 
       // Update the participant if it exists, or create a new one if it doesn't
@@ -20,11 +20,11 @@ async function createParticipants(participantData) {
 
       if (updateResult) {
         console.log(
-          `Updated/created participant with part_code: ${participant.part_code}`
+          `Updated/created participant with participantId: ${participant.participantId}`
         );
       } else {
         console.log(
-          `Failed to update/insert participant with part_code: ${participant.part_code}`
+          `Failed to update/insert participant with participantId: ${participant.participantId}`
         );
       }
     }
@@ -36,5 +36,5 @@ async function createParticipants(participantData) {
 }
 
 module.exports = {
-  createParticipants,
+  createParticipantsUpload,
 };

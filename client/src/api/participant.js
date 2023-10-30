@@ -36,7 +36,7 @@ async function uploadParticipants(parts) {
     method: "POST",
     body: JSON.stringify(parts),
   };
-  const res = await fetch("/api/participant/upload", options);
+  const res = await fetch("/api/org/uploadPart", options);
   return res.status === 200;
 }
 
