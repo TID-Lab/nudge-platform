@@ -30,6 +30,8 @@ async function fetchTotalParticipants() {
   return count;
 }
 
+//this goes to an endpoint in org/index.js in the server side
+//that endpoint is the right function it needs to be moved to participants folder and refactored
 async function uploadParticipants(parts) {
   const options = {
     ...defaultOptions,
@@ -53,9 +55,21 @@ async function fetchInactiveParticipants() {
     });
 }
 
+async function changeState(partStates) {
+  const options = {
+    ...defaultOptions,
+    method: "POST",
+    body: JSON.stringify(partStates),
+  };
+
+  const res = await fetch("/api/participant/changeState", options);
+  return res.status === 200;
+}
+
 export {
   fetchTotalParticipants,
   uploadParticipants,
   fetchParticipants,
   fetchInactiveParticipants,
+  changeState,
 };
