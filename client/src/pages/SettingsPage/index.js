@@ -7,17 +7,22 @@ import {
   Table,
   Tag,
   Typography,
+  message,
 } from "antd";
 
 import useAuth from "../../hooks/auth";
 import { useEffect, useState } from "react";
-import { fetchAllParticipants } from "../../api/participant";
+import {
+  fetchAllParticipants,
+  setParticipantActive,
+} from "../../api/participant";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 const SettingsPage = () => {
   useAuth();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [changedParticipants, setChangedParticipants] = useState({});
   const [allParticipants, setAllParticipants] = useState([]);
@@ -38,10 +43,18 @@ const SettingsPage = () => {
     setAllParticipants([...allParticipants]);
   };
 
-  const handleSubmitParticipantChanges = () => {};
+  const handleSubmitParticipantChanges = async () => {
+    try {
+      await setParticipantActive(changedParticipants);
+      messageApi.success("Successfully updated participants");
+    } catch (e) {
+      messageApi.error(`Failed to update participants: ${e.message}`);
+    }
+  };
 
   return (
     <Content>
+      {contextHolder}
       <Title>Settings</Title>
 
       <section>
@@ -78,7 +91,7 @@ const SettingsPage = () => {
               render: (_, __, i) => (
                 <Space>
                   <Switch
-                    defaultChecked
+                    checked={allParticipants[i].active}
                     onChange={(checked) => handleActiveToggle(checked, i)}
                   />
                 </Space>

@@ -57,7 +57,7 @@ async function fetchAllParticipants() {
     });
 }
 
-async function changeState(partStates) {
+async function setParticipantActive(partStates) {
   const options = {
     ...defaultOptions,
     method: "POST",
@@ -73,4 +73,5 @@ export {
   uploadParticipants,
   fetchParticipants,
   fetchAllParticipants,
+  setParticipantActive,
 };
