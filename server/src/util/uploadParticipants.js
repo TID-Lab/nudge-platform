@@ -1,23 +1,40 @@
-const useDebug = require('debug');
-const debug = useDebug('core');
-const Participant = require('../models/participant');
+const useDebug = require("debug");
+const debug = useDebug("core");
+const Participant = require("../models/participant");
 
-async function createParticipants(participantData) {
-  console.log(`Object ${participantData} `);
-  if (true) {
-    await Participant.remove({})
-  }
-  const nudges = await Participant.findOne({});
-  if (!nudges) {
-    try {
-      await Participant.create(participantData);
-      console.log('created sample participants');
-    } catch (err) {
-      console.log(`${err}`);
+async function createParticipantsUpload(participantData) {
+  try {
+    for (const participant of participantData) {
+      // Find the participant by participantId (make sure it matches your MongoDB schema)
+      const filter = { participantId: participant.participantId };
+
+      // Update the participant if it exists, or create a new one if it doesn't
+      const updateResult = await Participant.findOneAndUpdate(
+        filter,
+        participant,
+        {
+          new: true, // Return the updated document
+          upsert: true, // Create a new document if it doesn't exist
+        }
+      );
+
+      if (updateResult) {
+        console.log(
+          `Updated/created participant with participantId: ${participant.participantId}`
+        );
+      } else {
+        console.log(
+          `Failed to update/insert participant with participantId: ${participant.participantId}`
+        );
+      }
     }
+
+    console.log("Participants creation/updation completed.");
+  } catch (err) {
+    console.error(`Error creating/updating participants: ${err}`);
   }
 }
 
 module.exports = {
-  createParticipants
+  createParticipantsUpload,
 };

@@ -18,19 +18,19 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import Fuse from "fuse.js";
 
-import PendingNudgeList from "../../components/PendingNudgeList";
+import PendingNudgeList from "../../components/Lists/PendingNudgeList";
+import ScheduledAssignmentsList from "../../components/Lists/ScheduledAssignmentsList";
+import SentAssignmentsList from "../../components/Lists/SentAssignmentsList";
 import AssignDrawer from "../../components/Drawers/AssignDrawer";
 import NudgeBar from "../../components/NudgeBar";
-import {
-  deactivateNudge,
-  fetchNudges,
-  fetchTotalParticipants,
-} from "../../api/nudge";
+
+import { deactivateNudge, fetchNudges } from "../../api/nudge";
+
 import "./index.css";
 
 import useAuth from "../../hooks/auth";
-import ScheduledAssignmentsList from "../../components/Lists/ScheduledAssignments";
-import SentAssignmentsList from "../../components/Lists/SentAssignments";
+import { CombColorMap } from "../../util/constants";
+import { fetchParticipants } from "../../api/participant";
 
 const { Content } = Layout;
 
@@ -44,28 +44,13 @@ const MainPage = () => {
     (state) => state.scheduledAssignments
   );
   const sentAssignments = useSelector((state) => state.sentAssignments);
+  const participants = useSelector((state) => state.participants);
 
   const [isAssignDrawerOpen, setIsAssignDrawerOpen] = useState(false);
   const [assignedNudge, setAssignedNudge] = useState({ key: 0, message: "" });
-  const [totalParticipants, setTotalParticipants] = useState(0);
   const [query, setQuery] = useState("");
 
-  const fuse = new Fuse(nudges, { keys: ["message"] });
-
-  useEffect(() => {
-    fetchNudges()
-      .then((nudges) => {
-        dispatch({
-          type: "nudges/set",
-          payload: nudges,
-        });
-      })
-      .catch((e) => console.log(e));
-
-    fetchTotalParticipants()
-      .then((numParticipants) => setTotalParticipants(numParticipants))
-      .catch((err) => console.log("err:" + err));
-  }, [dispatch]);
+  const fuse = new Fuse(nudges, { keys: ["message", "comment"] });
 
   const onNudgeArchive = async (nudge) => {
     const inActiveNudge = {
@@ -97,7 +82,7 @@ const MainPage = () => {
         <StyledContent>
           <Row gutter={32}>
             <Col span={16}>
-              <NudgeBar nudges={pendingNudges} total={totalParticipants} />
+              <NudgeBar nudges={pendingNudges} total={participants.length} />
 
               <div className="nudge-list-container">
                 <h3>Nudge List</h3>
@@ -120,6 +105,7 @@ const MainPage = () => {
                     {
                       title: "Nudge Content",
                       dataIndex: "message",
+                      width: "50%",
                     },
                     {
                       title: "COM-B",
@@ -154,7 +140,11 @@ const MainPage = () => {
                       render: (_, { com_b }) => (
                         <>
                           {com_b.map((tag) => {
-                            return <Tag key={tag}>{tag.toUpperCase()}</Tag>;
+                            return (
+                              <Tag key={tag} color={CombColorMap[tag]}>
+                                {tag.toUpperCase()}
+                              </Tag>
+                            );
                           })}
                         </>
                       ),
@@ -162,6 +152,7 @@ const MainPage = () => {
                     },
                     {
                       title: "Comment",
+                      dataIndex: "comment",
                     },
                     {
                       title: "Actions",
@@ -202,11 +193,11 @@ const MainPage = () => {
                   {
                     key: "pending",
                     label: (
-                      <Badge dot={pendingNudges.length !== 0}>Pending</Badge>
+                      <Badge dot={pendingNudges.length !== 0}>Drafting</Badge>
                     ),
                     children: (
                       <PendingNudgeList
-                        total={totalParticipants}
+                        total={participants.length}
                         pendingNudges={pendingNudges}
                       />
                     ),
@@ -262,8 +253,6 @@ const MainPage = () => {
 export default MainPage;
 
 const StyledContent = styled(Content)`
-  padding: 1rem;
-
   .nudge-list-container {
     margin-top: 2rem;
   }

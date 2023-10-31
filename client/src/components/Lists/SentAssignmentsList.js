@@ -1,65 +1,61 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Modal, List, Button, Space, Collapse, Tag, Empty } from "antd";
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { List, Space, Collapse, Tag, Empty, Select } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { CheckOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import styled from "styled-components";
-import { cancelSchedule } from "../../api/nudge";
 
 const { Panel } = Collapse;
 
-export default function ScheduledAssignmentsList({
-  openReSch,
-  setReJobId,
-  schedules,
-}) {
-  const dispatch = useDispatch();
-  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+export default function SentAssignmentsList({ schedules }) {
+  const nudges = useSelector((state) => state.nudges);
+  const [query, setQuery] = useState(undefined);
 
-  const onAssignmentCancel = async (id) => {
-    try {
-      cancelSchedule(id); // do you need async/await logic here?
-      dispatch({
-        type: "scheduledAssignments/delete",
-        payload: id,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const sentAssignments = useMemo(() => {
+    return schedules
+      .filter(({ nudges }) => {
+        console.log(query);
+        if (query === undefined) return true;
+
+        return nudges.some(({ text }) =>
+          text.toLowerCase().includes(query.toLowerCase())
+        );
+      })
+      .sort((a, b) => new Date(b.lastRunAt) - new Date(a.lastRunAt));
+  }, [schedules, query]);
 
   return (
     <div>
-      {schedules.length === 0 ? (
-        <Empty description="No assignments scheduled" />
+      <Select
+        showSearch
+        allowClear
+        suffixIcon={<SearchOutlined />}
+        options={nudges.map(({ message }) => ({
+          value: message,
+          label: message,
+        }))}
+        placeholder="Search for sent nudges"
+        style={{ width: "100%", marginBottom: "1rem" }}
+        onChange={(value) => setQuery(value)}
+      />
+
+      {sentAssignments.length === 0 ? (
+        <Empty description="No assignments" />
       ) : (
         <Collapse>
-          {schedules.map(({ id, nextRunAt, nudges }) => (
+          {sentAssignments.map(({ id, lastRunAt, nudges }) => (
             <StyledPanel
               header={
                 <Space size={"large"}>
-                  <div>{dayjs(nextRunAt).format("MM/DD/YYYY h:mmA")}</div>
+                  <div>{dayjs(lastRunAt).format("MM/DD/YYYY h:mmA")}</div>
                   <div>
                     {nudges.length} nudge{nudges.length > 1 ? "s" : ""} assigned
                   </div>
                 </Space>
               }
               key={id}
-              extra={[
-                <Button type="link" onClick={() => onAssignmentCancel(id)}>
-                  Cancel
-                </Button>,
-                <Button
-                  type="link"
-                  onClick={() => {
-                    setReJobId(id);
-                    openReSch();
-                  }}
-                >
-                  Reschedule
-                </Button>,
-              ]}
             >
               <List
                 dataSource={nudges}

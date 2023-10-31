@@ -21,19 +21,6 @@ async function fetchNudges() {
     })
     .sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
 }
-
-async function fetchTotalParticipants() {
-  const options = {
-    ...defaultOptions,
-    method: "GET",
-  };
-  const res = await fetch("/api/nudge/participantCount", options);
-  const count = await res.json().then((resObj) => {
-    return resObj.participantCount;
-  });
-  return count;
-}
-
 async function createNudge(nudge) {
   const options = {
     ...defaultOptions,
@@ -151,7 +138,6 @@ export {
   cancelSchedule,
   checkAssignment,
   dispatchAssignment,
-  fetchTotalParticipants,
   createNudge,
   deactivateNudge,
   reSchedule,

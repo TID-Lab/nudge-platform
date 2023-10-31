@@ -11,6 +11,11 @@ import {
   cancelSchedule,
 } from "../../api/nudge";
 
+/**
+ * Confirm reschedule nudge assignments
+ *
+ * TODO: Merge with confirm send modal
+ */
 const ConfirmRescheduleModal = (props) => {
   const dispatch = useDispatch();
   const pendingNudges = useSelector((state) => state.pendingNudges);
@@ -56,7 +61,7 @@ const ConfirmRescheduleModal = (props) => {
       await dispatchAssignment(toSendNudge, false).then((res) => {
         //console.log(res);
         console.log(res);
-        if (res != []) {
+        if (res !== []) {
           cancelSchedule(id);
         }
       });
@@ -76,7 +81,7 @@ const ConfirmRescheduleModal = (props) => {
   return (
     <div>
       <Modal
-        title="Confirm Send"
+        title="Confirm Reschedule"
         open={props.open}
         width={700}
         okText={okText}

@@ -2,21 +2,21 @@
 
 // API routes for partner organizations
 
-const useDebug = require('debug');
-const routes = require('express').Router();
-const Organization = require('../../models/organization');
-const { hashPassword } = require('../../util/org');
-const { is } = require('../../util/org');
-const {createParticipants} = require('../../util/uploadParticipants')
+const useDebug = require("debug");
+const routes = require("express").Router();
+const Organization = require("../../models/organization");
+const { hashPassword } = require("../../util/org");
+const { is } = require("../../util/org");
+const { createParticipantsUpload } = require("../../util/uploadParticipants");
 
-const debug = useDebug('api');
+const debug = useDebug("api");
 
 function strip(org) {
   org.hash = undefined;
 }
 
 // Returns all of the partner organizations
-routes.get('/', async (req, res) => {
+routes.get("/", async (req, res) => {
   let orgs;
   try {
     orgs = await Organization.find({});
@@ -30,8 +30,8 @@ routes.get('/', async (req, res) => {
 });
 
 // Creates a partner organization.
-routes.post('/', is('admin'), async (req, res) => {
-  if (typeof req.body !== 'object') {
+routes.post("/", is("admin"), async (req, res) => {
+  if (typeof req.body !== "object") {
     res.status(400).send();
     return;
   }
@@ -68,8 +68,8 @@ routes.post('/', is('admin'), async (req, res) => {
 });
 
 // Updates a partner organization.
-routes.put('/', is('admin'), async (req, res) => {
-  if (typeof req.body !== 'object') {
+routes.put("/", is("admin"), async (req, res) => {
+  if (typeof req.body !== "object") {
     res.status(400).send();
     return;
   }
@@ -111,9 +111,9 @@ routes.put('/', is('admin'), async (req, res) => {
 });
 
 // Deletes a partner organization.
-routes.delete('/:id', is('admin'), async (req, res) => {
+routes.delete("/:id", is("admin"), async (req, res) => {
   const { id } = req.params;
-  if (typeof id !== 'string') {
+  if (typeof id !== "string") {
     res.status(400).send();
     return;
   }
@@ -126,18 +126,59 @@ routes.delete('/:id', is('admin'), async (req, res) => {
   }
 });
 
-routes.post('/uploadPart', async(req,res) => {
-  const data = req.body.participantData
+routes.post("/uploadPart", async (req, res) => {
+  const data = req.body;
   console.log(data);
   try {
-    createParticipants(data)
+    createParticipantsUpload(data);
     res.status(200).send();
-  } catch (err)  {
+  } catch (err) {
     debug(`${err}`);
     res.status(500).send(err);
   }
+});
 
-})
+routes.get("/allParts", async (req, res) => {
+  const protocol_code = req.query.protcode;
+  let ret_object = {};
+  //start comment for test
+  /* const data = {
+    mesg: [
+      {
+        active: true,
+        part_code: "demo001_29",
+        protocols: ["nudge_demo_001"],
+      },
+    ],
+    result: true,
+  };
+  ret_object = data; */
 
+  //end comment for test
+
+  //    const response = await fetch(`http://127.0.0.1:5000/api/users`);
+
+  //start comment for live
+  try {
+    const response = await fetch(
+      `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`,
+    );
+    const data = await response.json();
+
+    if (data.result === false) {
+      console.log(`Messed Up`);
+    }
+
+    ret_object = data;
+    res.status(200).send(ret_object);
+  } catch (error) {
+    console.error(`Error getting participants from backend`);
+    res.status(500).send(error);
+  }
+
+  //end comment for live
+
+  debug(`${ret_object}`);
+});
 
 module.exports = routes;

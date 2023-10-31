@@ -14,7 +14,7 @@ export function participantCsvToJson(csv) {
 
     for (let j = 0; j < headers.length; j++) {
       if (j === 0) {
-        participant["participantId"] = +currentLine[j];
+        participant["participantId"] = currentLine[j];
       } else {
         if (currentLine[j] !== "" && currentLine[j] !== "\r") {
           participant["labels"] = [

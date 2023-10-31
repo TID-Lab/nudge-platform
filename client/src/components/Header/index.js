@@ -1,15 +1,6 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  Layout,
-  Space,
-  Button,
-  Menu,
-  Input,
-  Form,
-  Upload,
-  message,
-} from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { Space, Button, Menu, Form, Upload, message, Flex } from "antd";
 import { FormOutlined, UploadOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
@@ -17,9 +8,9 @@ import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
 import { createNudge, fetchNudges } from "../../api/nudge";
 import { participantCsvToJson } from "../../util/participant";
-import UploadParticipantsModal from "../Modals/UploadParticipants";
-
-const { Header: AntHeader } = Layout;
+import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
+import { uploadParticipants } from "../../api/participant";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -49,7 +40,11 @@ const Header = () => {
 
   function onUploadParticipantModalOk() {
     // Update on server and DB
-    console.log(participants);
+    dispatch({
+      type: "participants/set",
+      payload: participants,
+    });
+    uploadParticipants(participants);
     setParticipants([]);
     messageApi.success("Participants uploaded successfully");
   }
@@ -58,18 +53,21 @@ const Header = () => {
     <StyledHeader>
       {contextHolder}
 
-      <nav className="nav">
+      <Flex justify="space-between">
         <Space>
           <Logo />
 
           <Menu
             mode="horizontal"
-            items={[{ label: "Nudges" }, { label: "Analytics" }]}
+            items={[
+              { label: <Link to="/">Nudges</Link> },
+              { label: "Analytics" },
+              { label: <Link to="/settings">Settings</Link> },
+            ]}
           />
         </Space>
 
-        <Space>
-          <Input.Search placeholder="Search" disabled size="large" />
+        <Space justify="center">
           <Button
             size="large"
             type="primary"
@@ -92,7 +90,7 @@ const Header = () => {
         </Space>
 
         <Space style={{ width: 300 }}> </Space>
-      </nav>
+      </Flex>
 
       <Form.Provider
         onFormFinish={(name, { values }) => {
@@ -142,25 +140,7 @@ const Header = () => {
 
 export default Header;
 
-const StyledHeader = styled(AntHeader)`
-  &.ant-layout-header {
-    background-color: var(--body-background);
-    padding: 1rem;
-  }
-
-  .ant-menu {
-    min-width: 15rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    background-color: var(--body-background);
-  }
-
-  .menu-action-group {
-    display: flex;
-  }
-
-  .nav {
-    display: flex;
-    justify-content: space-between;
-  }
+const StyledHeader = styled.header`
+  background-color: var(--body-background);
+  padding: 1rem;
 `;
