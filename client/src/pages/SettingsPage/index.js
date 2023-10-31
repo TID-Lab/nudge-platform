@@ -1,5 +1,5 @@
 import { Button, Layout, Space, Switch, Table, Tag, Typography } from "antd";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import useAuth from "../../hooks/auth";
 
@@ -8,8 +8,23 @@ const { Title } = Typography;
 
 const SettingsPage = () => {
   useAuth();
+  const dispatch = useDispatch();
 
   const participants = useSelector((state) => state.participants);
+
+  const handleActiveToggle = (isActive, index) => {
+    participants[index].active = isActive;
+
+    dispatch({
+      type: "participants/update",
+      payload: {
+        index,
+        participant: participants[index],
+      },
+    });
+  };
+
+  const handleSubmitParticipantChanges = () => {};
 
   return (
     <Content>
@@ -46,9 +61,12 @@ const SettingsPage = () => {
             {
               title: "Active",
               key: "active",
-              render: () => (
+              render: (_, __, i) => (
                 <Space>
-                  <Switch defaultChecked />
+                  <Switch
+                    defaultChecked
+                    onChange={(checked) => handleActiveToggle(checked, i)}
+                  />
                 </Space>
               ),
             },
@@ -61,6 +79,14 @@ const SettingsPage = () => {
           })}
         />
       </section>
+
+      <Button
+        type="primary"
+        size="large"
+        onClick={handleSubmitParticipantChanges}
+      >
+        Submit
+      </Button>
     </Content>
   );
 };
