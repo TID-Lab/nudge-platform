@@ -5,6 +5,7 @@ const defaultOptions = {
   },
 };
 
+// fetch active participants
 async function fetchParticipants() {
   const options = {
     ...defaultOptions,
@@ -30,6 +31,8 @@ async function fetchTotalParticipants() {
   return count;
 }
 
+//this goes to an endpoint in org/index.js in the server side
+//that endpoint is the right function it needs to be moved to participants folder and refactored
 async function uploadParticipants(parts) {
   const options = {
     ...defaultOptions,
@@ -40,4 +43,35 @@ async function uploadParticipants(parts) {
   return res.status === 200;
 }
 
-export { fetchTotalParticipants, uploadParticipants, fetchParticipants };
+// fetch active and inactive participants (all participants)
+async function fetchAllParticipants() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+
+  return fetch("/api/participant/partwinactive", options)
+    .then((res) => res.json())
+    .then((resObj) => {
+      return resObj.participants;
+    });
+}
+
+async function setParticipantActive(partStates) {
+  const options = {
+    ...defaultOptions,
+    method: "POST",
+    body: JSON.stringify(partStates),
+  };
+
+  const res = await fetch("/api/participant/changeState", options);
+  return res.status === 200;
+}
+
+export {
+  fetchTotalParticipants,
+  uploadParticipants,
+  fetchParticipants,
+  fetchAllParticipants,
+  setParticipantActive,
+};

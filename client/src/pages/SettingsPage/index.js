@@ -1,18 +1,60 @@
-import { Button, Layout, Space, Switch, Table, Tag, Typography } from "antd";
-import { useSelector } from "react-redux";
+import {
+  Button,
+  Flex,
+  Layout,
+  Space,
+  Switch,
+  Table,
+  Tag,
+  Typography,
+  message,
+} from "antd";
 
 import useAuth from "../../hooks/auth";
+import { useEffect, useState } from "react";
+import {
+  fetchAllParticipants,
+  setParticipantActive,
+} from "../../api/participant";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 const SettingsPage = () => {
   useAuth();
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const participants = useSelector((state) => state.participants);
+  const [changedParticipants, setChangedParticipants] = useState({});
+  const [allParticipants, setAllParticipants] = useState([]);
+
+  useEffect(() => {
+    fetchAllParticipants().then((participants) => {
+      setAllParticipants(participants);
+    });
+  }, []);
+
+  const handleActiveToggle = (isActive, index) => {
+    allParticipants[index].active = isActive;
+
+    setChangedParticipants({
+      ...changedParticipants,
+      [allParticipants[index].participantId]: allParticipants[index].active,
+    });
+    setAllParticipants([...allParticipants]);
+  };
+
+  const handleSubmitParticipantChanges = async () => {
+    try {
+      await setParticipantActive(changedParticipants);
+      messageApi.success("Successfully updated participants");
+    } catch (e) {
+      messageApi.error(`Failed to update participants: ${e.message}`);
+    }
+  };
 
   return (
     <Content>
+      {contextHolder}
       <Title>Settings</Title>
 
       <section>
@@ -46,14 +88,17 @@ const SettingsPage = () => {
             {
               title: "Active",
               key: "active",
-              render: () => (
+              render: (_, __, i) => (
                 <Space>
-                  <Switch defaultChecked />
+                  <Switch
+                    checked={allParticipants[i].active}
+                    onChange={(checked) => handleActiveToggle(checked, i)}
+                  />
                 </Space>
               ),
             },
           ]}
-          dataSource={participants.map((participant) => {
+          dataSource={allParticipants.map((participant) => {
             return {
               ...participant,
               key: participant.participantId,
@@ -61,6 +106,16 @@ const SettingsPage = () => {
           })}
         />
       </section>
+
+      <Flex justify="end">
+        <Button
+          type="primary"
+          size="large"
+          onClick={handleSubmitParticipantChanges}
+        >
+          Submit
+        </Button>
+      </Flex>
     </Content>
   );
 };

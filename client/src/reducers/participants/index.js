@@ -16,6 +16,10 @@ export default function participantsReducer(state = initState, action) {
       }
     case "participants/add":
       return [...state, action.payload];
+    case "participants/update":
+      state[action.payload.index] = action.payload.participant;
+
+      return [...state];
     default:
       return state;
   }

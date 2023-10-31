@@ -32,7 +32,7 @@ routes.post("/check", async (req, res) => {
   try {
     //console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
     // console.log(req.body);
-    const participants = await Participant.find({});
+    const participants = await Participant.find({active : true});
     const { checkedAssignments, participantMapping } = await checkAssignments(
       req.body,
       participants
@@ -56,7 +56,7 @@ routes.post("/assign", async (req, res) => {
     const { nudges, assignments, isScheduled, timeToSend } = req.body;
     console.log("Assignment given for time: ", timeToSend);
     // Checks to see if assignment is valid
-    const participants = await Participant.find({});
+    const participants = await Participant.find({active: true});
     const { checkedAssignments, participantMapping } = await checkAssignments(
       assignments,
       participants

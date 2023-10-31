@@ -6,6 +6,14 @@
 export function participantCsvToJson(csv) {
   const lines = csv.split("\n");
   const headers = lines[0].split(",");
+  let active = false;
+  //using active\r as that is the return character and active will always be last
+
+  if (headers.includes("active\r") || headers.includes("active")) {
+    active = true;
+
+    console.log("hit");
+  }
   const json = [];
 
   for (let i = 1; i < lines.length; i++) {
@@ -15,6 +23,14 @@ export function participantCsvToJson(csv) {
     for (let j = 0; j < headers.length; j++) {
       if (j === 0) {
         participant["participantId"] = currentLine[j];
+      } else if (active && j == headers.length - 1) {
+        if (
+          currentLine[j] !== "" &&
+          currentLine[j] !== "\r" &&
+          (currentLine[j] === "false\r" || currentLine[j] === "true\r")
+        ) {
+          participant["active"] = currentLine[j] === "true\r";
+        }
       } else {
         if (currentLine[j] !== "" && currentLine[j] !== "\r") {
           participant["labels"] = [
