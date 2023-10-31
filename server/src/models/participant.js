@@ -19,6 +19,11 @@ const participantSchema = new mongoose.Schema({
   },
   // This method just unrolls the labels object
   labels: { type: [String], enum: Object.values(labels).flat(1) },
+  active: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
 });
 const Participant = mongoose.model('Participant', participantSchema);
 module.exports = Participant;

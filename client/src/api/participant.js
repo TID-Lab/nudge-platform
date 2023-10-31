@@ -40,4 +40,22 @@ async function uploadParticipants(parts) {
   return res.status === 200;
 }
 
-export { fetchTotalParticipants, uploadParticipants, fetchParticipants };
+async function fetchInactiveParticipants() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+
+  return fetch("/api/participant/partwinactive", options)
+    .then((res) => res.json())
+    .then((resObj) => {
+      return resObj.participants;
+    });
+}
+
+export {
+  fetchTotalParticipants,
+  uploadParticipants,
+  fetchParticipants,
+  fetchInactiveParticipants,
+};

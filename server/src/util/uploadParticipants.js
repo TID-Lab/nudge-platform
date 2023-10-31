@@ -7,6 +7,7 @@ async function createParticipantsUpload(participantData) {
     for (const participant of participantData) {
       // Find the participant by participantId (make sure it matches your MongoDB schema)
       const filter = { participantId: participant.participantId };
+      //curent implementation will allow the updating of an inactive participant but will not allow the changing of status via upload
 
       // Update the participant if it exists, or create a new one if it doesn't
       const updateResult = await Participant.findOneAndUpdate(
@@ -15,6 +16,7 @@ async function createParticipantsUpload(participantData) {
         {
           new: true, // Return the updated document
           upsert: true, // Create a new document if it doesn't exist
+          setDefaultsOnInsert:true,
         }
       );
 
