@@ -5,6 +5,7 @@ const defaultOptions = {
   },
 };
 
+// fetch active participants
 async function fetchParticipants() {
   const options = {
     ...defaultOptions,
@@ -42,7 +43,8 @@ async function uploadParticipants(parts) {
   return res.status === 200;
 }
 
-async function fetchInactiveParticipants() {
+// fetch active and inactive participants (all participants)
+async function fetchAllParticipants() {
   const options = {
     ...defaultOptions,
     method: "GET",
@@ -70,6 +72,5 @@ export {
   fetchTotalParticipants,
   uploadParticipants,
   fetchParticipants,
-  fetchInactiveParticipants,
-  changeState,
+  fetchAllParticipants,
 };
