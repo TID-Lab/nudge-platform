@@ -60,4 +60,37 @@ routes.post("/upload", async (req, res) => {
   }
 });
 
+routes.post("/changeState", async (req, res) => {
+  const data = req.body;
+  debug(data)
+  try {
+    for (const participantId in data){
+      const newActiveValue = data[participantId];
+        // Find the participant by participantId
+        const filter = {"participantId": participantId };
+        // Update the "active" field with the new value
+        const updateResult = await Participant.findOneAndUpdate(
+          filter,
+          { active: newActiveValue },
+          {
+            new: true, // Return the updated document
+          }
+        );
+        if (updateResult) {
+          console.log(`Updated participantId: ${participantId} - active: ${newActiveValue}`);
+        } else {
+          console.log(`Participant with participantId: ${participantId} not found.`);
+        }
+    }
+    res.status(200).send();
+
+  }
+  catch(err){
+    debug(`${err}`);
+    res.status(500).send(err);
+
+  }
+
+})
+
 module.exports = routes;
