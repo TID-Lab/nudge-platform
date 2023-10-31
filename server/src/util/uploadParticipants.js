@@ -6,6 +6,7 @@ async function createParticipantsUpload(participantData) {
   try {
     for (const participant of participantData) {
       // Find the participant by participantId (make sure it matches your MongoDB schema)
+      debug(participant)
       const filter = { participantId: participant.participantId };
       //curent implementation will allow the updating of an inactive participant but will not allow the changing of status via upload
 
