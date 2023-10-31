@@ -1,27 +1,41 @@
-import { Button, Layout, Space, Switch, Table, Tag, Typography } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import {
+  Button,
+  Flex,
+  Layout,
+  Space,
+  Switch,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 
 import useAuth from "../../hooks/auth";
+import { useEffect, useState } from "react";
+import { fetchAllParticipants } from "../../api/participant";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 const SettingsPage = () => {
   useAuth();
-  const dispatch = useDispatch();
 
-  const participants = useSelector((state) => state.participants);
+  const [changedParticipants, setChangedParticipants] = useState({});
+  const [allParticipants, setAllParticipants] = useState([]);
+
+  useEffect(() => {
+    fetchAllParticipants().then((participants) => {
+      setAllParticipants(participants);
+    });
+  }, []);
 
   const handleActiveToggle = (isActive, index) => {
-    participants[index].active = isActive;
+    allParticipants[index].active = isActive;
 
-    dispatch({
-      type: "participants/update",
-      payload: {
-        index,
-        participant: participants[index],
-      },
+    setChangedParticipants({
+      ...changedParticipants,
+      [allParticipants[index].participantId]: allParticipants[index].active,
     });
+    setAllParticipants([...allParticipants]);
   };
 
   const handleSubmitParticipantChanges = () => {};
@@ -71,7 +85,7 @@ const SettingsPage = () => {
               ),
             },
           ]}
-          dataSource={participants.map((participant) => {
+          dataSource={allParticipants.map((participant) => {
             return {
               ...participant,
               key: participant.participantId,
@@ -80,13 +94,15 @@ const SettingsPage = () => {
         />
       </section>
 
-      <Button
-        type="primary"
-        size="large"
-        onClick={handleSubmitParticipantChanges}
-      >
-        Submit
-      </Button>
+      <Flex justify="end">
+        <Button
+          type="primary"
+          size="large"
+          onClick={handleSubmitParticipantChanges}
+        >
+          Submit
+        </Button>
+      </Flex>
     </Content>
   );
 };
