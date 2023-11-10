@@ -39,6 +39,14 @@ export default function UploadParticipantsModal({
         );
       },
     },
+    {
+      title: "Active",
+      dataIndex: "active",
+      key: "active",
+      render: (active) => {
+        return active !== false && <CheckOutlined />;
+      },
+    },
   ];
 
   // Participants to be updated on backend

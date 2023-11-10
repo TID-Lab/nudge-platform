@@ -11,9 +11,8 @@ export function participantCsvToJson(csv) {
 
   if (headers.includes("active\r") || headers.includes("active")) {
     active = true;
-
-    console.log("hit");
   }
+
   const json = [];
 
   for (let i = 1; i < lines.length; i++) {
@@ -23,7 +22,7 @@ export function participantCsvToJson(csv) {
     for (let j = 0; j < headers.length; j++) {
       if (j === 0) {
         participant["participantId"] = currentLine[j];
-      } else if (active && j == headers.length - 1) {
+      } else if (active && j === headers.length - 1) {
         if (
           currentLine[j] !== "" &&
           currentLine[j] !== "\r" &&
