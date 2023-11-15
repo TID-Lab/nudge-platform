@@ -89,6 +89,7 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
               warningOnly: true,
             },
           ]}
+          help="Type <NAME> to include your recipient’s first name in the Nudge mesage."
         >
           <TextArea
             rows={6}

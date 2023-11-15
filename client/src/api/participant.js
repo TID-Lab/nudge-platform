@@ -5,6 +5,20 @@ const defaultOptions = {
   },
 };
 
+async function getParticipants(partCode) {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/org/allParts/${"?protcode=" + partCode}`,
+    options
+  );
+  const parts = await res.json();
+
+  return parts;
+}
+
 // fetch active participants
 async function fetchParticipants() {
   const options = {
@@ -74,4 +88,5 @@ export {
   fetchParticipants,
   fetchAllParticipants,
   setParticipantActive,
+  getParticipants,
 };

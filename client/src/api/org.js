@@ -62,39 +62,9 @@ async function editOrganization(org) {
   return body;
 }
 
-/**
- *
- * Adds participants to the client side database via POST /api/org/uploadPart
- */
-async function uploadParticipants(parts) {
-  const options = {
-    ...defaultOptions,
-    method: "POST",
-    body: JSON.stringify(parts),
-  };
-  const res = await fetch("/api/org/uploadPart", options);
-  return res.status === 200;
-}
-
-async function getParticipants(partCode) {
-  const options = {
-    ...defaultOptions,
-    method: "GET",
-  };
-  const res = await fetch(
-    `/api/org/allParts/${"?protcode=" + partCode}`,
-    options
-  );
-  const parts = await res.json();
-  //console.log(parts);
-  return parts;
-}
-
 export {
   fetchOrganizations,
   deleteOrganization,
   createOrganization,
   editOrganization,
-  uploadParticipants,
-  getParticipants,
 };

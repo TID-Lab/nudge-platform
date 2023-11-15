@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
-import { Alert, Badge, Modal, Table, Tabs, Tag } from "antd";
+import { Badge, Modal, Table, Tabs, Tag } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
-import styled from "styled-components";
-import { cancelSchedule } from "../../api/nudge";
-import { getParticipants } from "../../api/org";
+import { getParticipants } from "../../api/participant";
 
 export default function UploadParticipantsModal({
   participants,
