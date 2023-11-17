@@ -11,6 +11,7 @@ import {
   Alert,
   Switch,
   Radio,
+  Popover,
 } from "antd";
 import { presetPrimaryColors } from "@ant-design/colors";
 import styled from "styled-components";
@@ -24,7 +25,7 @@ const colors = Object.values(presetPrimaryColors).map((_, i, arr) => {
     return arr[arr.length - i];
   }
 });
-const { Title } = Typography;
+const { Text, Title, Link, Paragraph } = Typography;
 
 const AssignDrawer = ({ open, onClose, nudge }) => {
   const dispatch = useDispatch();
@@ -33,12 +34,14 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
 
   const [error, setError] = useState("");
   const [isControl, setIsControl] = useState(false); // Whether nudge is assigned to control group
+  const [excludedParticipants, setExcludedParticipants] = useState([]);
 
   const onFinish = (values) => {
     let demographics = Object.values(values).filter((d) => d !== undefined);
 
     if (demographics.length === 0) {
       setError("Please select at least one demographic");
+
       return;
     } else {
       demographics = demographics.flat();
@@ -86,16 +89,20 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
     setError("");
   };
 
-  const onValuesChange = (changedValues) => {
-    if (
-      changedValues.hasOwnProperty("unassigned") &&
-      changedValues.unassigned
-    ) {
+  const onValuesChange = (changed, all) => {
+    checkExcluded(all);
+
+    if (changed.hasOwnProperty("unassigned") && changed.unassigned) {
       form.resetFields();
       form.setFieldValue("unassigned", true);
     } else {
       form.setFieldValue("unassigned", false);
     }
+  };
+
+  // Check whether some participants in the current assignment has already gotten the nudge
+  const checkExcluded = (formValues) => {
+    setExcludedParticipants(["foo", "bar"]);
   };
 
   return (
@@ -119,6 +126,61 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       }
     >
       <NudgeCard title={`Nudge #${nudge.key + 1}`}>{nudge.message}</NudgeCard>
+
+      {error !== "" && <Alert message={error} type="error" showIcon />}
+      {excludedParticipants.length > 0 && (
+        <Alert
+          message={
+            <Text>
+              <Popover
+                title="Excluded participant IDs"
+                content={
+                  <Paragraph>
+                    <ul>
+                      <li>
+                        <Text copyable>123</Text>
+                      </li>
+                      <li>
+                        <Text copyable>345</Text>
+                      </li>
+                    </ul>
+                  </Paragraph>
+                }
+                trigger="click"
+              >
+                <Link>{excludedParticipants.length} participants</Link>
+              </Popover>{" "}
+              will be excluded from this assignment.
+            </Text>
+          }
+          description={
+            <Text>
+              <Popover
+                title="Assignment dates"
+                content={
+                  <Paragraph>
+                    <ul>
+                      <li>
+                        <Text copyable>10/23/2023 7:23PM</Text>
+                      </li>
+                      <li>
+                        <Text copyable>10/23/2023 7:23PM</Text>
+                      </li>
+                    </ul>
+                  </Paragraph>
+                }
+                trigger="click"
+              >
+                <Link>Previous assignments</Link>
+              </Popover>{" "}
+              have already sent this nudge to the excluded participants"
+            </Text>
+          }
+          type="warning"
+          showIcon
+        />
+      )}
+
       <Title level={3}>Please select group to assign:</Title>
 
       <Form
@@ -203,8 +265,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           <Switch>All Unassigned</Switch>
         </Form.Item>
       </Form>
-
-      {error !== "" && <Alert message={error} type="error" showIcon />}
     </Drawer>
   );
 };

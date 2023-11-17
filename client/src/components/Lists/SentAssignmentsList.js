@@ -63,6 +63,7 @@ export default function SentAssignmentsList({ schedules }) {
                   <List.Item
                     style={{
                       borderLeft: `${color} solid 3px`,
+                      paddingLeft: "0.5rem",
                     }}
                   >
                     <Space size={"large"}>
