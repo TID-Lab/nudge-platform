@@ -36,6 +36,9 @@ export const DEMO_ENUM = {
 };
 
 export const FIELD_ENUM = {
+  PreDiabetes: "scrn_predb_dx",
+  FamHasDiabetes: "scrn_fam_hx",
+  AtRisk: "scrn_risk",
   AgeYrs: "age_yrs",
   Race: "race_ethn_race",
   Sex: "bio_sex_birth_2",

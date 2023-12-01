@@ -22,36 +22,55 @@ export function participantCsvToJson(csv) {
       labels: [],
     };
     const currLine = lines[i].split(",");
+    let isAtRisk = false; // at risk if any of the following are true: pre-diabetes, family history of diabetes, or at risk
 
     for (let j = 0; j < headers.length; j++) {
+      // first column is record_id (aka. participantId)
       if (j === 0) {
         participant[PARTICIPANT_CSV_MAP.record_id] = currLine[j];
       } else if (headers[j] === FIELD_ENUM.AgeYrs) {
+        // calculate age range
         const age = parseInt(currLine[j]);
 
         participant["labels"].push(calcAgeRange(age));
       } else {
-        //
+        // parse race labels
         if (headers[j].includes(FIELD_ENUM.Race)) {
           const [, raceCode] = headers[j].split("___");
 
-          if (currLine[j].includes("1")) {
+          if (currLine[j] === "1") {
             participant["labels"].push(
               PARTICIPANT_CSV_MAP.race_ethn_race[raceCode]
             );
           }
         } else if (headers[j] === FIELD_ENUM.Sex) {
-          if (currLine[j].includes("1")) {
+          // parse sex labels
+          if (currLine[j] === "1") {
             participant["labels"].push(
               PARTICIPANT_CSV_MAP[headers[j]][currLine[j]]
             );
           }
+        } else if (
+          [
+            FIELD_ENUM.PreDiabetes,
+            FIELD_ENUM.FamHasDiabetes,
+            FIELD_ENUM.AtRisk,
+          ].includes(headers[j])
+        ) {
+          // parse diabetes at risk label
+          // at risk is true if any of the conditions are true
+          isAtRisk = isAtRisk || currLine[j] === "1";
         } else {
-          if (currLine[j].includes("1")) {
+          // parse the rest of the binary labels
+          if (currLine[j] === "1") {
             participant["labels"].push(PARTICIPANT_CSV_MAP[headers[j]]);
           }
         }
       }
+    }
+
+    if (isAtRisk) {
+      participant["labels"].push(DEMO_ENUM.Diabetes.AtRisk);
     }
 
     json.push(participant);
