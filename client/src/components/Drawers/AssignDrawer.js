@@ -62,24 +62,30 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         const lastRes = res[newPendingNudges.length - 1];
 
         if (lastRes.success_code === "SUCCESS") {
+          console.log("hit");
+          dispatch({
+            type: "pendingNudges/add",
+            payload: {
+              id: nudge._id,
+              text: nudge.message,
+              demographics: demographics,
+              assigned: lastRes.num_assigned,
+              color: colors[pendingNudges.length % colors.length],
+              key: nudge.key,
+            },
+          });
+          handleClose();
+        } else if (lastRes.success_code === "PARTICIPANTS_ALREADY_SENT") {
+          //first do a pop up instead of the top thing with all the over laps
+          //then ask to click ok if they want to send with exclusions and show the right amount of exclusions
+          //then say if you want proceed click ok
+          // then do same dispatch above
           if (Object.keys(lastRes.overlap).length != 0) {
-            console.log("hit");
+            console.log("hit overlap");
             setExcludedParticipants(lastRes.overlap);
             console.log(lastRes.overlap);
           } else {
-            console.log("hit");
-            dispatch({
-              type: "pendingNudges/add",
-              payload: {
-                id: nudge._id,
-                text: nudge.message,
-                demographics: demographics,
-                assigned: lastRes.num_assigned,
-                color: colors[pendingNudges.length % colors.length],
-                key: nudge.key,
-              },
-            });
-            handleClose();
+            console.log("this should never happen");
           }
         } else if (lastRes.success_code === "NO_PARTICIPANT") {
           setError(
@@ -93,6 +99,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
   const handleClose = () => {
     onClose();
     form.resetFields();
+    setExcludedParticipants({});
     setError("");
   };
 

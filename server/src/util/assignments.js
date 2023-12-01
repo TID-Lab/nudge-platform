@@ -19,6 +19,7 @@ const assignmentCodes = {
   NO_PARTICIPANT: "NO_PARTICIPANT",
   PREVIOUSLY_ASSIGNED: "PREVIOUSLY_ASSIGNED",
   ASSIGNMENT_ABOVE_FAILED: "ASSIGNMENT_ABOVE_FAILED",
+  PARTICIPANTS_ALREADY_SENT: "PARTICIPANTS_ALREADY_SENT",
 };
 
 // Checks the participant assignment of an ordered list of a list of nudge assignments
@@ -114,12 +115,20 @@ async function checkAssignments(assignments, participants) {
             success_code: assignmentCodes.NO_PARTICIPANT,
           });
           break;
-        } else {
+        } else if(Object.keys(alreadySent).length!=0){
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
             num_left: participants.length,
             overlap: alreadySent,
+            success_code: assignmentCodes.PARTICIPANTS_ALREADY_SENT,
+          });
+        }
+        else {
+          returned.push({
+            nudge_id: curr["nudge_id"],
+            num_assigned: num_parti_before - participants.length,
+            num_left: participants.length,
             success_code: assignmentCodes.SUCCESS,
           });
         }
