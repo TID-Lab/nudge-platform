@@ -10,6 +10,8 @@ const nudgeSchema = new mongoose.Schema({
   comment: { type: String },
   com_b: { type: [String], default: [] },
   is_active: { type: Boolean, required: true, default: true },
+  participant_history: { type: [mongoose.Schema.Types.ObjectId], ref: 'ParticipantID', default: [] },
+
 });
 
 //  searchable fields

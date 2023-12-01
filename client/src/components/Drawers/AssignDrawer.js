@@ -34,7 +34,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
 
   const [error, setError] = useState("");
   const [isControl, setIsControl] = useState(false); // Whether nudge is assigned to control group
-  const [excludedParticipants, setExcludedParticipants] = useState([]);
+  const [excludedParticipants, setExcludedParticipants] = useState({});
 
   const onFinish = (values) => {
     let demographics = Object.values(values).filter((d) => d !== undefined);
@@ -62,18 +62,25 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         const lastRes = res[newPendingNudges.length - 1];
 
         if (lastRes.success_code === "SUCCESS") {
-          dispatch({
-            type: "pendingNudges/add",
-            payload: {
-              id: nudge._id,
-              text: nudge.message,
-              demographics: demographics,
-              assigned: lastRes.num_assigned,
-              color: colors[pendingNudges.length % colors.length],
-              key: nudge.key,
-            },
-          });
-          handleClose();
+          if (Object.keys(lastRes.overlap).length != 0) {
+            console.log("hit");
+            setExcludedParticipants(lastRes.overlap);
+            console.log(lastRes.overlap);
+          } else {
+            console.log("hit");
+            dispatch({
+              type: "pendingNudges/add",
+              payload: {
+                id: nudge._id,
+                text: nudge.message,
+                demographics: demographics,
+                assigned: lastRes.num_assigned,
+                color: colors[pendingNudges.length % colors.length],
+                key: nudge.key,
+              },
+            });
+            handleClose();
+          }
         } else if (lastRes.success_code === "NO_PARTICIPANT") {
           setError(
             'No participants are left with this demographic grouping. Please try a different combination, or toggle "All Unassigned"'
@@ -90,7 +97,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
   };
 
   const onValuesChange = (changed, all) => {
-    checkExcluded(all);
+    //checkExcluded(all);
 
     if (changed.hasOwnProperty("unassigned") && changed.unassigned) {
       form.resetFields();
@@ -128,27 +135,25 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       <NudgeCard title={`Nudge #${nudge.key + 1}`}>{nudge.message}</NudgeCard>
 
       {error !== "" && <Alert message={error} type="error" showIcon />}
-      {excludedParticipants.length > 0 && (
+      {console.log(excludedParticipants)}
+      {Object.keys(excludedParticipants).length != 0 && (
         <Alert
           message={
             <Text>
               <Popover
                 title="Excluded participant IDs"
-                content={
-                  <Paragraph>
-                    <ul>
-                      <li>
-                        <Text copyable>123</Text>
-                      </li>
-                      <li>
-                        <Text copyable>345</Text>
-                      </li>
-                    </ul>
-                  </Paragraph>
-                }
+                content={Object.entries(excludedParticipants).map(
+                  ([partCode, message]) => (
+                    <li key={partCode}>
+                      <Text copyable>{`${partCode}: ${message}`}</Text>
+                    </li>
+                  )
+                )}
                 trigger="click"
               >
-                <Link>{excludedParticipants.length} participants</Link>
+                <Link>
+                  {Object.keys(excludedParticipants).length} participants
+                </Link>
               </Popover>{" "}
               will be excluded from this assignment.
             </Text>

@@ -2,6 +2,9 @@ const db = require("./db");
 const axios = require("axios").default;
 const useDebug = require("debug");
 const debug = useDebug("core");
+const Nudge = require("../models/nudge");
+const mongoose = require("mongoose");
+
 
 const demographic_enum = {
   Age: ["18-29", "30-40", "41-50", "51-64", "65+"],
@@ -54,9 +57,16 @@ async function checkAssignments(assignments, participants) {
   let participants_inc = [];
   let returned = [];
   let participantMapping = {};
+  
   try {
     for (let i = 0; i < assignments.length; i++) {
+      let alreadySent = {};
       const curr = assignments[i];
+      debug("this is curr nudge info")
+      debug(curr)
+      //to pull the history of the nudge
+      const nudge = await Nudge.findOne({ _id: curr.nudge_id });
+      debug(nudge)
       let { demographics } = curr;
       // Just to double check they're lowercase
       demographics = demographics.map((ele) => ele.toLowerCase());
@@ -73,21 +83,29 @@ async function checkAssignments(assignments, participants) {
               includedDemographics.includes(element)
             )
           ) {
-            participants_inc.push(...participants.splice(parti_idx, 1));
-            const curr_participant =
-              participants_inc[participants_inc.length - 1];
-            if (
-              participantMapping[curr_participant.participantId] != undefined
-            ) {
-              console.log(
-                "Something went wrong, a participant is being mapped two messages..."
-              );
+            if(nudge.participant_history.includes(mongoose.Types.ObjectId(participants[parti_idx]._id))===false) {
+              participants_inc.push(...participants.splice(parti_idx, 1));
+              const curr_participant =
+                participants_inc[participants_inc.length - 1];
+              if (
+                participantMapping[curr_participant.participantId] != undefined
+              ) {
+                console.log(
+                  "Something went wrong, a participant is being mapped two messages..."
+                );
+              }
+              participantMapping[curr_participant.participantId] =
+                curr.nudge_message;
+              parti_idx = parti_idx - 1;
             }
-            participantMapping[curr_participant.participantId] =
-              curr.nudge_message;
-            parti_idx = parti_idx - 1;
+            else {
+              const curr_participant=participants.splice(parti_idx, 1)[0];
+              alreadySent[curr_participant.participantId]=curr.nudge_message
+              parti_idx = parti_idx - 1;
+            }
           }
         }
+        console.log("already sent", alreadySent)
         if (num_parti_before - participants.length == 0) {
           returned.push({
             nudge_id: curr["nudge_id"],
@@ -101,6 +119,7 @@ async function checkAssignments(assignments, participants) {
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
             num_left: participants.length,
+            overlap: alreadySent,
             success_code: assignmentCodes.SUCCESS,
           });
         }
