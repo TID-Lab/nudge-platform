@@ -28,7 +28,6 @@ const Header = () => {
     reader.onload = (e) => {
       const csv = e.target.result;
       const participantsJson = participantCsvToJson(csv);
-      console.log(participantsJson);
       setParticipants(participantsJson);
     };
 

@@ -6,14 +6,12 @@ import { DEMO_ENUM, FIELD_ENUM, PARTICIPANT_CSV_MAP } from "./constants";
  * @returns
  */
 export function participantCsvToJson(csv) {
-  const lines = csv.split("\n");
+  const lines = csv.replace(/(\r)/gm, "").split("\n");
   const headers = lines[0].split(",");
 
   let active = false;
 
-  //using active\r as that is the return character and active will always be last
-
-  if (headers.includes("active\r") || headers.includes("active")) {
+  if (headers.includes("active")) {
     active = true;
   }
 
@@ -33,22 +31,23 @@ export function participantCsvToJson(csv) {
 
         participant["labels"].push(calcAgeRange(age));
       } else {
+        //
         if (headers[j].includes(FIELD_ENUM.Race)) {
           const [, raceCode] = headers[j].split("___");
 
-          if (currLine[j] === "1") {
+          if (currLine[j].includes("1")) {
             participant["labels"].push(
               PARTICIPANT_CSV_MAP.race_ethn_race[raceCode]
             );
           }
         } else if (headers[j] === FIELD_ENUM.Sex) {
-          if (currLine[j] === "1") {
+          if (currLine[j].includes("1")) {
             participant["labels"].push(
               PARTICIPANT_CSV_MAP[headers[j]][currLine[j]]
             );
           }
         } else {
-          if (currLine[j] === "1") {
+          if (currLine[j].includes("1")) {
             participant["labels"].push(PARTICIPANT_CSV_MAP[headers[j]]);
           }
         }
