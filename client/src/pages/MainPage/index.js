@@ -101,11 +101,13 @@ const MainPage = () => {
                     {
                       title: "#",
                       render: (nudge) => <>{nudge.key + 1}</>,
+                      sorter: (a, b) => a.key - b.key,
                     },
                     {
                       title: "Nudge Content",
                       dataIndex: "message",
                       width: "50%",
+                      sorter: (a, b) => a.message.localeCompare(b.message),
                     },
                     {
                       title: "COM-B",
