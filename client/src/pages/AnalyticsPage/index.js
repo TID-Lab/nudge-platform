@@ -3,6 +3,8 @@ import './index.css';
 import {
   Layout,
   Typography,
+  Row,
+  Col,
 } from "antd";
 
 import useAuth from "../../hooks/auth";
@@ -33,7 +35,7 @@ const getTwitter = (tweetUrl) => {
         width="300"
         height="400"
         style={{ border: "none" }}
-        // allowFullScreen
+      // allowFullScreen
       ></iframe>
     </div>
   );
@@ -52,8 +54,8 @@ const getFacebook = (fbUrl, post_data) => {
         allow="encrypted-media"
       ></iframe> */}
       <div className="fb-post" data-href={fbUrl} data-width="300">
-          {getBackup(...post_data)}
-        </div>
+        {getBackup(...post_data)}
+      </div>
     </div>
   );
 };
@@ -146,12 +148,12 @@ const getBackup = (platform, author, content) => {
           </Typography>
         </div>
         <div className="content-container-post">
-        {spans.map((span, index) => (
-        <span key={index}>
-          {span}
-        </span>
-      ))}
-      </div>
+          {spans.map((span, index) => (
+            <span key={index}>
+              {span}
+            </span>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
@@ -218,7 +220,7 @@ const AnalyticsPage = () => {
                     <div className="scrollable-cards">
                       {topic.content.map((post, postIndex) => (
                         <div key={postIndex} className="card">
-                          {getPost(post.platform, post.url,[post.platform,post.author,post.content])}
+                          {getPost(post.platform, post.url, [post.platform, post.author, post.content])}
                         </div>
                       ))}
                     </div>
@@ -234,25 +236,31 @@ const AnalyticsPage = () => {
 
   return (
     <Content>
-      <div>
-        <Title>COM-B Analysis</Title>
-      </div>
-      <select
-        value={selectedCategory}
-        onChange={(e) => {
-          setSelectedCategory(e.target.value);
-          updateCards(e.target.value);
-        }}
-      >
-        <option value="" disabled>Select a category</option>
-        {categories.map((category, index) => (
-          <option key={index} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
-      {topicCards}
-      </Content>
+      <Row gutter={32}>
+        <Col span={4} style={{ position: 'sticky', top: 0 }}>
+          <div>
+            <Title>COM-B Analysis</Title>
+          </div>
+          <select
+            value={selectedCategory}
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+              updateCards(e.target.value);
+            }}
+          >
+            <option value="" disabled>Select a category</option>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </Col>
+        <Col span={20} style={{ borderLeft: '2px solid #f0f0f0', overflowY: 'auto', maxHeight: '90vh' }}>
+          {topicCards}
+        </Col>
+      </Row>
+    </Content>
   );
 };
 

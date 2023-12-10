@@ -14,7 +14,7 @@ code {
 
 .sub-topic {
   width: 100%;
-  max-width: 900px; /* Set a maximum width for the container if needed */
+  /* max-width: 900px; Set a maximum width for the container if needed */
   margin: 0 auto; /* Center the container horizontally */
 }
 
