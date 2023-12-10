@@ -8,6 +8,7 @@ import LandingPage from "../LandingPage";
 import Header from "../../components/Header";
 import MainPage from "../MainPage";
 import SettingsPage from "../SettingsPage";
+import AnalyticsPage from "../AnalyticsPage";
 import { useEffect } from "react";
 import { fetchParticipants } from "../../api/participant";
 import { useDispatch } from "react-redux";
@@ -65,6 +66,9 @@ const App = () => {
                 </Route>
                 <Route path="/settings">
                   <SettingsPage />
+                </Route>
+                <Route path="/analytics">
+                  <AnalyticsPage />
                 </Route>
               </Switch>
             </main>
