@@ -42,7 +42,7 @@ const CommentSection = (props) => {
     const spans = splitStringIntoSpans(content, maxLength);
 
     return (
-      <Card sx={{ width: 300, height: 400 }}>
+      <Card sx={{ width: 300}}>
         <CardContent>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="h5" style={{ fontWeight: 'bold' }}>
