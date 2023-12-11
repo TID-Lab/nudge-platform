@@ -1,0 +1,27 @@
+
+.comment-card {
+  max-width: 300px;
+  max-height: 100px;
+  /* Set a fixed width for each card, adjust as needed */
+  border: 1px solid #ddd;
+  margin-right: 10px;
+  /* Add some spacing between cards */
+  box-sizing: border-box;
+  /* Include padding and border in the card's total width */
+}
+
+.comment-card h5 {
+  margin-bottom: 5px;
+}
+
+.comment-container {
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.comment-card span {
+  white-space: nowrap;
+  text-align: left;
+}

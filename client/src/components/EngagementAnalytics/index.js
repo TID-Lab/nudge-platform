@@ -3,6 +3,7 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import BarChart from "../Charts/BarChart";
 import SocialMediaPost from "../SocialMediaPost";
+import CommentSection from "../CommentsSection";
 
 import {
   Layout,
@@ -75,22 +76,24 @@ const EngagementAnalytics = (props) => {
   useEffect(() => {
     if (selectedTopic !== -1 && subgraphLabels.length > selectedTopic) {
       const topic = subgraphTopics[selectedTopic];
-      console.log(topic);
       const filteredPostData = postEngagementData.filter(item =>
         item['bertopic'] === topic);
       if (filteredPostData.length > 0) {
         setPostsSection(
           <>
             <Title>{subgraphLabels[selectedTopic]}</Title>
-            <div className="scrollable-cards">
+            <div>
               {filteredPostData.map((post, postIndex) => (
-                <div key={postIndex}>
+                <div key={postIndex} className="scrollable-cards">
                   <SocialMediaPost
                     platform={post.platform}
                     url={post.url}
                     author={post.author}
                     content={post.content}
                     postIndex={postIndex}
+                  />
+                  <CommentSection
+                    comments={commentEngagementData.filter(item => item['newPostID'] === post.newPostID)}
                   />
                 </div>
               ))}
@@ -100,7 +103,7 @@ const EngagementAnalytics = (props) => {
       } else {
         setPostsSection(<></>);
       }
-    } 
+    }
   }, [selectedTopic, postEngagementData, commentEngagementData, subgraphLabels, subgraphTopics]);
 
   const handleCombBarClick = (barClicked) => {
