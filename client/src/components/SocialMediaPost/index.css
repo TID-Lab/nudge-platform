@@ -13,20 +13,9 @@
   max-width: 300px;
 }
 
-.scrollable-cards {
-  display: flex;
-  flex-direction: row;
-  /* Display the cards in a row */
-  overflow-x: auto;
-  /* Enable horizontal scrolling */
-  overflow-y: hidden;
-  /* Disable vertical scrolling */
-  white-space: nowrap;
-  /* Prevent wrapping to the next line */
-}
-
 .card {
-  width: 500px;
+  width: fit-content;
+  height: fit-content;
   /* Set a fixed width for each card, adjust as needed */
   border: 1px solid #ddd;
   margin-right: 10px;

@@ -31,7 +31,7 @@ const AnalyticsPage = () => {
   const [postEngagement, setPostEngagement] = useState([]);
 
   const onTabChange = (tabName) => {
-    if (tabName !== 'engagement') {
+    if (tabName !== 'engagement' && tabName !== 'weeklyData') {
       setShowCombSelect(true);
     } else {
       setShowCombSelect(false);
@@ -90,7 +90,7 @@ const AnalyticsPage = () => {
           <Paragraph> TO DO: Description of the COM-B category </Paragraph>
         </Col>)
         }
-        <Col span={setShowCombSelect ? 20 : 24} style={{ borderLeft: '2px solid #f0f0f0', overflowY: 'auto', maxHeight: '90vh' }}>
+        <Col span={showCombSelect ? 20 : 24} style={{ borderLeft: '2px solid #f0f0f0', overflowY: 'auto', maxHeight: '90vh' }}>
           <Tabs
             defaultActiveKey="static"
             items={[

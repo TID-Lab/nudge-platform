@@ -9,6 +9,8 @@ import {
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
+const { Text } = Typography;
+
 const CommentSection = (props) => {
   const { comments } = props;
   const [commentList, setCommentList] = useState([]);
@@ -61,10 +63,14 @@ const CommentSection = (props) => {
 
   return (
     <div className="comment-container">
-      {commentList.map((comment, commentIndex) => (
+      {commentList.length > 0 && commentList.map((comment, commentIndex) => (
         <div key={commentIndex} className="comment-card">
           {getCommentCard(comment.name, comment.message)}
         </div>))}
+      {commentList.length === 0 &&
+        <Text>
+          No Comments Found
+        </Text>}
     </div>
   );
 };

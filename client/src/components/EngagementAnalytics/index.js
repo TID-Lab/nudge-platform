@@ -7,7 +7,9 @@ import CommentSection from "../CommentsSection";
 
 import {
   Layout,
-  Typography
+  Typography,
+  Row,
+  Col,
 } from "antd";
 
 const { Content } = Layout;
@@ -82,9 +84,9 @@ const EngagementAnalytics = (props) => {
         setPostsSection(
           <>
             <Title>{subgraphLabels[selectedTopic]}</Title>
-            <div>
+            <div className="scrollable-cards">
               {filteredPostData.map((post, postIndex) => (
-                <div key={postIndex} className="scrollable-cards">
+                <div key={postIndex} className="scrollable-posts">
                   <SocialMediaPost
                     platform={post.platform}
                     url={post.url}
@@ -92,9 +94,14 @@ const EngagementAnalytics = (props) => {
                     content={post.content}
                     postIndex={postIndex}
                   />
-                  <CommentSection
-                    comments={commentEngagementData.filter(item => item['newPostID'] === post.newPostID)}
-                  />
+                  {commentEngagementData.length > 0 &&
+                    <>
+                      <Typography variant="h3" style={{ marginLeft: '2px' }}>Comments: </Typography>
+                      <CommentSection
+                        comments={commentEngagementData.filter(item => item['newPostID'] === post.newPostID)}
+                      />
+                    </>
+                  }
                 </div>
               ))}
             </div>
@@ -125,24 +132,33 @@ const EngagementAnalytics = (props) => {
 
   return (
     <Content>
-      <BarChart
-        title={title}
-        labels={labels}
-        datasets={datasets}
-        onBarClick={handleCombBarClick}
-        showLabels={true}
-      />
-      <Content>
-        {showCOMBGraph &&
+      <Row gutter={32}>
+        <Col span={showCOMBGraph ? 12 : 24}>
+          <BarChart
+            title={title}
+            labels={labels}
+            datasets={datasets}
+            onBarClick={handleCombBarClick}
+            showLabels={true}
+          />
+        </Col>
+        {showCOMBGraph && (<Col span={12} style={{ position: 'sticky', top: 0 }}>
           <BarChart
             title={subgraphTitle}
             labels={subgraphLabels}
             datasets={subgraphDatasets}
             onBarClick={handleTopicBarClick}
             showLabels={false}
-          />}
-        {postsSection}
-      </Content>
+          />
+        </Col>)}
+      </Row>
+      <Row>
+        <Col span={3}></Col>
+        <Col span={18} style={{ alignItems: 'center' }}>
+          {postsSection}
+        </Col>
+        <Col span={3}></Col>
+      </Row>
     </Content>
   );
 };
