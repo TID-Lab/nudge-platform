@@ -1,7 +1,7 @@
 
 .comment-card {
   max-width: 300px;
-  max-height: 100px;
+  height: fit-content;
   /* Set a fixed width for each card, adjust as needed */
   border: 1px solid #ddd;
   margin-right: 10px;
