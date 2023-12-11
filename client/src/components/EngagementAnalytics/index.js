@@ -6,11 +6,11 @@ import SocialMediaPost from "../SocialMediaPost";
 
 import {
   Layout,
-  Row,
-  Col,
+  Typography
 } from "antd";
 
 const { Content } = Layout;
+const { Title } = Typography;
 
 const EngagementAnalytics = (props) => {
   const { combEngagementData, topicData, topicEngagementData, postEngagementData, commentEngagementData } = props;
@@ -27,8 +27,7 @@ const EngagementAnalytics = (props) => {
   const [subgraphDatasets, setSubgraphDatasets] = useState([]);
 
   const [selectedTopic, setSelectedTopic] = useState(-1);
-  const [showTopicSection, setShowTopicSection] = useState(false);
-  const [postData, setPostData] = useState([]);
+  const [postsSection, setPostsSection] = useState(<></>);
 
   useEffect(() => {
     setTitle("COM-B Engagement");
@@ -66,32 +65,63 @@ const EngagementAnalytics = (props) => {
         backgroundColor: 'rgba(47, 119, 255, 0.75)',
       },]);
       setShowCOMBGraph(true);
+    } else {
+      setSubgraphTopics([]);
+      setShowCOMBGraph(false);
     }
 
   }, [topicData, topicEngagementData, selectedCOMB, labels]);
 
   useEffect(() => {
     if (selectedTopic !== -1 && subgraphLabels.length > selectedTopic) {
-      const topic = subgraphTopics[selectedCOMB];
+      const topic = subgraphTopics[selectedTopic];
       console.log(topic);
-      const filteredPostData = postEngagementData.filter(item => item['bertopic'] == topic);
+      const filteredPostData = postEngagementData.filter(item =>
+        item['bertopic'] === topic);
       if (filteredPostData.length > 0) {
-        setPostData(filteredPostData);
-        setShowTopicSection(true);
+        setPostsSection(
+          <>
+            <Title>{subgraphLabels[selectedTopic]}</Title>
+            <div className="scrollable-cards">
+              {filteredPostData.map((post, postIndex) => (
+                <div key={postIndex}>
+                  <SocialMediaPost
+                    platform={post.platform}
+                    url={post.url}
+                    author={post.author}
+                    content={post.content}
+                    postIndex={postIndex}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        );
+      } else {
+        setPostsSection(<></>);
       }
-    }
-  }, [selectedTopic, postEngagementData, commentEngagementData, subgraphLabels, selectedCOMB]);
+    } 
+  }, [selectedTopic, postEngagementData, commentEngagementData, subgraphLabels, subgraphTopics]);
 
   const handleCombBarClick = (barClicked) => {
-    setSelectedCOMB(barClicked);
+    if (barClicked !== selectedCOMB) {
+      setShowCOMBGraph(false);
+      setSubgraphTopics([]);
+      setSelectedTopic(-1);
+      setPostsSection(<></>);
+      setSelectedCOMB(barClicked);
+    }
   };
 
   const handleTopicBarClick = (barClicked) => {
-    setSelectedTopic(barClicked);
+    if (barClicked !== selectedTopic) {
+      setSelectedTopic(barClicked);
+      setPostsSection(<></>);
+    }
   };
 
   return (
-    <>
+    <Content>
       <BarChart
         title={title}
         labels={labels}
@@ -108,25 +138,9 @@ const EngagementAnalytics = (props) => {
             onBarClick={handleTopicBarClick}
             showLabels={false}
           />}
-        {showTopicSection &&
-          <div>
-            {postData.map((post, postIndex) => (
-              <div key={postIndex}>
-                <SocialMediaPost
-                  platform={post.platform}
-                  url={post.url}
-                  author={post.author}
-                  content={post.content}
-                  postIndex={postIndex}
-                />
-              </div>
-            ))}
-          </div>
-        }
+        {postsSection}
       </Content>
-
-
-    </>
+    </Content>
   );
 };
 
