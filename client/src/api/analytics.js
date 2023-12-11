@@ -103,9 +103,51 @@ async function getTopicEngagement() {
   }
 }
 
+async function getPostsEngagement() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/engagementposts`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching Engagement Posts CSV data:', error);
+    return [];
+  }
+}
+
+async function getCommentsEngagement() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/engagementcomments`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching Engagement Comments CSV data:', error);
+    return [];
+  }
+}
+
 export {
   getTopics,
   getTopicContent,
   getCOMBEngagement,
   getTopicEngagement,
+  getPostsEngagement,
+  getCommentsEngagement,
 };
