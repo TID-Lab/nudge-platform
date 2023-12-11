@@ -2,25 +2,33 @@ import "./index.css";
 
 import { useEffect, useState } from "react";
 import BarChart from "../Charts/BarChart";
+import SocialMediaPost from "../SocialMediaPost";
 
 import {
   Layout,
+  Row,
+  Col,
 } from "antd";
 
 const { Content } = Layout;
 
 const EngagementAnalytics = (props) => {
-  const { combEngagementData, topicData, topicEngagementData } = props;
+  const { combEngagementData, topicData, topicEngagementData, postEngagementData, commentEngagementData } = props;
   const [title, setTitle] = useState("");
   const [labels, setLabels] = useState([]);
   const [datasets, setDatasets] = useState([]);
-  
+
   const [selectedCOMB, setSelectedCOMB] = useState(-1);
   const [showCOMBGraph, setShowCOMBGraph] = useState(false);
 
   const [subgraphTitle, setSubgraphTitle] = useState("");
   const [subgraphLabels, setSubgraphLabels] = useState([]);
+  const [subgraphTopics, setSubgraphTopics] = useState([]);
   const [subgraphDatasets, setSubgraphDatasets] = useState([]);
+
+  const [selectedTopic, setSelectedTopic] = useState(-1);
+  const [showTopicSection, setShowTopicSection] = useState(false);
+  const [postData, setPostData] = useState([]);
 
   useEffect(() => {
     setTitle("COM-B Engagement");
@@ -44,12 +52,13 @@ const EngagementAnalytics = (props) => {
   useEffect(() => {
     if (selectedCOMB !== -1 && labels.length > selectedCOMB) {
       const comb_component = labels[selectedCOMB];
-      setSubgraphTitle('Engagement for topics in '+comb_component);
+      setSubgraphTitle('Engagement for topics in ' + comb_component);
       const filteredTopicData = topicData.filter(item => item['COMB'] === comb_component);
       const subgraph_labels = filteredTopicData.map(item => item.Theme);
       const topic_numbers = filteredTopicData.map(item => item['Topic Number']);
+      setSubgraphTopics(topic_numbers);
       setSubgraphLabels(subgraph_labels);
-      
+
       const subgraph_data = topic_numbers.map(item => Math.floor(topicEngagementData.find(itm => itm['Topic Number'] === item).comments));
       setSubgraphDatasets([{
         label: 'Comments per Topic',
@@ -59,19 +68,30 @@ const EngagementAnalytics = (props) => {
       setShowCOMBGraph(true);
     }
 
-  }, [topicData, topicEngagementData, selectedCOMB]);
+  }, [topicData, topicEngagementData, selectedCOMB, labels]);
+
+  useEffect(() => {
+    if (selectedTopic !== -1 && subgraphLabels.length > selectedTopic) {
+      const topic = subgraphTopics[selectedCOMB];
+      console.log(topic);
+      const filteredPostData = postEngagementData.filter(item => item['bertopic'] == topic);
+      if (filteredPostData.length > 0) {
+        setPostData(filteredPostData);
+        setShowTopicSection(true);
+      }
+    }
+  }, [selectedTopic, postEngagementData, commentEngagementData, subgraphLabels, selectedCOMB]);
 
   const handleCombBarClick = (barClicked) => {
     setSelectedCOMB(barClicked);
   };
 
   const handleTopicBarClick = (barClicked) => {
-    console.log(`Bar ${barClicked} clicked!`);
-    // setSelectedSubcategory(barClicked);
+    setSelectedTopic(barClicked);
   };
 
   return (
-    <Content>
+    <>
       <BarChart
         title={title}
         labels={labels}
@@ -79,15 +99,34 @@ const EngagementAnalytics = (props) => {
         onBarClick={handleCombBarClick}
         showLabels={true}
       />
-      {showCOMBGraph &&
-        <BarChart
-          title={subgraphTitle}
-          labels={subgraphLabels}
-          datasets={subgraphDatasets}
-          onBarClick={handleTopicBarClick}
-          showLabels={false}
-        />}
-    </Content>
+      <Content>
+        {showCOMBGraph &&
+          <BarChart
+            title={subgraphTitle}
+            labels={subgraphLabels}
+            datasets={subgraphDatasets}
+            onBarClick={handleTopicBarClick}
+            showLabels={false}
+          />}
+        {showTopicSection &&
+          <div>
+            {postData.map((post, postIndex) => (
+              <div key={postIndex}>
+                <SocialMediaPost
+                  platform={post.platform}
+                  url={post.url}
+                  author={post.author}
+                  content={post.content}
+                  postIndex={postIndex}
+                />
+              </div>
+            ))}
+          </div>
+        }
+      </Content>
+
+
+    </>
   );
 };
 

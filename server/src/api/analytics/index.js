@@ -84,4 +84,42 @@ routes.get("/topicengagement", async (req, res) => {
   }
 });
 
+routes.get("/engagementposts", async (req, res) => {
+  try {
+    res.setHeader('Content-Type', 'text/csv');
+    const stream = fs.createReadStream('./data/engagement_posts.csv');
+    stream.pipe(res);
+
+    stream.on('end', () => {
+      console.log('Stream ended successfully');
+    });
+
+    stream.on('error', (err) => {
+      console.error('Stream error:', err);
+    });
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
+
+routes.get("/engagementcomments", async (req, res) => {
+  try {
+    res.setHeader('Content-Type', 'text/csv');
+    const stream = fs.createReadStream('./data/engagement_comments.csv');
+    stream.pipe(res);
+
+    stream.on('end', () => {
+      console.log('Stream ended successfully');
+    });
+
+    stream.on('error', (err) => {
+      console.error('Stream error:', err);
+    });
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
+
 module.exports = routes;

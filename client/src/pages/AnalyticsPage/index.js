@@ -11,7 +11,7 @@ import {
 import useAuth from "../../hooks/auth";
 import { useEffect, useState } from "react";
 
-import { getTopics, getTopicContent, getCOMBEngagement, getTopicEngagement } from "../../api/analytics";
+import { getTopics, getTopicContent, getCOMBEngagement, getTopicEngagement, getPostsEngagement, getCommentsEngagement} from "../../api/analytics";
 import StaticAnalytics from "../../components/StaticAnalytics";
 import EngagementAnalytics from "../../components/EngagementAnalytics";
 
@@ -27,6 +27,8 @@ const AnalyticsPage = () => {
   const [combEngagement, setCombEngagement] = useState([]);
   const [topicEngagement, setTopicEngagement] = useState([]);
   const [showCombSelect, setShowCombSelect] = useState(true);
+  const [commentEngagement, setCommentEngagement] = useState([]);
+  const [postEngagement, setPostEngagement] = useState([]);
 
   const onTabChange = (tabName) => {
     if (tabName !== 'engagement') {
@@ -53,6 +55,14 @@ const AnalyticsPage = () => {
 
     getTopicEngagement().then((engagementData) => {
       setTopicEngagement(engagementData);
+    });
+
+    getPostsEngagement().then((engagementData) => {
+      setPostEngagement(engagementData);
+    });
+
+    getCommentsEngagement().then((engagementData) => {
+      setCommentEngagement(engagementData);
     });
   }
     , []);
@@ -99,6 +109,8 @@ const AnalyticsPage = () => {
                   combEngagementData={combEngagement}
                   topicData={subcategoryMapping}
                   topicEngagementData={topicEngagement}
+                  postEngagementData={postEngagement}
+                  commentEngagementData={commentEngagement}
                 />),
               },
               {
