@@ -15,11 +15,10 @@ const StaticAnalytics = (props) => {
       const tpcData = filteredSubcategoryMapping.map(subcategory => {
         const subcategoryNumber = subcategory['Topic Number'];
         const subcategoryName = subcategory['Theme'];
-
         // Filter post mapping based on subcategoryNumber
         const content = postMapping.filter(post => post.bertopic === subcategoryNumber);
 
-        return { topicName: subcategoryName, content };
+        return { topicName: subcategoryName, content: content };
       });
 
       // Update state

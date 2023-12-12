@@ -9,4 +9,5 @@
   /* Disable vertical scrolling */
   white-space: nowrap;
   /* Prevent wrapping to the next line */
+  height: fit-content;
 }
