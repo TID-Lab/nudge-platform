@@ -143,6 +143,48 @@ async function getCommentsEngagement() {
   }
 }
 
+
+async function getWeeklyTopics() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/weeklytopics`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching Weekly Topics CSV data:', error);
+    return [];
+  }
+}
+
+
+async function getWeeklyPosts() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/weeklyposts`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching Weekly Posts CSV data:', error);
+    return [];
+  }
+}
+
 export {
   getTopics,
   getTopicContent,
@@ -150,4 +192,6 @@ export {
   getTopicEngagement,
   getPostsEngagement,
   getCommentsEngagement,
+  getWeeklyTopics,
+  getWeeklyPosts,
 };
