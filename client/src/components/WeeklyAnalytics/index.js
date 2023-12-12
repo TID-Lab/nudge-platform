@@ -14,7 +14,6 @@ const { Text } = Typography;
 const WeeklyAnalytics = (props) => {
   const { metaTopic, topicData, postMapping } = props;
   const [displayData, setDisplayData] = useState([]);
-  const [titleText, setTitleText] = useState("");
 
   useEffect(() => {
     // Filter subcategory mapping based on the selected category
@@ -26,15 +25,17 @@ const WeeklyAnalytics = (props) => {
           const subcategoryName = subcategory['Theme'];
           // Filter post mapping based on subcategoryNumber
           const content = postMapping.filter(post => post.bertopic === subcategoryNumber);
-          return { topicName: subcategoryName, new: subcategory.new, content: content };
+          if (subcategory.new === "1") {
+            return { topicName: subcategoryName, new: subcategory.new, content: content, liwcChanges: [] }
+          } else {
+            return { topicName: subcategoryName, new: subcategory.new, content: content, liwcChanges: [{property:'assent',value: (Math.random() * (150))-80},{property:'anger',value: (Math.random() * (160))-80}] }
+            // return { topicName: subcategoryName, new: subcategory.new, content: content, liwcChanges: JSON.parse(subcategory['LIWC Update']) };
+          }
         });
 
         // Update state
         setDisplayData(filteredData);
-        setTitleText(metaTopic);
       }
-
-
     }
   }, [metaTopic, topicData, postMapping]);
 
@@ -54,7 +55,7 @@ const WeeklyAnalytics = (props) => {
               />
             ))}
           </div>
-          <PercentageChange value={50} attribute={"joy"}/><PercentageChange value={-50} attribute={"anger"}/>
+          {(topic.new === "0") && <>{topic.liwcChanges.map((mapping, index) => (<PercentageChange key={index} value={mapping.value} attribute={mapping.property} />))}</>}
         </div>
       ))}
     </div>

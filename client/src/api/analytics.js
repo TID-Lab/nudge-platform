@@ -143,7 +143,6 @@ async function getCommentsEngagement() {
   }
 }
 
-
 async function getWeeklyTopics() {
   const options = {
     ...defaultOptions,
@@ -163,7 +162,6 @@ async function getWeeklyTopics() {
     return [];
   }
 }
-
 
 async function getWeeklyPosts() {
   const options = {
@@ -185,6 +183,86 @@ async function getWeeklyPosts() {
   }
 }
 
+async function getLiwcComponents() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/liwccomponents`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching LIWC Components CSV data:', error);
+    return [];
+  }
+}
+
+async function getLiwcTopics() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/liwctopics`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching LIWC Topics CSV data:', error);
+    return [];
+  }
+}
+
+async function getLiwcPosts() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/liwcposts`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching LIWC Posts CSV data:', error);
+    return [];
+  }
+}
+
+async function getLiwcComments() {
+  const options = {
+    ...defaultOptions,
+    method: "GET",
+  };
+  const res = await fetch(
+    `/api/analytics/liwccomments`,
+    options
+  );
+
+  try {
+    const csvText = await res.text()
+    const parsedData = await parseCsvData(csvText);
+    return parsedData;
+  } catch (error) {
+    console.error('Error fetching LIWC Comments CSV data:', error);
+    return [];
+  }
+}
+
 export {
   getTopics,
   getTopicContent,
@@ -194,4 +272,8 @@ export {
   getCommentsEngagement,
   getWeeklyTopics,
   getWeeklyPosts,
+  getLiwcTopics,
+  getLiwcPosts,
+  getLiwcComments,
+  getLiwcComponents,
 };
