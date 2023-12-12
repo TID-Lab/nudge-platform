@@ -11,10 +11,24 @@ import {
 import useAuth from "../../hooks/auth";
 import { useEffect, useState } from "react";
 
-import { getTopics, getTopicContent, getCOMBEngagement, getTopicEngagement, getPostsEngagement, getCommentsEngagement, getWeeklyTopics, getWeeklyPosts } from "../../api/analytics";
+import {
+  getTopics,
+  getTopicContent,
+  getCOMBEngagement,
+  getTopicEngagement,
+  getPostsEngagement,
+  getCommentsEngagement,
+  getWeeklyTopics,
+  getWeeklyPosts,
+  getLiwcTopics,
+  getLiwcPosts,
+  getLiwcComments,
+  getLiwcComponents,
+} from "../../api/analytics";
 import StaticAnalytics from "../../components/StaticAnalytics";
 import EngagementAnalytics from "../../components/EngagementAnalytics";
 import WeeklyAnalytics from "../../components/WeeklyAnalytics";
+import LiwcAnalytics from '../../components/LiwcAnalytics';
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -31,23 +45,22 @@ const AnalyticsPage = () => {
   const [weeklyTopics, setWeeklyTopics] = useState([]);
   const [weeklyPosts, setWeeklyPosts] = useState([]);
   const [selectedMetaTopic, setSelectedMetaTopic] = useState("");
-  const [showMetaTopicSelect, setShowMetaTopicSelect] = useState(false);
 
   const [combEngagement, setCombEngagement] = useState([]);
   const [topicEngagement, setTopicEngagement] = useState([]);
   const [commentEngagement, setCommentEngagement] = useState([]);
   const [postEngagement, setPostEngagement] = useState([]);
 
+  const [liwcComponents, setLiwcComponents] = useState([]);
+  const [liwcTopics, setLiwcTopics] = useState([]);
+  const [liwcPosts, setLiwcPosts] = useState([]);
+  const [liwcComments, setLiwcCommments] = useState([]);
+
   const onTabChange = (tabName) => {
     if (tabName === "static") {
       setShowCombSelect(true);
-      setShowMetaTopicSelect(false);
-    } else if (tabName === "week") {
-      setShowCombSelect(false);
-      setShowMetaTopicSelect(true);
     } else {
       setShowCombSelect(false);
-      setShowMetaTopicSelect(false);
     }
   };
 
@@ -87,6 +100,22 @@ const AnalyticsPage = () => {
 
     getWeeklyPosts().then((postData) => {
       setWeeklyPosts(postData);
+    });
+
+    getLiwcComponents().then((components) => {
+      setLiwcComponents(components);
+    });
+
+    getLiwcTopics().then((topicsData) => {
+      setLiwcTopics(topicsData);
+    });
+
+    getLiwcPosts().then((postData) => {
+      setLiwcPosts(postData);
+    });
+
+    getLiwcComments().then((commentData) => {
+      setLiwcCommments(commentData);
     });
   }
     , []);
@@ -164,14 +193,41 @@ const AnalyticsPage = () => {
               {
                 key: "sentiment",
                 label: "Sentiment Analysis",
-                children: (<Content></Content>),
+                children: (
+                  /*<Tabs
+                    defaultActiveKey="week"
+                    items={[
+                      {
+                        key: "week",
+                        label: "This Week",
+                        children: (<></>
+                          // <TopPosts -> commentsection + liwcselector (requires comment pull)
+                          //   liwcWeekMap={[]}
+                          //   weeklyPosts={[]}
+                          //   weeklyComments={[]}
+                          // />
+                        )
+                      },
+                      {
+                        key: "all",
+                        label: "Topics of Interest",
+                        children: (<LiwcAnalytics.../>
+                        ),
+                      }
+                    ]} />*/
+                  <LiwcAnalytics // -> liwcselector + top 5 + (liwc over time graph?) + comment section
+                    components={liwcComponents}
+                    topicMapping={liwcTopics}
+                    postMapping={liwcPosts}
+                    commentData={liwcComments}
+                  />
+                ),
               },
             ]}
             onChange={onTabChange}
           />
         </Col>
       </Row>
-      {/* {showMetaTopicSelect} */}
     </Content>
   );
 };

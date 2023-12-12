@@ -160,4 +160,80 @@ routes.get("/weeklyposts", async (req, res) => {
   }
 });
 
+routes.get("/liwccomponents", async (req, res) => {
+  try {
+    res.setHeader('Content-Type', 'text/csv');
+    const stream = fs.createReadStream('./data/liwc_components.csv');
+    stream.pipe(res);
+
+    stream.on('end', () => {
+      console.log('Stream ended successfully');
+    });
+
+    stream.on('error', (err) => {
+      console.error('Stream error:', err);
+    });
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
+
+routes.get("/liwctopics", async (req, res) => {
+  try {
+    res.setHeader('Content-Type', 'text/csv');
+    const stream = fs.createReadStream('./data/liwc_topics.csv');
+    stream.pipe(res);
+
+    stream.on('end', () => {
+      console.log('Stream ended successfully');
+    });
+
+    stream.on('error', (err) => {
+      console.error('Stream error:', err);
+    });
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
+
+routes.get("/liwcposts", async (req, res) => {
+  try {
+    res.setHeader('Content-Type', 'text/csv');
+    const stream = fs.createReadStream('./data/liwc_posts.csv');
+    stream.pipe(res);
+
+    stream.on('end', () => {
+      console.log('Stream ended successfully');
+    });
+
+    stream.on('error', (err) => {
+      console.error('Stream error:', err);
+    });
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
+
+routes.get("/liwccomments", async (req, res) => {
+  try {
+    res.setHeader('Content-Type', 'text/csv');
+    const stream = fs.createReadStream('./data/liwc_comments.csv');
+    stream.pipe(res);
+
+    stream.on('end', () => {
+      console.log('Stream ended successfully');
+    });
+
+    stream.on('error', (err) => {
+      console.error('Stream error:', err);
+    });
+  } catch (err) {
+    debug(`${err}`);
+    res.status(500).send(err);
+  }
+});
+
 module.exports = routes;
