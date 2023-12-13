@@ -74,7 +74,7 @@ const MainPage = () => {
     setQuery(value);
   };
 
-  if (nudges.length === 0) {
+  if (nudges === undefined) {
     return <>Loading</>;
   } else {
     return (
