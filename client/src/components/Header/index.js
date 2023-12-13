@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Space, Button, Menu, Form, Upload, message, Flex } from "antd";
-import { FormOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  Space,
+  Button,
+  Menu,
+  Form,
+  Upload,
+  message,
+  Flex,
+  Dropdown,
+} from "antd";
+import { UploadOutlined, DownOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import Logo from "../Logo";
@@ -11,13 +20,17 @@ import { participantCsvToJson } from "../../util/participant";
 import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
 import { uploadParticipants } from "../../api/participant";
 import { Link } from "react-router-dom/cjs/react-router-dom";
+import BatchNudgeUploadModal from "../Modals/BatchNudgeUploadModa";
 
 const Header = () => {
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
+
+  const [isBatchNudgeUploadModalOpen, setIsBatchNudgeUploadModalOpen] =
+    useState(false); // Modal for batch nudge upload
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [participants, setParticipants] = useState([]); // List of new participants to upload to server
-  const [resp, setResp] = useState({
+  const [, setResp] = useState({
     state: "",
   });
 
@@ -68,14 +81,25 @@ const Header = () => {
         </Space>
 
         <Space justify="center">
-          <Button
+          <Dropdown.Button
+            icon={<DownOutlined />}
             size="large"
             type="primary"
-            icon={<FormOutlined />}
+            menu={{
+              items: [
+                {
+                  key: "upload-nudges",
+                  label: "Upload Nudges",
+                  onClick: () => {
+                    setIsBatchNudgeUploadModalOpen(true);
+                  },
+                },
+              ],
+            }}
             onClick={() => setIsDrawerOpen(true)}
           >
             Create Nudge
-          </Button>
+          </Dropdown.Button>
 
           <Upload
             maxCount={1}
@@ -134,6 +158,8 @@ const Header = () => {
         onOk={onUploadParticipantModalOk}
         open={participants.length !== 0}
       />
+
+      <BatchNudgeUploadModal open={isBatchNudgeUploadModalOpen} />
     </StyledHeader>
   );
 };
