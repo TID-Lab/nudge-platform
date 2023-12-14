@@ -21,7 +21,7 @@ async function fetchNudges() {
     })
     .sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
 }
-async function createNudge(nudge) {
+async function createNudge(nudge, { batch = false }) {
   const options = {
     ...defaultOptions,
     method: "POST",
@@ -31,7 +31,13 @@ async function createNudge(nudge) {
   let res;
 
   try {
-    res = await fetch("/api/nudge", options);
+    res = await fetch(
+      "/api/nudge?" +
+        new URLSearchParams({
+          batch,
+        }),
+      options
+    );
   } catch (err) {
     console.error(`${res.status}: ${err}`);
 

@@ -20,7 +20,7 @@ import { participantCsvToJson } from "../../util/participant";
 import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
 import { uploadParticipants } from "../../api/participant";
 import { Link } from "react-router-dom/cjs/react-router-dom";
-import BatchNudgeUploadModal from "../Modals/BatchNudgeUploadModa";
+import BatchNudgeUploadModal from "../Modals/BatchNudgeUploadModal";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const Header = () => {
   });
 
   // Transform CSV to JSON before uploading to server
-  function onBeforeUpload(file) {
+  function onBeforeParticipantUpload(file) {
     const reader = new FileReader();
     reader.readAsText(file, "UTF-8");
     reader.onload = (e) => {
@@ -105,7 +105,7 @@ const Header = () => {
             maxCount={1}
             accept=".csv"
             showUploadList={false}
-            beforeUpload={onBeforeUpload}
+            beforeUpload={onBeforeParticipantUpload}
           >
             <Button size="large" type="secondary" icon={<UploadOutlined />}>
               Upload Participants
@@ -159,7 +159,10 @@ const Header = () => {
         open={participants.length !== 0}
       />
 
-      <BatchNudgeUploadModal open={isBatchNudgeUploadModalOpen} />
+      <BatchNudgeUploadModal
+        open={isBatchNudgeUploadModalOpen}
+        onCancel={() => setIsBatchNudgeUploadModalOpen(false)}
+      />
     </StyledHeader>
   );
 };

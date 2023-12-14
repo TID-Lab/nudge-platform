@@ -37,8 +37,16 @@ routes.post("/", async (req, res) => {
     res.status(400).send();
     return;
   }
+
+  const batch = req.query.batch === "true";
+
   try {
-    await Nudge.create(req.body);
+    if (batch) {
+      await Nudge.insertMany(req.body);
+    } else {
+      await Nudge.create(req.body);
+    }
+
     res.status(200).send();
   } catch (err) {
     debug(`${err}`);
