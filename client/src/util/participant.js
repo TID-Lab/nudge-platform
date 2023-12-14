@@ -6,8 +6,9 @@ import { DEMO_ENUM, FIELD_ENUM, PARTICIPANT_CSV_MAP } from "./constants";
  * @returns
  */
 export function participantCsvToJson(csv) {
-  const lines = csv.replace(/(\r)/gm, "").split("\n");
-  const headers = lines[0].split(",");
+  console.log(csv);
+  const lines = csv;
+  const headers = csv[0];
 
   let active = false;
 
@@ -21,7 +22,7 @@ export function participantCsvToJson(csv) {
     const participant = {
       labels: [],
     };
-    const currLine = lines[i].split(",");
+    const currLine = lines[i];
     let isAtRisk = false; // at risk if any of the following are true: pre-diabetes, family history of diabetes, or at risk
 
     for (let j = 0; j < headers.length; j++) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Space,
   Button,
@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { UploadOutlined, DownOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+import Papa from "papaparse";
 
 import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
@@ -36,13 +37,13 @@ const Header = () => {
 
   // Transform CSV to JSON before uploading to server
   function onBeforeParticipantUpload(file) {
-    const reader = new FileReader();
-    reader.readAsText(file, "UTF-8");
-    reader.onload = (e) => {
-      const csv = e.target.result;
-      const participantsJson = participantCsvToJson(csv);
-      setParticipants(participantsJson);
-    };
+    Papa.parse(file, {
+      complete: (results) => {
+        const participantsJson = participantCsvToJson(results.data);
+
+        setParticipants(participantsJson);
+      },
+    });
 
     return false;
   }
