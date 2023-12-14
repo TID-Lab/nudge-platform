@@ -1,0 +1,7 @@
+,LIWC,Display,Title
+0,assent,Agreement,Topics with Most Agreement in Comments
+1,negemo,Negative Sentiment,Topics with Most Negative Comments
+2,negate,Disagreement,Topics with Disagreement in Comments
+3,relig,Religious Content,Topics with Mentions of Religion in Comments
+4,anger,Anger,Topics with Angry Reactions in Comments
+5,interrog,Doubts/Questions,Topics with Doubts and Questions in Comments
