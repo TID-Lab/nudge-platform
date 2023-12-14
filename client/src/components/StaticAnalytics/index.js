@@ -63,7 +63,6 @@ const StaticAnalytics = (props) => {
               </option>
             ))}
           </select>
-          <Paragraph style={{ marginTop: '6px' }} > TO DO: Description of the COM-B category </Paragraph>
         </Col>
         <Col span={16} style={{ position: 'sticky', top: 0, borderRight: '2px solid #f0f0f0', }}>
           <div>
