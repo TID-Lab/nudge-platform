@@ -41,10 +41,10 @@ const AnalyticsPage = () => {
   const [postMapping, setPostMapping] = useState([]);
   const [showCombSelect, setShowCombSelect] = useState(false);
 
-  const [metaTopics, setMetaTopics] = useState([]);
+  // const [metaTopics, setMetaTopics] = useState([]);
   const [weeklyTopics, setWeeklyTopics] = useState([]);
   const [weeklyPosts, setWeeklyPosts] = useState([]);
-  const [selectedMetaTopic, setSelectedMetaTopic] = useState("");
+  // const [selectedMetaTopic, setSelectedMetaTopic] = useState("");
 
   const [combEngagement, setCombEngagement] = useState([]);
   const [topicEngagement, setTopicEngagement] = useState([]);
@@ -69,6 +69,9 @@ const AnalyticsPage = () => {
       setSubcategoryMapping(topicsData);
       const uniqueCategories = Array.from(new Set(topicsData.map(topic => topic.COMB)));
       setCategories(uniqueCategories);
+      // const uniqueMetas = Array.from(new Set(topicsData.map(topic => topic.metaTopic)));
+      // // setMetaTopics(['All', ...uniqueCategories]);
+      // setMetaTopics(uniqueMetas);
     });
 
     getTopicContent().then((postData) => {
@@ -93,9 +96,6 @@ const AnalyticsPage = () => {
 
     getWeeklyTopics().then((topicsData) => {
       setWeeklyTopics(topicsData);
-      const uniqueCategories = Array.from(new Set(topicsData.map(topic => topic.metaTopic)));
-      // setMetaTopics(['All', ...uniqueCategories]);
-      setMetaTopics(uniqueCategories);
     });
 
     getWeeklyPosts().then((postData) => {
@@ -150,26 +150,11 @@ const AnalyticsPage = () => {
                 key: "week",
                 label: "Weekly Data",
                 children: (
-                  <>
-                    <Title>Meta Topics</Title>
-                    <select
-                      value={selectedMetaTopic}
-                      onChange={(e) => {
-                        setSelectedMetaTopic(e.target.value);
-                      }}
-                    >
-                      <option value="" disabled>Select a MetaTopic</option>
-                      {metaTopics.map((topic, index) => (
-                        <option key={index} value={topic}>
-                          {topic}
-                        </option>
-                      ))}
-                    </select>
-                    <WeeklyAnalytics
-                      metaTopic={selectedMetaTopic}
-                      topicData={weeklyTopics}
-                      postMapping={weeklyPosts} />
-                  </>),
+                  <WeeklyAnalytics
+                    categories={categories}
+                    topicData={weeklyTopics}
+                    postMapping={weeklyPosts} />
+                ),
               },
               {
                 key: "static",
@@ -194,28 +179,7 @@ const AnalyticsPage = () => {
                 key: "sentiment",
                 label: "Sentiment Analysis",
                 children: (
-                  /*<Tabs
-                    defaultActiveKey="week"
-                    items={[
-                      {
-                        key: "week",
-                        label: "This Week",
-                        children: (<></>
-                          // <TopPosts -> commentsection + liwcselector (requires comment pull)
-                          //   liwcWeekMap={[]}
-                          //   weeklyPosts={[]}
-                          //   weeklyComments={[]}
-                          // />
-                        )
-                      },
-                      {
-                        key: "all",
-                        label: "Topics of Interest",
-                        children: (<LiwcAnalytics.../>
-                        ),
-                      }
-                    ]} />*/
-                  <LiwcAnalytics // -> liwcselector + top 5 + (liwc over time graph?) + comment section
+                  <LiwcAnalytics // (liwc over time graph?) / newest posts in liwc reaction?
                     components={liwcComponents}
                     topicMapping={liwcTopics}
                     postMapping={liwcPosts}
