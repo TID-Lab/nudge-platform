@@ -124,14 +124,6 @@ const AnalyticsPage = () => {
                 ),
               },
               {
-                key: "static",
-                label: "COM-B Categories",
-                children: (<StaticAnalytics
-                  categories={categories}
-                  subcategoryMapping={subcategoryMapping}
-                  postMapping={postMapping} />),
-              },
-              {
                 key: "engagement",
                 label: "Engagement Data",
                 children: (<EngagementAnalytics
@@ -153,6 +145,14 @@ const AnalyticsPage = () => {
                     commentData={liwcComments}
                   />
                 ),
+              },
+              {
+                key: "static",
+                label: "COM-B Categories",
+                children: (<StaticAnalytics
+                  categories={categories}
+                  subcategoryMapping={subcategoryMapping}
+                  postMapping={postMapping} />),
               },
             ]}
             onChange={onTabChange}
