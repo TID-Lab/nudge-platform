@@ -28,7 +28,7 @@ const WeeklyAnalytics = (props) => {
           if (subcategory.new === "1") {
             return { topicName: subcategoryName, new: subcategory.new, content: content, liwcChanges: [] }
           } else {
-            return { topicName: subcategoryName, new: subcategory.new, content: content, liwcChanges: [{property:'assent',value: (Math.random() * (150))-80},{property:'anger',value: (Math.random() * (160))-80}] }
+          return { topicName: subcategoryName, new: subcategory.new, content: content, liwcChanges: [/*{property:'assent',value: (Math.random() * (150))-80},{property:'anger',value: (Math.random() * (160))-80},{property:'relig',value: (Math.random() * (90))-40}*/] }
             // return { topicName: subcategoryName, new: subcategory.new, content: content, liwcChanges: JSON.parse(subcategory['LIWC Update']) };
           }
         });
