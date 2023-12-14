@@ -42,7 +42,7 @@ const WeeklyAnalytics = (props) => {
               new: subcategory.new,
               content: content,
               metaTopic: metaTopic,
-              liwcChanges: [/*{property:'assent',value: (Math.random() * (150))-80},{property:'anger',value: (Math.random() * (160))-80},{property:'relig',value: (Math.random() * (90))-40}*/],
+              liwcChanges: [{property:'assent',value: (Math.random() * (150))-80},{property:'anger',value: (Math.random() * (160))-80},{property:'relig',value: (Math.random() * (90))-40}],
               // liwcChanges: JSON.parse(subcategory['LIWC Update']),
             }
           }
@@ -65,7 +65,7 @@ const WeeklyAnalytics = (props) => {
             title="Weekly Analytics Dashboard"
             width="100%"
             height="600"
-            src="http://20.119.99.148/"
+            src="https://nudgeanalytics.eastus.cloudapp.azure.com"
           ></iframe>)
         },
         {
