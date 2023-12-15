@@ -1,4 +1,3 @@
 .env
 .env.production
-server/data/*.csv
 mongostart.ps1
