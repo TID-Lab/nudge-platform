@@ -10,7 +10,7 @@ import {
   Col,
 } from "antd";
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { Content } = Layout;
 
 const StaticAnalytics = (props) => {
@@ -36,7 +36,7 @@ const StaticAnalytics = (props) => {
       // Update state
       setTopicData(tpcData);
     }
-  }, [selectedMetaTopic, subcategoryMapping, postMapping]);
+  }, [selectedCOMB, selectedMetaTopic, subcategoryMapping, postMapping]);
 
   return (
     <Content>
@@ -50,7 +50,7 @@ const StaticAnalytics = (props) => {
             onChange={(e) => {
               const comb_selected = e.target.value;
               setSelectedCOMB(comb_selected);
-              const filteredMetaTopics = subcategoryMapping.filter(item => item.COMB == comb_selected);
+              const filteredMetaTopics = subcategoryMapping.filter(item => item.COMB === comb_selected);
               const uniqueCategories = Array.from(new Set(filteredMetaTopics.map(topic => topic.metaTopic)));
               setMetaTopics(uniqueCategories);
               setSelectedMetaTopic("");

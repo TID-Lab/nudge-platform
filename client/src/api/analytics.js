@@ -1,6 +1,3 @@
-
-import Papa from 'papaparse';
-
 const defaultOptions = {
   headers: {
     Accept: "text/csv",
@@ -8,34 +5,19 @@ const defaultOptions = {
   },
 };
 
-function parseCsvData(csvString) {
-  return new Promise((resolve) => {
-    Papa.parse(csvString, {
-      header: true,
-      complete: (result) => {
-        resolve(result.data);
-      },
-      error: (error) => {
-        console.error('Error parsing CSV data:', error);
-        resolve([]);
-      },
-    });
-  });
-}
-
 async function getTopics() {
   const options = {
     ...defaultOptions,
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/combtopics`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/comb_topics`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching Topic CSV data:', error);
@@ -49,13 +31,13 @@ async function getTopicContent() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/combposts`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/comb_posts`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching Posts CSV data:', error);
@@ -69,13 +51,13 @@ async function getCOMBEngagement() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/combengagement`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/engagement_comb`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching COMB Engagement CSV data:', error);
@@ -89,13 +71,13 @@ async function getTopicEngagement() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/topicengagement`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/topic_engagement`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching Topic Engagement CSV data:', error);
@@ -109,13 +91,13 @@ async function getPostsEngagement() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/engagementposts`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/engagement_posts`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching Engagement Posts CSV data:', error);
@@ -129,13 +111,13 @@ async function getCommentsEngagement() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/engagementcomments`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/engagement_comments`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching Engagement Comments CSV data:', error);
@@ -149,13 +131,13 @@ async function getWeeklyTopics() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/weeklytopics`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/updated_topics`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching Weekly Topics CSV data:', error);
@@ -169,13 +151,13 @@ async function getWeeklyPosts() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/weeklyposts`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/updated_posts`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching Weekly Posts CSV data:', error);
@@ -189,13 +171,13 @@ async function getLiwcComponents() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/liwccomponents`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/liwc_components`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching LIWC Components CSV data:', error);
@@ -209,13 +191,13 @@ async function getLiwcTopics() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/liwctopics`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/liwc_topics`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching LIWC Topics CSV data:', error);
@@ -229,13 +211,13 @@ async function getLiwcPosts() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/liwcposts`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/liwc_posts`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching LIWC Posts CSV data:', error);
@@ -249,13 +231,13 @@ async function getLiwcComments() {
     method: "GET",
   };
   const res = await fetch(
-    `/api/analytics/liwccomments`,
+    `https://nudgeanalytics.eastus.cloudapp.azure.com/api/analytics/liwc_comments`,
     options
   );
 
   try {
-    const csvText = await res.text()
-    const parsedData = await parseCsvData(csvText);
+    const json_data = await res.json();
+    const parsedData = JSON.parse(json_data);
     return parsedData;
   } catch (error) {
     console.error('Error fetching LIWC Comments CSV data:', error);

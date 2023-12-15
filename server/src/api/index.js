@@ -16,7 +16,6 @@ const authRoutes = require("./auth");
 const nudgeRoutes = require("./nudge");
 const assignRoutes = require("./assignment");
 const participantRoutes = require("./participant");
-const analyticsRoutes = require("./analytics");
 
 const debug = useDebug("api");
 const app = express();
@@ -73,7 +72,6 @@ module.exports = () =>
     apiRoutes.use("/auth", authRoutes); // routes for user authentication
     apiRoutes.use("/assignment", assignRoutes); // routes for assignment
     apiRoutes.use("/participant", participantRoutes); // routes for participant
-    apiRoutes.use("/analytics", analyticsRoutes); // routes for participant
     app.use("/api", apiRoutes); // mounts all the routes above to the /api route
 
     // Mount the client-side React app

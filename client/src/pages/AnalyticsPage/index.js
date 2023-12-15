@@ -2,7 +2,6 @@ import './index.css';
 
 import {
   Layout,
-  Typography,
   Row,
   Col,
   Tabs,
