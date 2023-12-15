@@ -1,18 +1,31 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Card, Space, Empty, Alert, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Space,
+  Empty,
+  Alert,
+  Typography,
+  Dropdown,
+  Modal,
+  Popconfirm,
+} from "antd";
+import { DownOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import PendingNudgeCard from "../Cards/PendingNudgeCard";
-import ConfirmSendModal from "../Modals/ConfirmSend";
-import { fetchAssignments } from "../../api/nudge";
+import ScheduleModal from "../Modals/ScheduleModal";
+import { dispatchAssignment } from "../../api/nudge";
 import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
+import { useUpdateAssignmentLists } from "../../hooks/nudge";
 
 const { Title } = Typography;
 
 const PendingNudgeList = ({ total, pendingNudges }) => {
   const dispatch = useDispatch();
   const participants = useSelector((state) => state.participants);
+  const updateAssignmentLists = useUpdateAssignmentLists();
 
   const [numParticipants, setNumParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
@@ -26,35 +39,19 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
   }, [pendingNudges]);
 
   useEffect(() => {
-    fetchAssignments()
-      .then((jobs) => {
-        const scheduled = jobs.filter(({ lastRunAt }) => !lastRunAt);
-        const sent = jobs.filter(({ lastRunAt }) => lastRunAt);
+    updateAssignmentLists();
+  }, [updateAssignmentLists]);
 
-        dispatch({
-          type: "scheduledAssignments/set",
-          payload: scheduled.map(({ _id, nextRunAt, data }) => {
-            return { id: _id, nextRunAt, nudges: data.nudges };
-          }),
-        });
-        dispatch({
-          type: "sentAssignments/set",
-          payload: sent.map(({ _id, lastRunAt, data }) => {
-            return { id: _id, lastRunAt, nudges: data.nudges };
-          }),
-        });
-      })
-      .catch((e) => console.log(e));
-  }, [dispatch]);
-
-  const handleAssignmentSend = () => {
+  const handleAssignmentSend = async () => {
     const hasOrphans = false; // TODO: check if there are orphans
 
     if (hasOrphans) {
       setIsParticipantModalOpen(true);
-    } else {
-      setIsSendModalOpen(true);
     }
+
+    await dispatchAssignment(pendingNudges, false);
+    updateAssignmentLists();
+    dispatch({ type: "pendingNudges/set", payload: [] });
   };
 
   return (
@@ -108,17 +105,35 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         >
           Reset
         </Button>
-        <Button
-          block
-          onClick={handleAssignmentSend}
-          type="primary"
-          disabled={numParticipants !== total}
+
+        <Popconfirm
+          onConfirm={handleAssignmentSend}
+          title="Send Now"
+          description="Send the above nudge assignments now?"
         >
-          Send
-        </Button>
+          <Dropdown.Button
+            icon={<DownOutlined />}
+            type="primary"
+            menu={{
+              items: [
+                {
+                  key: "send-later",
+                  label: "Send Later",
+                  icon: <ClockCircleOutlined />,
+                  onClick: () => {
+                    setIsSendModalOpen(true);
+                  },
+                },
+              ],
+            }}
+            disabled={numParticipants !== total}
+          >
+            Send
+          </Dropdown.Button>
+        </Popconfirm>
       </ButtonGroup>
 
-      <ConfirmSendModal
+      <ScheduleModal
         open={isSendModalOpen}
         onCancel={() => setIsSendModalOpen(false)}
       />
@@ -126,7 +141,6 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
       <UploadParticipantsModal
         open={isParticipantModalOpen}
         onCancel={() => setIsParticipantModalOpen(false)}
-        onOk={() => setIsSendModalOpen(true)}
         participants={participants}
       ></UploadParticipantsModal>
     </ListContainer>
@@ -168,6 +182,10 @@ const ButtonGroup = styled(Space)`
 
   .ant-space-item {
     flex: 1;
+  }
+
+  .ant-btn-compact-first-item {
+    width: 100%;
   }
 `;
 

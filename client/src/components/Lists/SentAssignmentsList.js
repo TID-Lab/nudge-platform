@@ -16,7 +16,6 @@ export default function SentAssignmentsList({ schedules }) {
   const sentAssignments = useMemo(() => {
     return schedules
       .filter(({ nudges }) => {
-        console.log(query);
         if (query === undefined) return true;
 
         return nudges.some(({ text }) =>

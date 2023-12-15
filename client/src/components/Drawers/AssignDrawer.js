@@ -33,7 +33,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
   const [form] = Form.useForm();
 
   const [error, setError] = useState("");
-  const [isControl, setIsControl] = useState(false); // Whether nudge is assigned to control group
   const [excludedParticipants, setExcludedParticipants] = useState([]);
 
   const onFinish = (values) => {
@@ -190,19 +189,8 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         onFinish={onFinish}
         onValuesChange={onValuesChange}
       >
-        <Form.Item label="Study Group" name="studygroup" required>
-          <Radio.Group
-            onChange={(e) => setIsControl(e.target.value === "control")}
-            options={[
-              { value: "intervention", label: "Intervention" },
-              { value: "control", label: "Control" },
-            ]}
-          />
-        </Form.Item>
-
         <Form.Item label="Testing Status" name="testingstatus">
           <Checkbox.Group
-            disabled={isControl}
             options={[
               { value: "sickxtested", label: "Sick x Tested" },
               { value: "notsickxtested", label: "Not Sick x Tested" },
@@ -214,7 +202,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         </Form.Item>
         <Form.Item label="Race" name="race">
           <Checkbox.Group
-            disabled={isControl}
             options={[
               { value: "black", label: "Black" },
               { value: "latinx", label: "Latinx" },
@@ -226,7 +213,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         </Form.Item>
         <Form.Item label="Gender" name="gender">
           <Checkbox.Group
-            disabled={isControl}
             options={[
               { value: "female", label: "Female" },
               { value: "male", label: "Male" },
@@ -236,7 +222,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         </Form.Item>
         <Form.Item label="Age" name="age">
           <Checkbox.Group
-            disabled={isControl}
             options={[
               { value: "18-29", label: "18-29" },
               { value: "30-40", label: "30-40" },
@@ -248,7 +233,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         </Form.Item>
         <Form.Item label="Diabetes" name="diabetes">
           <Checkbox.Group
-            disabled={isControl}
             options={[
               { value: "has-diabetes", label: "Has Diabetes" },
               { value: "at-risk", label: "At Risk" },
