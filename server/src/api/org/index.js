@@ -161,7 +161,7 @@ routes.get("/allParts", async (req, res) => {
   //start comment for live
   try {
     const response = await fetch(
-      `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`,
+      `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=PEACH2_1`,
     );
     const data = await response.json();
 
