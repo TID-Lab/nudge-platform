@@ -6,7 +6,10 @@ import { DEMO_ENUM, FIELD_ENUM, PARTICIPANT_CSV_MAP } from "./constants";
  * @returns
  */
 export function participantCsvToJson(csv) {
-  const lines = csv.replace(/(\r)/gm, "").split("\n");
+  const lines = csv
+    .replace(/(\r)/gm, "")
+    .split("\n")
+    .filter((line) => line !== "");
   const headers = lines[0].split(",");
 
   let active = false;
@@ -25,9 +28,9 @@ export function participantCsvToJson(csv) {
     let isAtRisk = false; // at risk if any of the following are true: pre-diabetes, family history of diabetes, or at risk
 
     for (let j = 0; j < headers.length; j++) {
-      // first column is record_id (aka. participantId)
+      // first column is record_id_nudge (aka. participantId)
       if (j === 0) {
-        participant[PARTICIPANT_CSV_MAP.record_id] = currLine[j];
+        participant[PARTICIPANT_CSV_MAP[FIELD_ENUM.RecordId]] = currLine[j];
       } else if (headers[j] === FIELD_ENUM.AgeYrs) {
         // calculate age range
         const age = parseInt(currLine[j]);
@@ -62,7 +65,7 @@ export function participantCsvToJson(csv) {
           isAtRisk = isAtRisk || currLine[j] === "1";
         } else {
           // parse the rest of the binary labels
-          if (currLine[j] === "1") {
+          if (currLine[j] === "1" && headers[j] !== FIELD_ENUM.Randomization) {
             participant["labels"].push(PARTICIPANT_CSV_MAP[headers[j]]);
           }
         }

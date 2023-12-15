@@ -36,6 +36,8 @@ export const DEMO_ENUM = {
 };
 
 export const FIELD_ENUM = {
+  RecordId: "record_id_nudge",
+  Randomization: "randomization",
   PreDiabetes: "scrn_predb_dx",
   FamHasDiabetes: "scrn_fam_hx",
   AtRisk: "scrn_risk",
@@ -46,7 +48,7 @@ export const FIELD_ENUM = {
 
 // Map of participant CSV headers to participant object keys on the nudge platform
 export const PARTICIPANT_CSV_MAP = {
-  record_id: "participantId",
+  record_id_nudge: "participantId",
   scrn_db_dx: DEMO_ENUM.Diabetes.HasDiabetes,
   scrn_predb_dx: DEMO_ENUM.Diabetes.PreDiabetes,
   scrn_fam_hx: DEMO_ENUM.Diabetes.FamHasDiabetes,
