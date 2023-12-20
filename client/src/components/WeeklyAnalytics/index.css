@@ -51,3 +51,15 @@
   white-space: nowrap;
   text-align: left;
 }
+
+.sub-topics-section {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.liwc-update-section {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+}

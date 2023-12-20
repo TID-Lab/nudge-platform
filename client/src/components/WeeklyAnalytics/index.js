@@ -26,9 +26,8 @@ const WeeklyAnalytics = (props) => {
           const subcategoryNumber = subcategory['Topic Number'];
           const subcategoryName = subcategory['Theme'];
           const metaTopic = subcategory['metaTopic'];
-          // Filter post mapping based on subcategoryNumber
           const content = postMapping.filter(post => post.bertopic === subcategoryNumber);
-          if (subcategory.new === "1") {
+          if (subcategory.new === 1) {
             return {
               topicName: subcategoryName,
               new: subcategory.new,
@@ -37,13 +36,20 @@ const WeeklyAnalytics = (props) => {
               liwcChanges: []
             }
           } else {
+            let parsedData;
+            try {
+              parsedData = JSON.parse(subcategory['LIWC Update']);
+            } catch (error) {
+              console.error('Error parsing LIWC Update JSON:', error);
+              parsedData = [];
+            }
+
             return {
               topicName: subcategoryName,
               new: subcategory.new,
               content: content,
               metaTopic: metaTopic,
-            liwcChanges: [/*{property:'assent',value: (Math.random() * (150))-80},{property:'anger',value: (Math.random() * (160))-80},{property:'relig',value: (Math.random() * (90))-40}*/],
-              // liwcChanges: JSON.parse(subcategory['LIWC Update']),
+              liwcChanges: parsedData,
             }
           }
         });
@@ -90,7 +96,7 @@ const WeeklyAnalytics = (props) => {
               <div className="sub-topics-section">
                 {displayData.map((topic, index) => (
                   <div key={index} className="sub-topic">
-                    <h3>{topic.topicName} {(topic.new === "1") && <Pill text="New Topic!" />}</h3>
+                    <h3>{topic.topicName} {(topic.new === 1) && <Pill text="New Topic!" />}</h3>
                     <div className="scrollable-cards">
                       {topic.content.map((post, postIndex) => (
                         <SocialMediaPost
@@ -102,7 +108,9 @@ const WeeklyAnalytics = (props) => {
                         />
                       ))}
                     </div>
-                    {(topic.new === "0") && <>{topic.liwcChanges.map((mapping, index) => (<PercentageChange key={index} value={mapping.value} attribute={mapping.property} />))}</>}
+                    {(topic.new === 0) && <div className="liwc-update-section">
+                      {topic.liwcChanges.map((mapping, index) => (<PercentageChange key={index} value={mapping.value} attribute={mapping.property} />))}
+                    </div>}
                     {<Pill text={topic.metaTopic} />}
                   </div>
                 ))}

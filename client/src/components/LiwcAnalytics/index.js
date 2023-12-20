@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import SocialMediaPost from "../SocialMediaPost";
 import CommentSection from "../CommentsSection";
 import TopicCard from "../Charts/TopicCard";
+import Pill from "../Pill";
 
 import {
   Layout,
@@ -40,7 +41,7 @@ const LiwcAnalytics = (props) => {
       if (filteredPostData.length > 0 && topic_theme_data !== undefined) {
         setPostsSection(
           <>
-            <Title>{topic_theme_data['Theme']}</Title>
+            <Title>{topic_theme_data['Theme']}</Title> <Pill text={topic_theme_data['COMB']}/>
             <div className="scrollable-cards">
               {filteredPostData.map((post, postIndex) => (
                 <div key={postIndex} className="scrollable-posts">
