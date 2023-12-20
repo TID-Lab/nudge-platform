@@ -1,0 +1,9 @@
+.pill {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background-color: #3498db; /* You can change the background color */
+  color: #fff; /* You can change the text color */
+  font-size: 14px;
+  font-weight: bold;
+}

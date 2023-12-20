@@ -61,7 +61,7 @@ const Header = () => {
             mode="horizontal"
             items={[
               { label: <Link to="/">Nudges</Link> },
-              { label: "Analytics" },
+              { label: <Link to="/analytics">Analytics</Link> },
               { label: <Link to="/settings">Settings</Link> },
             ]}
           />
