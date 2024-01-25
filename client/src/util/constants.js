@@ -19,7 +19,7 @@ export const DEMO_ENUM = {
   Sex: {
     Female: "female",
     Male: "male",
-    Intersex: "intersex",
+    Intersex: "non-binary",
     NoneApply: "none-apply",
     NoAnswer: "no-answer",
   },
@@ -32,6 +32,14 @@ export const DEMO_ENUM = {
     PacificIslander: "pacific-islander",
     Other: "other",
     NoAnswer: "no-answer",
+  },
+  SickStatus: {
+    Sick: "sick",
+    NotSick: "not-sick",
+  },
+  TestStatus: {
+    Tested: "tested",
+    NotTested: "untested",
   },
 };
 

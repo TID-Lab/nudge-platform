@@ -1,15 +1,14 @@
+const { DEMO_ENUM } = require("./constants");
 const db = require("./db");
 const axios = require("axios").default;
 const useDebug = require("debug");
 const debug = useDebug("core");
 
-const demographic_enum = {
-  Age: ["18-29", "30-40", "41-50", "51-64", "65+"],
-  Race: ["black", "latinx", "white", "asian", "native-american"],
-  Gender: ["female", "male", "non-binary"],
-  Diabetes: ["has-diabetes", "at-risk", "caretaker"],
-  TestingStatus: ["tested", "untested"],
-};
+const demographicEnum = Object.fromEntries(
+  Object.entries(DEMO_ENUM).map(([k, v]) => {
+    return [k, Array.isArray(v) ? v : Object.values(v)];
+  }),
+);
 
 const assignmentCodes = {
   SUCCESS: "SUCCESS",
@@ -54,47 +53,64 @@ async function checkAssignments(assignments, participants) {
   let participants_inc = [];
   let returned = [];
   let participantMapping = {};
+
   try {
     for (let i = 0; i < assignments.length; i++) {
       const curr = assignments[i];
+
       let { demographics } = curr;
       // Just to double check they're lowercase
       demographics = demographics.map((ele) => ele.toLowerCase());
+
       const num_parti_before = participants.length;
       const prevAssigned = checkPreviouslyAssigned(curr);
+
       if (!prevAssigned) {
         // FOR EACH PARTICIPANT, CHECK IF label in the included
         let includedDemographics = getIncludedDemographics(demographics);
-        console.log(includedDemographics);
+
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
           console.log(participants[parti_idx]["labels"]);
+          console.log(includedDemographics);
+          console.log(
+            participants[parti_idx]["labels"].every((element) =>
+              includedDemographics.includes(element),
+            ),
+          );
+
+          // BUG?
           if (
             participants[parti_idx]["labels"].every((element) =>
-              includedDemographics.includes(element)
+              includedDemographics.includes(element),
             )
           ) {
             participants_inc.push(...participants.splice(parti_idx, 1));
+
             const curr_participant =
               participants_inc[participants_inc.length - 1];
+
             if (
-              participantMapping[curr_participant.participantId] != undefined
+              participantMapping[curr_participant.participantId] !== undefined
             ) {
               console.log(
-                "Something went wrong, a participant is being mapped two messages..."
+                "Something went wrong, a participant is being mapped two messages...",
               );
             }
+
             participantMapping[curr_participant.participantId] =
               curr.nudge_message;
             parti_idx = parti_idx - 1;
           }
         }
-        if (num_parti_before - participants.length == 0) {
+
+        if (num_parti_before - participants.length === 0) {
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
             num_left: participants.length,
             success_code: assignmentCodes.NO_PARTICIPANT,
           });
+
           break;
         } else {
           returned.push({
@@ -107,6 +123,7 @@ async function checkAssignments(assignments, participants) {
         // TODO: excluded demographics
       } else {
         console.log("nudge prev assigned!");
+
         // TODO: Handle previously assigned
         returned.push({
           nudge_id: curr["nudge_id"],
@@ -120,6 +137,7 @@ async function checkAssignments(assignments, participants) {
             ],
           },
         });
+
         break;
       }
     }
@@ -148,11 +166,11 @@ async function dispatchNudges(participantMapping, sender) {
 
   Object.keys(participantMapping).forEach((participant) => {
     console.log(
-      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`
+      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`,
     );
     // HTTP get request
     debug(
-      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`
+      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`,
     );
     const resPromise = axios
       .post(
@@ -166,7 +184,7 @@ async function dispatchNudges(participantMapping, sender) {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       )
       .catch((err) => {
         console.log(`Issue sending nudge, ${err}`);
@@ -187,13 +205,15 @@ async function dispatchNudges(participantMapping, sender) {
 function getIncludedDemographics(demographics) {
   const includedDemographics = [...demographics];
 
-  Object.keys(demographic_enum).forEach((category) => {
+  console.log(demographicEnum);
+
+  Object.keys(demographicEnum).forEach((category) => {
     // Checks if there is any overlap (i.e. there exists a demographic label in the age category)
-    const contains = demographic_enum[category].some((element) =>
-      demographics.includes(element)
+    const contains = demographicEnum[category].some((element) =>
+      demographics.includes(element),
     );
     if (!contains) {
-      includedDemographics.push(...demographic_enum[category]);
+      includedDemographics.push(...demographicEnum[category]);
     }
   });
 
@@ -223,6 +243,6 @@ function checkPreviouslyAssigned(assignment) {
 module.exports = {
   checkAssignments,
   assignmentCodes,
-  demographic_enum,
+  demographicEnum,
   dispatchNudges,
 };
