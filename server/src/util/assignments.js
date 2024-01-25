@@ -85,9 +85,9 @@ async function checkAssignments(assignments, participants) {
             )
           ) {
             if(nudge.participant_history.includes(mongoose.Types.ObjectId(participants[parti_idx]._id))===false) {
+              //only splice the participant when it is assigned (previous design) so in the else clause
               participants_inc.push(...participants.splice(parti_idx, 1));
-              const curr_participant =
-                participants_inc[participants_inc.length - 1];
+              const curr_participant = participants_inc[participants_inc.length - 1];
               if (
                 participantMapping[curr_participant.participantId] != undefined
               ) {
@@ -100,14 +100,13 @@ async function checkAssignments(assignments, participants) {
               parti_idx = parti_idx - 1;
             }
             else {
-              const curr_participant=participants.splice(parti_idx, 1)[0];
+              const curr_participant=participants[parti_idx]
               alreadySent[curr_participant.participantId]=curr.nudge_message
-              parti_idx = parti_idx - 1;
             }
           }
         }
         console.log("already sent", alreadySent)
-        if (num_parti_before - participants.length == 0) {
+        if (num_parti_before - participants.length == 0 && Object.keys(alreadySent).length==0) {
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
@@ -116,6 +115,8 @@ async function checkAssignments(assignments, participants) {
           });
           break;
         } else if(Object.keys(alreadySent).length!=0){
+          console.log(Object.keys(alreadySent).length)
+          console.log(num_parti_before - participants.length)
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,

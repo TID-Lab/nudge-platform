@@ -87,6 +87,20 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           } else {
             console.log("this should never happen");
           }
+          //edge case where all participants are already sent (if ensures an empty dispatch isn't added)
+          if (lastRes.num_assigned != 0) {
+            dispatch({
+              type: "pendingNudges/add",
+              payload: {
+                id: nudge._id,
+                text: nudge.message,
+                demographics: demographics,
+                assigned: lastRes.num_assigned,
+                color: colors[pendingNudges.length % colors.length],
+                key: nudge.key,
+              },
+            });
+          }
         } else if (lastRes.success_code === "NO_PARTICIPANT") {
           setError(
             'No participants are left with this demographic grouping. Please try a different combination, or toggle "All Unassigned"'
