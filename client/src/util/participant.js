@@ -47,12 +47,9 @@ export function participantCsvToJson(csv) {
             );
           }
         } else if (headers[j] === FIELD_ENUM.Sex) {
-          // parse sex labels
-          if (currLine[j] === "1") {
-            participant["labels"].push(
-              PARTICIPANT_CSV_MAP[headers[j]][currLine[j]]
-            );
-          }
+          participant["labels"].push(
+            PARTICIPANT_CSV_MAP[headers[j]][currLine[j]]
+          );
         } else if (
           [
             FIELD_ENUM.PreDiabetes,
