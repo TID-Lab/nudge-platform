@@ -63,18 +63,19 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
     checkAssignment(newPendingNudges)
       .then((res) => {
         const lastRes = res[newPendingNudges.length - 1];
-
-        setAssignPayload({
+        const payload = {
           id: nudge._id,
           text: nudge.message,
           demographics: demographics,
           assigned: lastRes.num_assigned,
           color: colors[pendingNudges.length % colors.length],
           key: nudge.key,
-        });
+        };
+
+        setAssignPayload(payload);
 
         if (lastRes.success_code === "SUCCESS") {
-          handleAssign();
+          handleAssign(payload);
         } else if (
           lastRes.success_code === "PARTICIPANTS_ALREADY_SENT" &&
           Object.keys(lastRes.overlap).length !== 0
@@ -90,11 +91,13 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       .catch((e) => console.log(e));
   };
 
-  const handleAssign = () => {
-    if (assignPayload.assigned !== 0) {
+  const handleAssign = (pl) => {
+    const payload = assignPayload ?? pl;
+
+    if (payload.assigned !== 0) {
       dispatch({
         type: "pendingNudges/add",
-        payload: assignPayload,
+        payload: payload,
       });
     }
 
@@ -105,6 +108,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
     onClose();
     form.resetFields();
     setExcludedParticipants({});
+    setAssignPayload();
     setIsExcludeModalOpen(false);
     setError("");
   };
