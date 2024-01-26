@@ -12,6 +12,7 @@ import {
   Switch,
   Radio,
   Popover,
+  Modal,
 } from "antd";
 import { presetPrimaryColors } from "@ant-design/colors";
 import styled from "styled-components";
@@ -33,10 +34,12 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
   const [form] = Form.useForm();
 
   const [error, setError] = useState("");
-  const [isControl, setIsControl] = useState(false); // Whether nudge is assigned to control group
   const [excludedParticipants, setExcludedParticipants] = useState({});
+  const [isExcludeModalOpen, setIsExcludeModalOpen] = useState(false);
+  const [assignPayload, setAssignPayload] = useState();
 
-  const onFinish = (values) => {
+  // First confirmation after assigning demographics
+  const onSubmit = (values) => {
     let demographics = Object.values(values).filter((d) => d !== undefined);
 
     if (demographics.length === 0) {
@@ -61,46 +64,23 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       .then((res) => {
         const lastRes = res[newPendingNudges.length - 1];
 
+        setAssignPayload({
+          id: nudge._id,
+          text: nudge.message,
+          demographics: demographics,
+          assigned: lastRes.num_assigned,
+          color: colors[pendingNudges.length % colors.length],
+          key: nudge.key,
+        });
+
         if (lastRes.success_code === "SUCCESS") {
-          console.log("hit");
-          dispatch({
-            type: "pendingNudges/add",
-            payload: {
-              id: nudge._id,
-              text: nudge.message,
-              demographics: demographics,
-              assigned: lastRes.num_assigned,
-              color: colors[pendingNudges.length % colors.length],
-              key: nudge.key,
-            },
-          });
-          handleClose();
-        } else if (lastRes.success_code === "PARTICIPANTS_ALREADY_SENT") {
-          //first do a pop up instead of the top thing with all the over laps
-          //then ask to click ok if they want to send with exclusions and show the right amount of exclusions
-          //then say if you want proceed click ok
-          // then do same dispatch above
-          if (Object.keys(lastRes.overlap).length != 0) {
-            console.log("hit overlap");
-            setExcludedParticipants(lastRes.overlap);
-            console.log(lastRes.overlap);
-          } else {
-            console.log("this should never happen");
-          }
-          //edge case where all participants are already sent (if ensures an empty dispatch isn't added)
-          if (lastRes.num_assigned != 0) {
-            dispatch({
-              type: "pendingNudges/add",
-              payload: {
-                id: nudge._id,
-                text: nudge.message,
-                demographics: demographics,
-                assigned: lastRes.num_assigned,
-                color: colors[pendingNudges.length % colors.length],
-                key: nudge.key,
-              },
-            });
-          }
+          handleAssign();
+        } else if (
+          lastRes.success_code === "PARTICIPANTS_ALREADY_SENT" &&
+          Object.keys(lastRes.overlap).length !== 0
+        ) {
+          setIsExcludeModalOpen(true);
+          setExcludedParticipants(lastRes.overlap);
         } else if (lastRes.success_code === "NO_PARTICIPANT") {
           setError(
             'No participants are left with this demographic grouping. Please try a different combination, or toggle "All Unassigned"'
@@ -110,15 +90,27 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       .catch((e) => console.log(e));
   };
 
+  const handleAssign = () => {
+    if (assignPayload.assigned !== 0) {
+      dispatch({
+        type: "pendingNudges/add",
+        payload: assignPayload,
+      });
+    }
+
+    handleClose();
+  };
+
   const handleClose = () => {
     onClose();
     form.resetFields();
     setExcludedParticipants({});
+    setIsExcludeModalOpen(false);
     setError("");
   };
 
   const onValuesChange = (changed, all) => {
-    //checkExcluded(all);
+    // checkExcluded(all);
 
     if (changed.hasOwnProperty("unassigned") && changed.unassigned) {
       form.resetFields();
@@ -128,170 +120,134 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
     }
   };
 
-  // Check whether some participants in the current assignment has already gotten the nudge
+  // TODO: Check whether some participants in the current assignment has already gotten the nudge
   const checkExcluded = (formValues) => {
     setExcludedParticipants(["foo", "bar"]);
   };
 
   return (
-    <Drawer
-      title="Assign"
-      width={900}
-      size="large"
-      onClose={handleClose}
-      open={open}
-      footer={
-        <Space>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            onClick={() => form.submit()}
-            type="primary"
-            htmlType="submit"
-          >
-            Confirm
-          </Button>
-        </Space>
-      }
-    >
-      <NudgeCard title={`Nudge #${nudge.key + 1}`}>{nudge.message}</NudgeCard>
-
-      {error !== "" && <Alert message={error} type="error" showIcon />}
-      {console.log(excludedParticipants)}
-      {Object.keys(excludedParticipants).length != 0 && (
-        <Alert
-          message={
-            <Text>
-              <Popover
-                title="Excluded participant IDs"
-                content={Object.entries(excludedParticipants).map(
-                  ([partCode, message]) => (
-                    <li key={partCode}>
-                      <Text copyable>{`${partCode}: ${message}`}</Text>
-                    </li>
-                  )
-                )}
-                trigger="click"
-              >
-                <Link>
-                  {Object.keys(excludedParticipants).length} participants
-                </Link>
-              </Popover>{" "}
-              will be excluded from this assignment.
-            </Text>
-          }
-          description={
-            <Text>
-              <Popover
-                title="Assignment dates"
-                content={
-                  <Paragraph>
-                    <ul>
-                      <li>
-                        <Text copyable>10/23/2023 7:23PM</Text>
-                      </li>
-                      <li>
-                        <Text copyable>10/23/2023 7:23PM</Text>
-                      </li>
-                    </ul>
-                  </Paragraph>
-                }
-                trigger="click"
-              >
-                <Link>Previous assignments</Link>
-              </Popover>{" "}
-              have already sent this nudge to the excluded participants"
-            </Text>
-          }
-          type="warning"
-          showIcon
-        />
-      )}
-
-      <Title level={3}>Please select group to assign:</Title>
-
-      <Form
-        layout="vertical"
-        form={form}
-        name="assignForm"
-        onFinish={onFinish}
-        onValuesChange={onValuesChange}
+    <>
+      <Drawer
+        title="Assign"
+        width={900}
+        size="large"
+        onClose={handleClose}
+        open={open}
+        footer={
+          <Space>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button
+              onClick={() => form.submit()}
+              type="primary"
+              htmlType="submit"
+            >
+              Confirm
+            </Button>
+          </Space>
+        }
       >
-        <Form.Item label="Study Group" name="studygroup" required>
-          <Radio.Group
-            onChange={(e) => setIsControl(e.target.value === "control")}
-            options={[
-              { value: "intervention", label: "Intervention" },
-              { value: "control", label: "Control" },
-            ]}
-          />
-        </Form.Item>
+        <NudgeCard title={`Nudge #${nudge.key + 1}`}>{nudge.message}</NudgeCard>
 
-        <Form.Item label="Testing Status" name="testingstatus">
-          <Checkbox.Group
-            disabled={isControl}
-            options={[
-              { value: "sickxtested", label: "Sick x Tested" },
-              { value: "notsickxtested", label: "Not Sick x Tested" },
-              { value: "sickxnottested", label: "Sick x Not Tested" },
-              { value: "notsickxnottested", label: "Not Sick x Not Tested" },
-              { value: "notreported", label: "Not Reported" },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="Race" name="race">
-          <Checkbox.Group
-            disabled={isControl}
-            options={[
-              { value: "black", label: "Black" },
-              { value: "latinx", label: "Latinx" },
-              { value: "asian", label: "Asian" },
-              { value: "white", label: "White" },
-              { value: "native-american", label: "Native American" },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="Gender" name="gender">
-          <Checkbox.Group
-            disabled={isControl}
-            options={[
-              { value: "female", label: "Female" },
-              { value: "male", label: "Male" },
-              { value: "non-binary", label: "Non-binary" },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="Age" name="age">
-          <Checkbox.Group
-            disabled={isControl}
-            options={[
-              { value: "18-29", label: "18-29" },
-              { value: "30-40", label: "30-40" },
-              { value: "41-50", label: "41-50" },
-              { value: "51-64", label: "51-64" },
-              { value: "65+", label: "65 and older" },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="Diabetes" name="diabetes">
-          <Checkbox.Group
-            disabled={isControl}
-            options={[
-              { value: "has-diabetes", label: "Has Diabetes" },
-              { value: "at-risk", label: "At Risk" },
-              { value: "caretaker", label: "Caretaker" },
-            ]}
-          />
-        </Form.Item>
+        {error !== "" && <Alert message={error} type="error" showIcon />}
 
-        <Form.Item
-          name="unassigned"
-          valuePropName="checked"
-          label="All Unassigned"
+        <Title level={3}>Please select demographic to assign:</Title>
+
+        <Form
+          layout="vertical"
+          form={form}
+          name="assignForm"
+          onFinish={onSubmit}
+          onValuesChange={onValuesChange}
         >
-          <Switch>All Unassigned</Switch>
-        </Form.Item>
-      </Form>
-    </Drawer>
+          <Form.Item label="Testing Status" name="testingstatus">
+            <Checkbox.Group
+              options={[
+                { value: "sickxtested", label: "Sick x Tested" },
+                { value: "notsickxtested", label: "Not Sick x Tested" },
+                { value: "sickxnottested", label: "Sick x Not Tested" },
+                { value: "notsickxnottested", label: "Not Sick x Not Tested" },
+                { value: "notreported", label: "Not Reported" },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item label="Race" name="race">
+            <Checkbox.Group
+              options={[
+                { value: "black", label: "Black" },
+                { value: "latinx", label: "Latinx" },
+                { value: "asian", label: "Asian" },
+                { value: "white", label: "White" },
+                { value: "native-american", label: "Native American" },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item label="Gender" name="gender">
+            <Checkbox.Group
+              options={[
+                { value: "female", label: "Female" },
+                { value: "male", label: "Male" },
+                { value: "non-binary", label: "Non-binary" },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item label="Age" name="age">
+            <Checkbox.Group
+              options={[
+                { value: "18-29", label: "18-29" },
+                { value: "30-40", label: "30-40" },
+                { value: "41-50", label: "41-50" },
+                { value: "51-64", label: "51-64" },
+                { value: "65+", label: "65 and older" },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item label="Diabetes" name="diabetes">
+            <Checkbox.Group
+              options={[
+                { value: "has-diabetes", label: "Has Diabetes" },
+                { value: "at-risk", label: "At Risk" },
+                { value: "caretaker", label: "Caretaker" },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="unassigned"
+            valuePropName="checked"
+            label="All Unassigned"
+          >
+            <Switch>All Unassigned</Switch>
+          </Form.Item>
+        </Form>
+      </Drawer>
+
+      <Modal
+        title="Excluding Participants"
+        open={isExcludeModalOpen}
+        onOk={handleAssign}
+        onCancel={handleClose}
+      >
+        <Paragraph>
+          Some participants have already received this nudge
+        </Paragraph>
+        <Text>
+          <Popover
+            title="Excluded participant IDs"
+            content={Object.entries(excludedParticipants).map(
+              ([partCode, message]) => (
+                <li key={partCode}>
+                  <Text copyable>{`${partCode}: ${message}`}</Text>
+                </li>
+              )
+            )}
+            trigger="hover"
+          >
+            <Link>{Object.keys(excludedParticipants).length} participants</Link>
+          </Popover>{" "}
+          will be excluded from this assignment.
+        </Text>
+      </Modal>
+    </>
   );
 };
 
