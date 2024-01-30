@@ -4,6 +4,7 @@ const axios = require("axios").default;
 const useDebug = require("debug");
 const debug = useDebug("core");
 
+// structure demographics values correctly for the assignment checking algorithm
 const demographicEnum = Object.fromEntries(
   Object.entries(DEMO_ENUM).map(([k, v]) => {
     return [k, Array.isArray(v) ? v : Object.values(v)];
@@ -70,15 +71,6 @@ async function checkAssignments(assignments, participants) {
         let includedDemographics = getIncludedDemographics(demographics);
 
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
-          console.log(participants[parti_idx]["labels"]);
-          console.log(includedDemographics);
-          console.log(
-            participants[parti_idx]["labels"].every((element) =>
-              includedDemographics.includes(element),
-            ),
-          );
-
-          // BUG?
           if (
             participants[parti_idx]["labels"].every((element) =>
               includedDemographics.includes(element),
@@ -193,7 +185,6 @@ async function dispatchNudges(participantMapping, sender) {
   });
 
   const responses = await Promise.all(responsePromises);
-  //console.log(responses);
   // Log/store the responses somehow?
   return responses;
 }
@@ -204,8 +195,6 @@ async function dispatchNudges(participantMapping, sender) {
 // (and then we can check each participant's demographics against the included list)
 function getIncludedDemographics(demographics) {
   const includedDemographics = [...demographics];
-
-  console.log(demographicEnum);
 
   Object.keys(demographicEnum).forEach((category) => {
     // Checks if there is any overlap (i.e. there exists a demographic label in the age category)

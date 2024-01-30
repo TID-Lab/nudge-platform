@@ -33,14 +33,24 @@ const SettingsPage = () => {
     });
   }, []);
 
-  const handleActiveToggle = (isActive, index) => {
-    allParticipants[index].active = isActive;
+  const handleActiveToggle = (isActive, changedParticipant) => {
+    setAllParticipants(
+      allParticipants.map((p) => {
+        if (p.participantId !== changedParticipant.participantId) {
+          return p;
+        }
+
+        return {
+          ...changedParticipant,
+          active: isActive,
+        };
+      })
+    );
 
     setChangedParticipants({
       ...changedParticipants,
-      [allParticipants[index].participantId]: allParticipants[index].active,
+      [changedParticipant.participantId]: isActive,
     });
-    setAllParticipants([...allParticipants]);
   };
 
   const handleSubmitParticipantChanges = async () => {
@@ -88,11 +98,13 @@ const SettingsPage = () => {
             {
               title: "Active",
               key: "active",
-              render: (_, __, i) => (
+              render: (participant) => (
                 <Space>
                   <Switch
-                    checked={allParticipants[i].active}
-                    onChange={(checked) => handleActiveToggle(checked, i)}
+                    checked={participant.active}
+                    onChange={(checked) =>
+                      handleActiveToggle(checked, participant)
+                    }
                   />
                 </Space>
               ),
