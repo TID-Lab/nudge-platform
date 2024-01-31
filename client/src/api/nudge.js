@@ -88,7 +88,6 @@ async function cancelSchedule(id) {
 
 async function reSchedule(id, newTime) {
   const temp_body = { the_id: id, the_time: newTime };
-  console.log(temp_body);
   const options = {
     ...defaultOptions,
     method: "POST",

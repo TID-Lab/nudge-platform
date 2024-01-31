@@ -128,7 +128,7 @@ routes.delete("/:id", is("admin"), async (req, res) => {
 
 routes.post("/uploadPart", async (req, res) => {
   const data = req.body;
-  console.log(data);
+
   try {
     createParticipantsUpload(data);
     res.status(200).send();
@@ -164,10 +164,6 @@ routes.get("/allParts", async (req, res) => {
       `https://peach2nudge.ipat.gatech.edu/api/participants/?protocol=nudge_demo_001`,
     );
     const data = await response.json();
-
-    if (data.result === false) {
-      console.log(`Messed Up`);
-    }
 
     ret_object = data;
     res.status(200).send(ret_object);
