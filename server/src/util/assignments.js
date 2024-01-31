@@ -5,7 +5,6 @@ const debug = useDebug("core");
 const Nudge = require("../models/nudge");
 const mongoose = require("mongoose");
 
-
 const demographic_enum = {
   Age: ["18-29", "30-40", "41-50", "51-64", "65+"],
   Race: ["black", "latinx", "white", "asian", "native-american"],
@@ -58,55 +57,63 @@ async function checkAssignments(assignments, participants) {
   let participants_inc = [];
   let returned = [];
   let participantMapping = {};
-  
+
   try {
     for (let i = 0; i < assignments.length; i++) {
       let alreadySent = {};
       const curr = assignments[i];
-      debug("this is curr nudge info")
-      debug(curr)
       //to pull the history of the nudge
       const nudge = await Nudge.findOne({ _id: curr.nudge_id });
-      debug(nudge)
-      let { demographics } = curr;
-      // Just to double check they're lowercase
-      demographics = demographics.map((ele) => ele.toLowerCase());
       const num_parti_before = participants.length;
       const prevAssigned = checkPreviouslyAssigned(curr);
+      let { demographics } = curr;
+
+      // Just to double check they're lowercase
+      demographics = demographics.map((ele) => ele.toLowerCase());
+
       if (!prevAssigned) {
         // FOR EACH PARTICIPANT, CHECK IF label in the included
         let includedDemographics = getIncludedDemographics(demographics);
-        console.log(includedDemographics);
+
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
-          console.log(participants[parti_idx]["labels"]);
           if (
             participants[parti_idx]["labels"].every((element) =>
-              includedDemographics.includes(element)
+              includedDemographics.includes(element),
             )
           ) {
-            if(nudge.participant_history.includes(mongoose.Types.ObjectId(participants[parti_idx]._id))===false) {
+            if (
+              nudge.participant_history.includes(
+                mongoose.Types.ObjectId(participants[parti_idx]._id),
+              ) === false
+            ) {
               //only splice the participant when it is assigned (previous design) so in the else clause
               participants_inc.push(...participants.splice(parti_idx, 1));
-              const curr_participant = participants_inc[participants_inc.length - 1];
+
+              const curr_participant =
+                participants_inc[participants_inc.length - 1];
+
               if (
                 participantMapping[curr_participant.participantId] != undefined
               ) {
                 console.log(
-                  "Something went wrong, a participant is being mapped two messages..."
+                  "Something went wrong, a participant is being mapped two messages...",
                 );
               }
+
               participantMapping[curr_participant.participantId] =
                 curr.nudge_message;
               parti_idx = parti_idx - 1;
-            }
-            else {
-              const curr_participant=participants[parti_idx]
-              alreadySent[curr_participant.participantId]=curr.nudge_message
+            } else {
+              const curr_participant = participants[parti_idx];
+              alreadySent[curr_participant.participantId] = curr.nudge_message;
             }
           }
         }
-        console.log("already sent", alreadySent)
-        if (num_parti_before - participants.length == 0 && Object.keys(alreadySent).length==0) {
+
+        if (
+          num_parti_before - participants.length === 0 &&
+          Object.keys(alreadySent).length === 0
+        ) {
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
@@ -114,9 +121,7 @@ async function checkAssignments(assignments, participants) {
             success_code: assignmentCodes.NO_PARTICIPANT,
           });
           break;
-        } else if(Object.keys(alreadySent).length!=0){
-          console.log(Object.keys(alreadySent).length)
-          console.log(num_parti_before - participants.length)
+        } else if (Object.keys(alreadySent).length != 0) {
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
@@ -124,8 +129,7 @@ async function checkAssignments(assignments, participants) {
             overlap: alreadySent,
             success_code: assignmentCodes.PARTICIPANTS_ALREADY_SENT,
           });
-        }
-        else {
+        } else {
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
@@ -177,11 +181,11 @@ async function dispatchNudges(participantMapping, sender) {
 
   Object.keys(participantMapping).forEach((participant) => {
     console.log(
-      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`
+      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`,
     );
     // HTTP get request
     debug(
-      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`
+      `Sending participant id ${participant} the following message: ${participantMapping[participant]}`,
     );
     const resPromise = axios
       .post(
@@ -195,7 +199,7 @@ async function dispatchNudges(participantMapping, sender) {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       )
       .catch((err) => {
         console.log(`Issue sending nudge, ${err}`);
@@ -219,7 +223,7 @@ function getIncludedDemographics(demographics) {
   Object.keys(demographic_enum).forEach((category) => {
     // Checks if there is any overlap (i.e. there exists a demographic label in the age category)
     const contains = demographic_enum[category].some((element) =>
-      demographics.includes(element)
+      demographics.includes(element),
     );
     if (!contains) {
       includedDemographics.push(...demographic_enum[category]);
