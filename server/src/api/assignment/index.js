@@ -62,8 +62,8 @@ routes.post("/assign", async (req, res) => {
       participants
     );
     if (
-      checkedAssignments[checkedAssignments.length - 1].success_code !=
-      "SUCCESS"
+      (checkedAssignments[checkedAssignments.length - 1].success_code !=
+      "SUCCESS") && (checkedAssignments[checkedAssignments.length - 1].success_code !=  "PARTICIPANTS_ALREADY_SENT")
     ) {
       const err_msg = `Something went wrong with the assignments: \n${checkedAssignments}`;
       debug(err_msg);

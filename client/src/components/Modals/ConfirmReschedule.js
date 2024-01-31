@@ -35,6 +35,7 @@ const ConfirmRescheduleModal = (props) => {
   const disabledDate = (current) => {
     return current < dayjs().subtract(1, "day");
   };
+
   const onOk = async () => {
     if (isScheduled) {
       if (!scheduledTime) {
@@ -54,20 +55,15 @@ const ConfirmRescheduleModal = (props) => {
       }
     } else {
       //filter only the job with the id from the scheduledNudges
-      console.log(id);
-      console.log(scheduledNudges);
-      const toSendNudge = scheduledNudges.filter((job) => job.id == id)[0]
+      const toSendNudge = scheduledNudges.filter((job) => job.id === id)[0]
         .nudges;
       await dispatchAssignment(toSendNudge, false).then((res) => {
-        //console.log(res);
-        console.log(res);
-        if (res !== []) {
+        if (res.length === 0) {
           cancelSchedule(id);
         }
       });
     }
 
-    //dispatch({ type: "pendingNudges/set", payload: [] });
     onCancel();
     setSuccessModal(true);
   };

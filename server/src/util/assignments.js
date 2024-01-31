@@ -1,21 +1,24 @@
-const { DEMO_ENUM } = require("./constants");
 const db = require("./db");
 const axios = require("axios").default;
 const useDebug = require("debug");
 const debug = useDebug("core");
+const Nudge = require("../models/nudge");
+const mongoose = require("mongoose");
 
-// structure demographics values correctly for the assignment checking algorithm
-const demographicEnum = Object.fromEntries(
-  Object.entries(DEMO_ENUM).map(([k, v]) => {
-    return [k, Array.isArray(v) ? v : Object.values(v)];
-  }),
-);
+const demographic_enum = {
+  Age: ["18-29", "30-40", "41-50", "51-64", "65+"],
+  Race: ["black", "latinx", "white", "asian", "native-american"],
+  Gender: ["female", "male", "non-binary"],
+  Diabetes: ["has-diabetes", "at-risk", "caretaker"],
+  TestingStatus: ["tested", "untested"],
+};
 
 const assignmentCodes = {
   SUCCESS: "SUCCESS",
   NO_PARTICIPANT: "NO_PARTICIPANT",
   PREVIOUSLY_ASSIGNED: "PREVIOUSLY_ASSIGNED",
   ASSIGNMENT_ABOVE_FAILED: "ASSIGNMENT_ABOVE_FAILED",
+  PARTICIPANTS_ALREADY_SENT: "PARTICIPANTS_ALREADY_SENT",
 };
 
 // Checks the participant assignment of an ordered list of a list of nudge assignments
@@ -57,14 +60,16 @@ async function checkAssignments(assignments, participants) {
 
   try {
     for (let i = 0; i < assignments.length; i++) {
+      let alreadySent = {};
       const curr = assignments[i];
-
-      let { demographics } = curr;
-      // Just to double check they're lowercase
-      demographics = demographics.map((ele) => ele.toLowerCase());
-
+      //to pull the history of the nudge
+      const nudge = await Nudge.findOne({ _id: curr.nudge_id });
       const num_parti_before = participants.length;
       const prevAssigned = checkPreviouslyAssigned(curr);
+      let { demographics } = curr;
+
+      // Just to double check they're lowercase
+      demographics = demographics.map((ele) => ele.toLowerCase());
 
       if (!prevAssigned) {
         // FOR EACH PARTICIPANT, CHECK IF label in the included
@@ -76,34 +81,54 @@ async function checkAssignments(assignments, participants) {
               includedDemographics.includes(element),
             )
           ) {
-            participants_inc.push(...participants.splice(parti_idx, 1));
-
-            const curr_participant =
-              participants_inc[participants_inc.length - 1];
-
             if (
-              participantMapping[curr_participant.participantId] !== undefined
+              nudge.participant_history.includes(
+                mongoose.Types.ObjectId(participants[parti_idx]._id),
+              ) === false
             ) {
-              console.log(
-                "Something went wrong, a participant is being mapped two messages...",
-              );
-            }
+              //only splice the participant when it is assigned (previous design) so in the else clause
+              participants_inc.push(...participants.splice(parti_idx, 1));
 
-            participantMapping[curr_participant.participantId] =
-              curr.nudge_message;
-            parti_idx = parti_idx - 1;
+              const curr_participant =
+                participants_inc[participants_inc.length - 1];
+
+              if (
+                participantMapping[curr_participant.participantId] != undefined
+              ) {
+                console.log(
+                  "Something went wrong, a participant is being mapped two messages...",
+                );
+              }
+
+              participantMapping[curr_participant.participantId] =
+                curr.nudge_message;
+              parti_idx = parti_idx - 1;
+            } else {
+              const curr_participant = participants[parti_idx];
+              alreadySent[curr_participant.participantId] = curr.nudge_message;
+            }
           }
         }
 
-        if (num_parti_before - participants.length === 0) {
+        if (
+          num_parti_before - participants.length === 0 &&
+          Object.keys(alreadySent).length === 0
+        ) {
           returned.push({
             nudge_id: curr["nudge_id"],
             num_assigned: num_parti_before - participants.length,
             num_left: participants.length,
             success_code: assignmentCodes.NO_PARTICIPANT,
           });
-
           break;
+        } else if (Object.keys(alreadySent).length != 0) {
+          returned.push({
+            nudge_id: curr["nudge_id"],
+            num_assigned: num_parti_before - participants.length,
+            num_left: participants.length,
+            overlap: alreadySent,
+            success_code: assignmentCodes.PARTICIPANTS_ALREADY_SENT,
+          });
         } else {
           returned.push({
             nudge_id: curr["nudge_id"],
@@ -115,7 +140,6 @@ async function checkAssignments(assignments, participants) {
         // TODO: excluded demographics
       } else {
         console.log("nudge prev assigned!");
-
         // TODO: Handle previously assigned
         returned.push({
           nudge_id: curr["nudge_id"],
@@ -129,7 +153,6 @@ async function checkAssignments(assignments, participants) {
             ],
           },
         });
-
         break;
       }
     }
@@ -185,6 +208,7 @@ async function dispatchNudges(participantMapping, sender) {
   });
 
   const responses = await Promise.all(responsePromises);
+  //console.log(responses);
   // Log/store the responses somehow?
   return responses;
 }
@@ -196,13 +220,13 @@ async function dispatchNudges(participantMapping, sender) {
 function getIncludedDemographics(demographics) {
   const includedDemographics = [...demographics];
 
-  Object.keys(demographicEnum).forEach((category) => {
+  Object.keys(demographic_enum).forEach((category) => {
     // Checks if there is any overlap (i.e. there exists a demographic label in the age category)
-    const contains = demographicEnum[category].some((element) =>
+    const contains = demographic_enum[category].some((element) =>
       demographics.includes(element),
     );
     if (!contains) {
-      includedDemographics.push(...demographicEnum[category]);
+      includedDemographics.push(...demographic_enum[category]);
     }
   });
 
@@ -232,6 +256,6 @@ function checkPreviouslyAssigned(assignment) {
 module.exports = {
   checkAssignments,
   assignmentCodes,
-  demographicEnum,
+  demographic_enum,
   dispatchNudges,
 };

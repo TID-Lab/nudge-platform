@@ -25,18 +25,17 @@ const AssignMenu = (props) => {
   const pendingNudges = useSelector((state) => state.pendingNudges);
 
   function assignNudge() {
-    if (demographics.length == 0) {
+    if (demographics.length === 0) {
       setErrorMessage(
         'No demographics were chosen. Consider "All Remaining" to select every participant.'
       );
       setShowError(true);
       return;
     }
-    console.log("bruh");
-    console.log(demographics.findIndex((obj) => obj == "All Unassigned") != -1);
+
     if (
       demographics.length > 1 &&
-      demographics.findIndex((obj) => obj == "All Unassigned") != -1
+      demographics.findIndex((obj) => obj === "All Unassigned") !== -1
     ) {
       setErrorMessage(
         'Cannot select "All Remaining" with other demographics selected.'
@@ -44,6 +43,7 @@ const AssignMenu = (props) => {
       setShowError(true);
       return;
     }
+
     const reformattedNudges = pendingNudges.map((nudge) => {
       return {
         nudge_id: nudge.id,
