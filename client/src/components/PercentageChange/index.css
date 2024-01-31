@@ -1,0 +1,14 @@
+.percentage-change {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.increase {
+  color: #4CAF50; /* Green color for increase */
+}
+
+.decrease {
+  color: #EF5350; /* Red color for decrease */
+}

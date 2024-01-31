@@ -1,5 +1,5 @@
 import React from "react";
-import { Space, Form, Drawer, Button, Input, Select, Tag } from "antd";
+import { Space, Form, Drawer, Button, Input, Select, Tag, Alert } from "antd";
 import { CombColorMap } from "../../util/constants";
 
 const { TextArea } = Input;
@@ -79,21 +79,24 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
                 "Nudge content is empty. Please input your nudge content.",
             },
             {
-              max: 300,
-              message: "Nudge content cannot be longer than 300 characters.",
-            },
-            {
-              max: 130,
+              max: 160,
               message:
                 "We recommend your nudge to be less than 130 characters.",
               warningOnly: true,
             },
           ]}
-          help="Type <NAME> to include your recipient’s first name in the Nudge mesage."
         >
           <TextArea
             rows={6}
             placeholder="Please input your nudge content here. Type <NAME> to include your recipient’s first name in the Nudge mesage."
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <Alert
+            message="Hint: Type <NAME> to include your recipient's first name in the Nudge mesage."
+            type="info"
+            showIcon
           />
         </Form.Item>
 

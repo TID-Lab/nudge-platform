@@ -1,0 +1,13 @@
+
+.scrollable-posts {
+  display: flex;
+  flex-direction: column;
+  /* Display the cards in a row */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  overflow-y: auto;
+  /* Disable vertical scrolling */
+  white-space: nowrap;
+  /* Prevent wrapping to the next line */
+  height: fit-content;
+}
