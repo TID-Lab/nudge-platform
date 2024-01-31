@@ -80,9 +80,14 @@ async function checkAssignments(assignments, participants) {
             console.log(includedDemographics);
           }
 
+          // All labels of this participant need to be in included demographics
+          // But this participant must have labels that are selected to assign
           if (
             participants[parti_idx]["labels"].every((element) =>
               includedDemographics.includes(element),
+            ) &&
+            demographics.every((d) =>
+              participants[parti_idx].labels.includes(d),
             )
           ) {
             if (
@@ -225,11 +230,13 @@ function getIncludedDemographics(demographics) {
   const includedDemographics = [...demographics];
 
   Object.keys(demographicEnum).forEach((category) => {
-    // Checks if there is any overlap (i.e. there exists a demographic label in the age category)
+    // Checks if there is any overlap (e.g. there exists a demographic label in the age category)
     const contains = demographicEnum[category].some((element) =>
       demographics.includes(element),
     );
-    if (!contains) {
+
+    // Make exception to add all diabete category labels since they are not mutually exclusive
+    if (!contains || category === "Diabetes") {
       includedDemographics.push(...demographicEnum[category]);
     }
   });
