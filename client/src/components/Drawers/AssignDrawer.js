@@ -163,17 +163,24 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           onFinish={onSubmit}
           onValuesChange={onValuesChange}
         >
-          <Form.Item label="Testing Status" name="testingstatus">
-            <Checkbox.Group
+          <Form.Item label="Testing Status" name="testing-status">
+            <Radio.Group
               options={[
-                { value: "sickxtested", label: "Sick x Tested" },
-                { value: "notsickxtested", label: "Not Sick x Tested" },
-                { value: "sickxnottested", label: "Sick x Not Tested" },
-                { value: "notsickxnottested", label: "Not Sick x Not Tested" },
-                { value: "notreported", label: "Not Reported" },
+                { value: "tested", label: "Tested" },
+                { value: "untested", label: "Not Tested" },
               ]}
             />
           </Form.Item>
+
+          <Form.Item label="Sick Status" name="sick-status">
+            <Radio.Group
+              options={[
+                { value: "sick", label: "Sick" },
+                { value: "not-sick", label: "Not Sick" },
+              ]}
+            />
+          </Form.Item>
+
           <Form.Item label="Race" name="race">
             <Checkbox.Group
               options={[
@@ -209,6 +216,8 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
             <Checkbox.Group
               options={[
                 { value: "has-diabetes", label: "Has Diabetes" },
+                { value: "prediabetes", label: "Prediabetes" },
+                { value: "fam-diabetes", label: "fam-diabetes" },
                 { value: "at-risk", label: "At Risk" },
                 { value: "caretaker", label: "Caretaker" },
               ]}

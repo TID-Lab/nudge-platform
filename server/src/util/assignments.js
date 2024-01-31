@@ -4,14 +4,14 @@ const useDebug = require("debug");
 const debug = useDebug("core");
 const Nudge = require("../models/nudge");
 const mongoose = require("mongoose");
+const { DEMO_ENUM } = require("./constants");
 
-const demographic_enum = {
-  Age: ["18-29", "30-40", "41-50", "51-64", "65+"],
-  Race: ["black", "latinx", "white", "asian", "native-american"],
-  Gender: ["female", "male", "non-binary"],
-  Diabetes: ["has-diabetes", "at-risk", "caretaker"],
-  TestingStatus: ["tested", "untested"],
-};
+// structure demographics values correctly for the assignment checking algorithm
+const demographicEnum = Object.fromEntries(
+  Object.entries(DEMO_ENUM).map(([k, v]) => {
+    return [k, Array.isArray(v) ? v : Object.values(v)];
+  }),
+);
 
 const assignmentCodes = {
   SUCCESS: "SUCCESS",
@@ -76,6 +76,10 @@ async function checkAssignments(assignments, participants) {
         let includedDemographics = getIncludedDemographics(demographics);
 
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
+          if (participants[parti_idx].participantId === "13") {
+            console.log(includedDemographics);
+          }
+
           if (
             participants[parti_idx]["labels"].every((element) =>
               includedDemographics.includes(element),
@@ -220,13 +224,13 @@ async function dispatchNudges(participantMapping, sender) {
 function getIncludedDemographics(demographics) {
   const includedDemographics = [...demographics];
 
-  Object.keys(demographic_enum).forEach((category) => {
+  Object.keys(demographicEnum).forEach((category) => {
     // Checks if there is any overlap (i.e. there exists a demographic label in the age category)
-    const contains = demographic_enum[category].some((element) =>
+    const contains = demographicEnum[category].some((element) =>
       demographics.includes(element),
     );
     if (!contains) {
-      includedDemographics.push(...demographic_enum[category]);
+      includedDemographics.push(...demographicEnum[category]);
     }
   });
 
@@ -256,6 +260,6 @@ function checkPreviouslyAssigned(assignment) {
 module.exports = {
   checkAssignments,
   assignmentCodes,
-  demographic_enum,
+  demographicEnum,
   dispatchNudges,
 };
