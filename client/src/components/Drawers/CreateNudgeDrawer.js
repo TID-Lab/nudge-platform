@@ -1,11 +1,38 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Space, Form, Drawer, Button, Input, Select, Tag, Alert } from "antd";
 import { CombColorMap } from "../../util/constants";
+import { createNudge, fetchNudges } from "../../api/nudge";
 
 const { TextArea } = Input;
 
 const CreateNudgeDrawer = ({ open, onClose }) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+
+  const handleFormFinish = (values) => {
+    const newNudge = {
+      ...values,
+      date_created: Date(),
+      is_active: true,
+    };
+
+    createNudge(newNudge)
+      // TODO: More elegant way to sync/refetch. https://redux.js.org/tutorials/essentials/part-5-async-logic
+      .then(() => fetchNudges())
+      .then((nudges) => {
+        dispatch({
+          type: "nudges/set",
+          payload: nudges,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    form.resetFields();
+    onClose();
+  };
 
   return (
     <Drawer
@@ -26,7 +53,12 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
         </Space>
       }
     >
-      <Form layout="vertical" form={form} name="createNudgeForm">
+      <Form
+        layout="vertical"
+        form={form}
+        name="createNudgeForm"
+        onFinish={handleFormFinish}
+      >
         <Form.Item label="Com-B (optional)" name="com_b">
           <Select
             mode="multiple"
@@ -92,20 +124,17 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
           />
         </Form.Item>
 
-        <Form.Item>
-          <Alert
-            message="Hint: Type <NAME> to include your recipient's first name in the Nudge mesage."
-            type="info"
-            showIcon
-          />
-        </Form.Item>
+        <Alert
+          message="Hint: Type <NAME> to include your recipient's first name in the Nudge mesage."
+          type="info"
+          showIcon
+          style={{ marginBottom: "1rem" }}
+        />
 
-        <Form.Item label="Comment" name="comment">
-          <TextArea
-            rows={4}
-            placeholder="Please input any comment to this nudge."
-          />
-        </Form.Item>
+        <TextArea
+          rows={4}
+          placeholder="Please input any comment to this nudge."
+        />
       </Form>
     </Drawer>
   );

@@ -1,16 +1,13 @@
-const mongoose = require('mongoose');
-const { demographic_enum } = require('../util/assignments')
+const mongoose = require("mongoose");
+const { DEMO_ENUM } = require("../util/constants");
 
 // not sure why demographic enum is not importing...
-const labels = {
-  Age: ['18-29', '30-40', '41-50', '51-64', '65+'],
-  Race: ['black', 'latinx', 'white', 'asian', 'native-american'],
-  Gender: ['female', 'male', 'non-binary'],
-  Diabetes: ['has-diabetes', 'at-risk', 'caretaker'],
-  TestingStatus: ['tested', 'untested'],
-  StudyGroup:['intervention', 'control'],
-  TestStatus: ['sickxtested', 'notsickxtested','sickxnottested','notsickxnottersted', 'notreported'],
-};
+const labels = Object.fromEntries(
+  Object.entries(DEMO_ENUM).map(([k, v]) => {
+    return [k, Array.isArray(v) ? v : Object.values(v)];
+  }),
+);
+
 const participantSchema = new mongoose.Schema({
   participantId: {
     type: String,
@@ -25,5 +22,5 @@ const participantSchema = new mongoose.Schema({
     required: true,
   },
 });
-const Participant = mongoose.model('Participant', participantSchema);
+const Participant = mongoose.model("Participant", participantSchema);
 module.exports = Participant;

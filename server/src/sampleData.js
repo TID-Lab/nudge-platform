@@ -32,19 +32,26 @@ const data = {
   participantData: [
     {
       participantId: "jeff",
-      labels: ["asian", "female", "65+", "tested", "at-risk"],
+      labels: ["asian", "female", "65+", "tested", "at-risk", "sick"],
     },
     {
       participantId: "andrew",
-      labels: ["black", "male", "30-40", "untested", "has-diabetes"],
+      labels: [
+        "black",
+        "male",
+        "30-40",
+        "untested",
+        "has-diabetes",
+        "not-sick",
+      ],
     },
     {
       participantId: "mike",
-      labels: ["white", "female", "18-29", "untested", "at-risk"],
+      labels: ["white", "female", "18-29", "untested", "at-risk", "sick"],
     },
     {
       participantId: "richard",
-      labels: ["asian", "female", "41-50", "untested", "caretaker"],
+      labels: ["asian", "female", "41-50", "untested", "caretaker", "not-sick"],
     },
     {
       participantId: "amy",
@@ -52,7 +59,7 @@ const data = {
     },
     {
       participantId: "amy2",
-      labels: ["white", "female", "18-29", "untested", "at-risk"],
+      labels: ["white", "female", "18-29", "untested", "at-risk", "sick"],
     },
     {
       participantId: "kenneth",
@@ -64,15 +71,22 @@ const data = {
     },
     {
       participantId: "demo001_0",
-      labels: ["asian", "female", "41-50", "untested", "caretaker"],
+      labels: ["asian", "female", "41-50", "untested", "caretaker", "sick"],
     },
     {
       participantId: "demo001_1",
-      labels: ["black", "female", "65+", "untested", "has-diabetes"],
+      labels: [
+        "black",
+        "female",
+        "65+",
+        "untested",
+        "has-diabetes",
+        "not-sick",
+      ],
     },
     {
       participantId: "demo001_2",
-      labels: ["white", "female", "18-29", "untested", "at-risk"],
+      labels: ["white", "female", "18-29", "untested", "at-risk", "not-sick"],
     },
     {
       participantId: "demo001_3",

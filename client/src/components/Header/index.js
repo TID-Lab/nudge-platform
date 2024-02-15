@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Space, Button, Menu, Form, Upload, message, Flex } from "antd";
 import { FormOutlined, UploadOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import Logo from "../Logo";
 import CreateNudgeDrawer from "../Drawers/CreateNudgeDrawer";
-import { createNudge, fetchNudges } from "../../api/nudge";
 import { participantCsvToJson } from "../../util/participant";
 import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
 import { uploadParticipants } from "../../api/participant";
@@ -17,9 +16,6 @@ const Header = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [participants, setParticipants] = useState([]); // List of new participants to upload to server
-  const [resp, setResp] = useState({
-    state: "",
-  });
 
   // Transform CSV to JSON before uploading to server
   function onBeforeUpload(file) {
@@ -92,41 +88,10 @@ const Header = () => {
         <Space style={{ width: 300 }}> </Space>
       </Flex>
 
-      <Form.Provider
-        onFormFinish={(name, { values }) => {
-          if (name === "createNudgeForm") {
-            const newNudge = {
-              ...values,
-              date_created: Date(),
-              is_active: true,
-            };
-
-            createNudge(newNudge)
-              // TODO: More elegant way to sync/refetch. https://redux.js.org/tutorials/essentials/part-5-async-logic
-              .then(() => fetchNudges())
-              .then((nudges) =>
-                dispatch({
-                  type: "nudges/set",
-                  payload: nudges,
-                })
-              )
-              .catch((err) => {
-                // TODO: Make alert messages more user-readable
-                setResp({
-                  state: "error",
-                  message: err.message,
-                });
-              });
-          }
-
-          setIsDrawerOpen(false);
-        }}
-      >
-        <CreateNudgeDrawer
-          onClose={() => setIsDrawerOpen(false)}
-          open={isDrawerOpen}
-        />
-      </Form.Provider>
+      <CreateNudgeDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+      />
 
       <UploadParticipantsModal
         participants={participants}

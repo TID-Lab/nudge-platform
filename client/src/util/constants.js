@@ -36,10 +36,12 @@ export const DEMO_ENUM = {
   SickStatus: {
     Sick: "sick",
     NotSick: "not-sick",
+    NoResponse: "no-response",
   },
   TestStatus: {
     Tested: "tested",
     NotTested: "untested",
+    NoResponse: "no-response",
   },
 };
 

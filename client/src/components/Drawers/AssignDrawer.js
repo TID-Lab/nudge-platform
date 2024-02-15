@@ -75,7 +75,14 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
         setAssignPayload(payload);
 
         if (lastRes.success_code === "SUCCESS") {
-          handleAssign(payload);
+          if (payload.assigned !== 0) {
+            dispatch({
+              type: "pendingNudges/add",
+              payload: payload,
+            });
+          }
+
+          handleClose();
         } else if (
           lastRes.success_code === "PARTICIPANTS_ALREADY_SENT" &&
           Object.keys(lastRes.overlap).length !== 0
@@ -91,8 +98,8 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
       .catch((e) => console.log(e));
   };
 
-  const handleAssign = (pl) => {
-    const payload = assignPayload ?? pl;
+  const handleAssign = () => {
+    const payload = assignPayload;
 
     if (payload.assigned !== 0) {
       dispatch({
@@ -168,6 +175,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               options={[
                 { value: "tested", label: "Tested" },
                 { value: "untested", label: "Not Tested" },
+                { value: "no-response", label: "No Response" },
               ]}
             />
           </Form.Item>
@@ -177,6 +185,7 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
               options={[
                 { value: "sick", label: "Sick" },
                 { value: "not-sick", label: "Not Sick" },
+                { value: "no-response", label: "No Response" },
               ]}
             />
           </Form.Item>
@@ -216,8 +225,6 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
             <Checkbox.Group
               options={[
                 { value: "has-diabetes", label: "Has Diabetes" },
-                { value: "prediabetes", label: "Prediabetes" },
-                { value: "fam-diabetes", label: "fam-diabetes" },
                 { value: "at-risk", label: "At Risk" },
                 { value: "caretaker", label: "Caretaker" },
               ]}

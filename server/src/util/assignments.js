@@ -76,12 +76,9 @@ async function checkAssignments(assignments, participants) {
         let includedDemographics = getIncludedDemographics(demographics);
 
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
-          if (participants[parti_idx].participantId === "13") {
-            console.log(includedDemographics);
-          }
-
           // All labels of this participant need to be in included demographics
           // But this participant must have labels that are selected to assign
+
           if (
             participants[parti_idx]["labels"].every((element) =>
               includedDemographics.includes(element),
