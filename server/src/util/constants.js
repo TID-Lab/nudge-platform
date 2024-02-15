@@ -27,12 +27,12 @@ const DEMO_ENUM = {
   SickStatus: {
     Sick: "sick",
     NotSick: "not-sick",
-    NoResponse: "no-response",
+    NoResponse: "no-sick-response",
   },
   TestStatus: {
     Tested: "tested",
     NotTested: "untested",
-    NoResponse: "no-response",
+    NoResponse: "no-test-response",
   },
 };
 

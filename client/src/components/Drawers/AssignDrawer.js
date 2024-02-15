@@ -18,6 +18,7 @@ import { presetPrimaryColors } from "@ant-design/colors";
 import styled from "styled-components";
 
 import { checkAssignment } from "../../api/nudge";
+import { DEMO_ENUM } from "../../util/constants";
 
 const colors = Object.values(presetPrimaryColors).map((_, i, arr) => {
   if (i % 2 === 0) {
@@ -173,9 +174,12 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           <Form.Item label="Testing Status" name="testing-status">
             <Radio.Group
               options={[
-                { value: "tested", label: "Tested" },
-                { value: "untested", label: "Not Tested" },
-                { value: "no-response", label: "No Response" },
+                { value: DEMO_ENUM.TestStatus.Tested, label: "Tested" },
+                { value: DEMO_ENUM.TestStatus.NotTested, label: "Not Tested" },
+                {
+                  value: DEMO_ENUM.TestStatus.NoResponse,
+                  label: "No Response",
+                },
               ]}
             />
           </Form.Item>
@@ -183,9 +187,12 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           <Form.Item label="Sick Status" name="sick-status">
             <Radio.Group
               options={[
-                { value: "sick", label: "Sick" },
-                { value: "not-sick", label: "Not Sick" },
-                { value: "no-response", label: "No Response" },
+                { value: DEMO_ENUM.SickStatus.Sick, label: "Sick" },
+                { value: DEMO_ENUM.SickStatus.NotSick, label: "Not Sick" },
+                {
+                  value: DEMO_ENUM.SickStatus.NoResponse,
+                  label: "No Response",
+                },
               ]}
             />
           </Form.Item>
@@ -193,40 +200,46 @@ const AssignDrawer = ({ open, onClose, nudge }) => {
           <Form.Item label="Race" name="race">
             <Checkbox.Group
               options={[
-                { value: "black", label: "Black" },
-                { value: "latinx", label: "Latinx" },
-                { value: "asian", label: "Asian" },
-                { value: "white", label: "White" },
-                { value: "native-american", label: "Native American" },
+                { value: DEMO_ENUM.Race.Black, label: "Black" },
+                { value: DEMO_ENUM.Race.Latinx, label: "Latinx" },
+                { value: DEMO_ENUM.Race.Asian, label: "Asian" },
+                { value: DEMO_ENUM.Race.White, label: "White" },
+                {
+                  value: DEMO_ENUM.Race.NativeAmerican,
+                  label: "Native American",
+                },
               ]}
             />
           </Form.Item>
           <Form.Item label="Gender" name="gender">
             <Checkbox.Group
               options={[
-                { value: "female", label: "Female" },
-                { value: "male", label: "Male" },
-                { value: "non-binary", label: "Non-binary" },
+                { value: DEMO_ENUM.Sex.Female, label: "Female" },
+                { value: DEMO_ENUM.Sex.Male, label: "Male" },
+                { value: DEMO_ENUM.Sex.Intersex, label: "Non-binary" },
               ]}
             />
           </Form.Item>
           <Form.Item label="Age" name="age">
             <Checkbox.Group
               options={[
-                { value: "18-29", label: "18-29" },
-                { value: "30-40", label: "30-40" },
-                { value: "41-50", label: "41-50" },
-                { value: "51-64", label: "51-64" },
-                { value: "65+", label: "65 and older" },
+                { value: DEMO_ENUM.Age[0], label: "18-29" },
+                { value: DEMO_ENUM.Age[1], label: "30-40" },
+                { value: DEMO_ENUM.Age[2], label: "41-50" },
+                { value: DEMO_ENUM.Age[3], label: "51-64" },
+                { value: DEMO_ENUM.Age[4], label: "65 and older" },
               ]}
             />
           </Form.Item>
           <Form.Item label="Diabetes" name="diabetes">
             <Checkbox.Group
               options={[
-                { value: "has-diabetes", label: "Has Diabetes" },
-                { value: "at-risk", label: "At Risk" },
-                { value: "caretaker", label: "Caretaker" },
+                {
+                  value: DEMO_ENUM.Diabetes.HasDiabetes,
+                  label: "Has Diabetes",
+                },
+                { value: DEMO_ENUM.Diabetes.AtRisk, label: "At Risk" },
+                { value: DEMO_ENUM.Diabetes.Caretaker, label: "Caretaker" },
               ]}
             />
           </Form.Item>

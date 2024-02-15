@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { DEMO_ENUM } = require("../util/constants");
 
-// not sure why demographic enum is not importing...
 const labels = Object.fromEntries(
   Object.entries(DEMO_ENUM).map(([k, v]) => {
     return [k, Array.isArray(v) ? v : Object.values(v)];
