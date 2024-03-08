@@ -30,12 +30,10 @@ routes.post("/check", async (req, res) => {
     return;
   }
   try {
-    //console.log("THE FOLLOWING SHOULD BE AN ORDERED LIST OF ASSIGNMENTS IN FORM [{nudge_id, [demographics], [(negative demographic pairings), (negative demographic pairings)]}]");
-    // console.log(req.body);
-    const participants = await Participant.find({active : true});
+    const participants = await Participant.find({ active: true });
     const { checkedAssignments, participantMapping } = await checkAssignments(
       req.body,
-      participants
+      participants,
     );
     res.status(200).send(checkedAssignments);
   } catch (err) {
@@ -51,19 +49,18 @@ routes.post("/check", async (req, res) => {
 routes.post("/assign", async (req, res) => {
   try {
     // May need to format timeToSend
-    console.log("=======================");
-    console.log(`req body: ${JSON.stringify(req.body)}`);
     const { nudges, assignments, isScheduled, timeToSend } = req.body;
-    console.log("Assignment given for time: ", timeToSend);
     // Checks to see if assignment is valid
-    const participants = await Participant.find({active: true});
+    const participants = await Participant.find({ active: true });
     const { checkedAssignments, participantMapping } = await checkAssignments(
       assignments,
-      participants
+      participants,
     );
     if (
-      (checkedAssignments[checkedAssignments.length - 1].success_code !=
-      "SUCCESS") && (checkedAssignments[checkedAssignments.length - 1].success_code !=  "PARTICIPANTS_ALREADY_SENT")
+      checkedAssignments[checkedAssignments.length - 1].success_code !=
+        "SUCCESS" &&
+      checkedAssignments[checkedAssignments.length - 1].success_code !=
+        "PARTICIPANTS_ALREADY_SENT"
     ) {
       const err_msg = `Something went wrong with the assignments: \n${checkedAssignments}`;
       debug(err_msg);
@@ -80,7 +77,7 @@ routes.post("/assign", async (req, res) => {
         username,
       });
     } else {
-      agendaResponse = agenda.now("sendNudge", {
+      agendaResponse = await agenda.now("sendNudge", {
         participantMapping,
         nudges,
         username,
@@ -89,7 +86,10 @@ routes.post("/assign", async (req, res) => {
 
     // nudge: {nudge_msg: str, participant_ids: [ids]}
     // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}
-    res.status(200).send(checkedAssignments);
+    res.status(200).send({
+      id: agendaResponse.attrs._id.toString(),
+      checkedAssignments,
+    });
   } catch (err) {
     debug(`${err}`);
     res.status(500).send(err);
@@ -99,7 +99,7 @@ routes.post("/assign", async (req, res) => {
 routes.get("/", async (req, res) => {
   try {
     const jobs = (await agenda.jobs({ name: "sendNudge" })).map(
-      (job) => job.attrs
+      (job) => job.attrs,
     );
 
     res.status(200).send(jobs);

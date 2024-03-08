@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { DEMO_ENUM, FIELD_ENUM, PARTICIPANT_CSV_MAP } from "./constants";
 
 /**
@@ -91,4 +92,9 @@ function calcAgeRange(age) {
   } else if (age >= 65) {
     return DEMO_ENUM.Age[4];
   }
+}
+
+// Calculate the week of study based on the created date and today's date
+export function calcWeekOfStudy(createdDate) {
+  return dayjs().diff(dayjs(createdDate), "week");
 }

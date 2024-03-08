@@ -16,6 +16,7 @@ import {
   fetchAllParticipants,
   setParticipantActive,
 } from "../../api/participant";
+import { calcWeekOfStudy } from "../../util/participant";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -92,6 +93,15 @@ const SettingsPage = () => {
                       );
                     })}
                   </>
+                );
+              },
+            },
+            {
+              title: "Week of Study",
+              key: "weekOfStudy",
+              render: (participant) => {
+                return (
+                  <div>{calcWeekOfStudy("2024-01-21T00:02:12.855000")}</div>
                 );
               },
             },

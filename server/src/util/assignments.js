@@ -6,6 +6,9 @@ const Nudge = require("../models/nudge");
 const mongoose = require("mongoose");
 const { DEMO_ENUM } = require("./constants");
 
+// Set to true to enable debug logging
+const DEBUG = false;
+
 // structure demographics values correctly for the assignment checking algorithm
 const demographicEnum = Object.fromEntries(
   Object.entries(DEMO_ENUM).map(([k, v]) => {
@@ -75,10 +78,15 @@ async function checkAssignments(assignments, participants) {
         // FOR EACH PARTICIPANT, CHECK IF label in the included
         let includedDemographics = getIncludedDemographics(demographics);
 
+        if (DEBUG) {
+          console.log("includedDemographics: ", includedDemographics);
+          console.log("demographics: ", demographics);
+          console.log(participants.map((p) => p.labels));
+        }
+
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
           // All labels of this participant need to be in included demographics
           // But this participant must have labels that are selected to assign
-
           if (
             participants[parti_idx]["labels"].every((element) =>
               includedDemographics.includes(element),

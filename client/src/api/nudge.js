@@ -124,11 +124,14 @@ async function dispatchAssignment(nudges, isScheduled, timeToSend = null) {
     }),
   };
   const res = await fetch("/api/assignment/assign", options);
-  const checkedNudges = await res.json().then((checkedNudges) => {
-    return [...checkedNudges];
+  const ret = await res.json().then((res) => {
+    return {
+      batchId: res.id, // Batch ID is the same as the agenda job ID
+      checkedAssignments: res.checkedAssignments,
+    };
   });
 
-  return checkedNudges;
+  return ret;
 }
 
 export {

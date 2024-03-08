@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Space, Button, Menu, Form, Upload, message, Flex } from "antd";
 import { FormOutlined, UploadOutlined } from "@ant-design/icons";
 import styled from "styled-components";
@@ -13,6 +13,9 @@ import { Link } from "react-router-dom/cjs/react-router-dom";
 
 const Header = () => {
   const dispatch = useDispatch();
+
+  const existingParticipants = useSelector((state) => state.participants);
+
   const [messageApi, contextHolder] = message.useMessage();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [participants, setParticipants] = useState([]); // List of new participants to upload to server
@@ -38,7 +41,7 @@ const Header = () => {
     // Update on server and DB
     dispatch({
       type: "participants/set",
-      payload: participants,
+      payload: [...existingParticipants, ...participants],
     });
     uploadParticipants(participants);
     setParticipants([]);

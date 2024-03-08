@@ -9,7 +9,6 @@ const useDebug = require("debug");
 const debug = useDebug("api");
 const Nudge = require("../../models/nudge");
 const Participant = require("../../models/participant");
-let agenda = require("../../util/agenda.js");
 
 // Return all nudges
 routes.get("/", async (req, res) => {

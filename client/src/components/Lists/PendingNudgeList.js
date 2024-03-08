@@ -19,6 +19,7 @@ import ScheduleModal from "../Modals/ScheduleModal";
 import { dispatchAssignment } from "../../api/nudge";
 import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
 import { useUpdateAssignmentLists } from "../../hooks/nudge";
+import AssignmentDiaryModal from "../Modals/AssignmentDiaryModal";
 
 const { Title } = Typography;
 
@@ -29,8 +30,10 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
 
   const [numParticipants, setNumParticipants] = useState(0);
   const [showError, setShowError] = useState(false);
-  const [isSendModalOpen, setIsSendModalOpen] = useState(false); // Modal for assignment confirmation
+  const [batchId, setBatchId] = useState();
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false); // Modal for assignment confirmation
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false); // Modal for participant list (orphan)
+  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false);
 
   useEffect(() => {
     let participants = 0;
@@ -49,9 +52,13 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
       setIsParticipantModalOpen(true);
     }
 
-    await dispatchAssignment(pendingNudges, false);
+    const { batchId } = await dispatchAssignment(pendingNudges, false);
+    setBatchId(batchId);
+
     updateAssignmentLists();
     dispatch({ type: "pendingNudges/set", payload: [] });
+
+    setIsDiaryModalOpen(true);
   };
 
   return (
@@ -121,7 +128,7 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
                   label: "Send Later",
                   icon: <ClockCircleOutlined />,
                   onClick: () => {
-                    setIsSendModalOpen(true);
+                    setIsScheduleModalOpen(true);
                   },
                 },
               ],
@@ -134,8 +141,8 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
       </ButtonGroup>
 
       <ScheduleModal
-        open={isSendModalOpen}
-        onCancel={() => setIsSendModalOpen(false)}
+        open={isScheduleModalOpen}
+        onCancel={() => setIsScheduleModalOpen(false)}
       />
 
       <UploadParticipantsModal
@@ -143,6 +150,13 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         onCancel={() => setIsParticipantModalOpen(false)}
         participants={participants}
       ></UploadParticipantsModal>
+
+      <AssignmentDiaryModal
+        open={isDiaryModalOpen}
+        onOk={() => setIsDiaryModalOpen(false)}
+        onCancel={() => setIsDiaryModalOpen(false)}
+        batchId={batchId}
+      />
     </ListContainer>
   );
 };
