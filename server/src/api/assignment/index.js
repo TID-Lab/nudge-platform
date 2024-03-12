@@ -87,7 +87,7 @@ routes.post("/assign", async (req, res) => {
     // nudge: {nudge_msg: str, participant_ids: [ids]}
     // nudge: {nudge_pairs: [{nudge_msg: str, participant_id: id}]}
     res.status(200).send({
-      id: agendaResponse.attrs._id.toString(),
+      job: agendaResponse.attrs, // agenda job object
       checkedAssignments,
     });
   } catch (err) {

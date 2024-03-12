@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Space, Form, Drawer, Button, Input, Select, Tag, Alert } from "antd";
 import { CombColorMap } from "../../util/constants";
 import { createNudge, fetchNudges } from "../../api/nudge";
+import NewNudgeDiaryModal from "../Modals/NewNudgeDiaryModal";
 
 const { TextArea } = Input;
 
@@ -10,16 +11,21 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
+  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false);
+  const [dateCreated, setDateCreated] = useState();
+
   const handleFormFinish = (values) => {
+    const dateCreated = new Date();
+
     const newNudge = {
       ...values,
-      date_created: Date(),
+      date_created: dateCreated.toString(),
       is_active: true,
     };
 
     createNudge(newNudge)
       // TODO: More elegant way to sync/refetch. https://redux.js.org/tutorials/essentials/part-5-async-logic
-      .then(() => fetchNudges())
+      .then((resp) => fetchNudges())
       .then((nudges) => {
         dispatch({
           type: "nudges/set",
@@ -32,6 +38,9 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
 
     form.resetFields();
     onClose();
+
+    setDateCreated(dateCreated.toISOString());
+    setIsDiaryModalOpen(true);
   };
 
   return (
@@ -136,6 +145,13 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
           placeholder="Please input any comment to this nudge."
         />
       </Form>
+
+      <NewNudgeDiaryModal
+        open={isDiaryModalOpen}
+        onOk={() => setIsDiaryModalOpen(false)}
+        onCancel={() => setIsDiaryModalOpen(false)}
+        id={dateCreated}
+      />
     </Drawer>
   );
 };

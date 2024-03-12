@@ -3,26 +3,25 @@ import { Modal, Typography } from "antd";
 
 const { Paragraph, Text } = Typography;
 
-const AssignmentDiaryModal = (props) => {
+const NewNudgeDiaryModal = (props) => {
   return (
     <Modal
-      title="Assignment Diary"
+      title="New Nudge Diary"
       open={props.open}
       onOk={props.onOk}
       onCancel={props.onCancel}
       width={800}
     >
       <Paragraph>
-        Please copy the batch ID and paste it into the survey to complete:{" "}
+        Date created:{" "}
         <Text copyable mark>
-          {props.batchId
-            ? props.batchId
-            : "No batch ID found, please email admins"}
+          {props.id ? props.id : "No date found, please email admins"}
         </Text>
+        . Please copy the date and paste it into the survey to complete!
       </Paragraph>
 
       <iframe
-        src="https://gatech.co1.qualtrics.com/jfe/form/SV_eUT03VVMpLsMzBQ"
+        src="https://gatech.co1.qualtrics.com/jfe/form/SV_dhRSObQ1uzNMYOq"
         title="Diary survey"
         width={750}
         height={500}
@@ -31,4 +30,4 @@ const AssignmentDiaryModal = (props) => {
   );
 };
 
-export default AssignmentDiaryModal;
+export default NewNudgeDiaryModal;

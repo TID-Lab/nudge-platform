@@ -52,8 +52,9 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
       setIsParticipantModalOpen(true);
     }
 
-    const { batchId } = await dispatchAssignment(pendingNudges, false);
-    setBatchId(batchId);
+    const { job } = await dispatchAssignment(pendingNudges, false);
+
+    setBatchId(job._id);
 
     updateAssignmentLists();
     dispatch({ type: "pendingNudges/set", payload: [] });
