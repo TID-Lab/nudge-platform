@@ -143,7 +143,14 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
 
       <ScheduleModal
         open={isScheduleModalOpen}
-        onCancel={() => setIsScheduleModalOpen(false)}
+        onOk={(batchId) => {
+          setIsScheduleModalOpen(false);
+          setIsDiaryModalOpen(true);
+          setBatchId(batchId);
+        }}
+        onCancel={() => {
+          setIsScheduleModalOpen(false);
+        }}
       />
 
       <UploadParticipantsModal

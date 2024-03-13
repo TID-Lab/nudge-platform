@@ -29,11 +29,13 @@ const ScheduleModal = (props) => {
     }
 
     try {
-      await dispatchAssignment(
+      const { job } = await dispatchAssignment(
         pendingNudges,
         true,
         dayjs(scheduledTime).toDate()
       ); // can this give me the latest schedule?
+
+      props.onOk(job._id);
     } catch (e) {
       Modal.error({
         content: "Error scheduling nudges. Please try again.",
@@ -43,8 +45,6 @@ const ScheduleModal = (props) => {
     updateAssignmentLists();
 
     dispatch({ type: "pendingNudges/set", payload: [] });
-    onCancel();
-    setSuccessModal(true);
   };
 
   const onCancel = () => {
@@ -56,7 +56,7 @@ const ScheduleModal = (props) => {
   return (
     <>
       <Modal
-        title="Confirm Send"
+        title="Schedule for later"
         open={props.open}
         okText={okText}
         confirmLoading={loading}
