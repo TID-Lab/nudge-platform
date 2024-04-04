@@ -20,6 +20,12 @@ const participantSchema = new mongoose.Schema({
     default: true,
     required: true,
   },
+  date_created: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
 });
 const Participant = mongoose.model("Participant", participantSchema);
 module.exports = Participant;
+``;

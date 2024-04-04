@@ -100,7 +100,7 @@ export default function UploadParticipantsModal({
   // pulling backend server participants
   useEffect(() => {
     // Fetch data from the backend when the component mounts
-    getParticipants("nudge_demo_001")
+    getParticipants("PEACH2_1")
       .then((res) => {
         setExistingParticipants(res.mesg ?? []);
       })

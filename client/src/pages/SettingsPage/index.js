@@ -100,9 +100,7 @@ const SettingsPage = () => {
               title: "Week of Study",
               key: "weekOfStudy",
               render: (participant) => {
-                return (
-                  <div>{calcWeekOfStudy("2024-01-21T00:02:12.855000")}</div>
-                );
+                return <div>{calcWeekOfStudy(participant.date_created)}</div>;
               },
             },
             {

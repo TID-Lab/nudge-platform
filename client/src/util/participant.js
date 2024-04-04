@@ -96,5 +96,5 @@ function calcAgeRange(age) {
 
 // Calculate the week of study based on the created date and today's date
 export function calcWeekOfStudy(createdDate) {
-  return dayjs().diff(dayjs(createdDate), "week");
+  return dayjs().diff(dayjs(createdDate), "week") + 1;
 }
