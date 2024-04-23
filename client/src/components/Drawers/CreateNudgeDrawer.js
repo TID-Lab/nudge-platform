@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { Space, Form, Drawer, Button, Input, Select, Tag, Alert } from "antd";
 import { CombColorMap } from "../../util/constants";
 import { createNudge, fetchNudges } from "../../api/nudge";
-import NewNudgeDiaryModal from "../Modals/NewNudgeDiaryModal";
 
 const { TextArea } = Input;
 
@@ -40,7 +39,6 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
     onClose();
 
     setDateCreated(dateCreated.toISOString());
-    setIsDiaryModalOpen(true);
   };
 
   return (
@@ -145,13 +143,6 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
           placeholder="Please input any comment to this nudge."
         />
       </Form>
-
-      <NewNudgeDiaryModal
-        open={isDiaryModalOpen}
-        onOk={() => setIsDiaryModalOpen(false)}
-        onCancel={() => setIsDiaryModalOpen(false)}
-        id={dateCreated}
-      />
     </Drawer>
   );
 };

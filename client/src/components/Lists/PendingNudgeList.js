@@ -8,7 +8,6 @@ import {
   Alert,
   Typography,
   Dropdown,
-  Modal,
   Popconfirm,
 } from "antd";
 import { DownOutlined, ClockCircleOutlined } from "@ant-design/icons";
@@ -19,7 +18,6 @@ import ScheduleModal from "../Modals/ScheduleModal";
 import { dispatchAssignment } from "../../api/nudge";
 import UploadParticipantsModal from "../Modals/UploadParticipantsModal";
 import { useUpdateAssignmentLists } from "../../hooks/nudge";
-import AssignmentDiaryModal from "../Modals/AssignmentDiaryModal";
 
 const { Title } = Typography;
 
@@ -145,7 +143,6 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         open={isScheduleModalOpen}
         onOk={(batchId) => {
           setIsScheduleModalOpen(false);
-          setIsDiaryModalOpen(true);
           setBatchId(batchId);
         }}
         onCancel={() => {
@@ -158,13 +155,6 @@ const PendingNudgeList = ({ total, pendingNudges }) => {
         onCancel={() => setIsParticipantModalOpen(false)}
         participants={participants}
       ></UploadParticipantsModal>
-
-      <AssignmentDiaryModal
-        open={isDiaryModalOpen}
-        onOk={() => setIsDiaryModalOpen(false)}
-        onCancel={() => setIsDiaryModalOpen(false)}
-        batchId={batchId}
-      />
     </ListContainer>
   );
 };

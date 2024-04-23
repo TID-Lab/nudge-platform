@@ -35,7 +35,8 @@ import { fetchParticipants } from "../../api/participant";
 const { Content } = Layout;
 
 const MainPage = () => {
-  useAuth();
+  // DISABLED FOR USER STUDY ENVIRONMENT
+  // useAuth();
 
   const dispatch = useDispatch();
   const nudges = useSelector((state) => state.nudges);

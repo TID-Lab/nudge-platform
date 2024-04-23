@@ -67,7 +67,7 @@ const data = {
     },
     {
       participantId: "jay",
-      labels: ["latinx", "male", "30-40", "untested", "at-risk"],
+      labels: ["latinx", "male", "30-40", "untested", "at-risk", "not-sick"],
     },
     {
       participantId: "demo001_0",
@@ -111,22 +111,9 @@ const data = {
   ],
   nudgeData: [
     {
-      message: "Hello world!",
-      date_created: Date(),
-      com_b: ["o-soc", "c-phy"],
-      is_active: true,
-    },
-    {
       message: "Make sure to test for the football game!",
       date_created: Date(),
       com_b: ["o-soc"],
-      is_active: true,
-    },
-    {
-      message:
-        "Extra long nudge ~ lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam posuere nisi nunc, sed sodales nunc vehicula ac. Maecenas et commodo nulla, non placerat urna. Aenean maximus tellus ligula, ut rhoncus libero facilisis at. ",
-      date_created: Date(),
-      // com_b: ['M-REF'],
       is_active: true,
     },
     {
