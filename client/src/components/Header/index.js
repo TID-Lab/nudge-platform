@@ -61,7 +61,7 @@ const Header = () => {
             items={[
               { label: <Link to="/">Nudges</Link> },
               { label: <Link to="/analytics">Analytics</Link> },
-              { label: <Link to="/settings">Settings</Link> },
+              { label: <Link to="/settings">Participants</Link> },
             ]}
           />
         </Space>

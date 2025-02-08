@@ -74,6 +74,12 @@ async function checkAssignments(assignments, participants) {
       // Just to double check they're lowercase
       demographics = demographics.map((ele) => ele.toLowerCase());
 
+      // radioOptions contains all of the "AND" filtering options (sick status, tested status)
+      const radioOptions = ["sick", "not-sick", "no-sick-response", "tested", "untested", "no-test-response"];
+
+      // radioFilters contains all the "AND" filters that the nudge assigner has selected
+      const radioFilters = demographics.filter((d) => radioOptions.includes(d));
+
       if (!prevAssigned) {
         // FOR EACH PARTICIPANT, CHECK IF label in the included
         let includedDemographics = getIncludedDemographics(demographics);
@@ -87,14 +93,24 @@ async function checkAssignments(assignments, participants) {
         for (let parti_idx = 0; parti_idx < participants.length; parti_idx++) {
           // All labels of this participant need to be in included demographics
           // But this participant must have labels that are selected to assign
+          // if (
+          //   participants[parti_idx]["labels"].every((element) =>
+          //     includedDemographics.includes(element),
+          //   ) &&
+          // // WARNING: This causes problems when we have "OR" functionality across some labels :(
+          //   demographics.every((d) =>
+          //     participants[parti_idx].labels.includes(d),
+          //   )
+          // ) {
+
+          // All labels of this participant need to be in included demographics ("OR" options)
+          // But this participant MUST have labels that are selected as radioOptions ("AND" options)
           if (
-            participants[parti_idx]["labels"].every((element) =>
+            participants[parti_idx]["labels"].every((element) => 
               includedDemographics.includes(element),
             ) &&
-            demographics.every((d) =>
-              participants[parti_idx].labels.includes(d),
-            )
-          ) {
+            (radioFilters.every((d) => participants[parti_idx]["labels"].includes(d)))
+            ) {
             if (
               nudge.participant_history.includes(
                 mongoose.Types.ObjectId(participants[parti_idx]._id),

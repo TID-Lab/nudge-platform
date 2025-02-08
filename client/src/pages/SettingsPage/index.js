@@ -22,7 +22,7 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 const SettingsPage = () => {
-  useAuth();
+  // useAuth();
   const [messageApi, contextHolder] = message.useMessage();
 
   const [changedParticipants, setChangedParticipants] = useState({});

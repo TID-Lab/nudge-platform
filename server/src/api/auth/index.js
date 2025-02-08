@@ -9,13 +9,13 @@ const AuthUsers = require("../../models/authUsers");
 const Organization = require("../../models/organization");
 const { comparePassword } = require("../../util/org");
 const oauth = require("../../util/oauth-promise")(
-  process.env.CALLBACK_URL ||
-    "https://peach.ipat.gatech.edu/social-media-dashboard",
+  // process.env.CALLBACK_URL ||
+    "https://peach2demo.ipat.gatech.edu/social-media-dashboard",
 );
 const debug = useDebug("api");
 const casServiceUrl =
   process.env.NODE_ENV === "production"
-    ? "https://peach2.ipat.gatech.edu/api/auth"
+    ? "https://peach2demo.ipat.gatech.edu/api/auth"
     : "http://localhost:3000/api/auth";
 
 var cas = new CASAuthentication({

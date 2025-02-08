@@ -138,10 +138,12 @@ const CreateNudgeDrawer = ({ open, onClose }) => {
           style={{ marginBottom: "1rem" }}
         />
 
-        <TextArea
-          rows={4}
-          placeholder="Please input any comment to this nudge."
-        />
+        <Form.Item label="Nudge comment" name="comment">
+          <TextArea
+            rows={4}
+            placeholder="Please input any comment to this nudge."
+          />
+        </Form.Item>
       </Form>
     </Drawer>
   );
