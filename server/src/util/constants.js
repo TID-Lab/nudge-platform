@@ -12,7 +12,7 @@ const DEMO_ENUM = {
     Male: "male",
     Intersex: "non-binary",
     NoneApply: "none-apply",
-    NoAnswer: "no-answer",
+    // NoAnswer: "no-answer", # causes a minor bug when combined with "no-answer" from "Race" category
   },
   Race: {
     NativeAmerican: "native-american",
